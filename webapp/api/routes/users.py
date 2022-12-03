@@ -65,10 +65,10 @@ def get_users():
             "last_name",
             "email",
             "tentang",
-            "role",
-            "role_verified",
             "is_alumni",
+            "is_pengurus",
             "is_admin",
+            "admin_verified",
             "profpic",
             "created_at",
             "updated_at",
@@ -90,10 +90,10 @@ def get_specific_user(id):
             "last_name",
             "email",
             "tentang",
-            "role",
-            "role_verified",
             "is_alumni",
+            "is_pengurus",
             "is_admin",
+            "admin_verified",
             "profpic",
             "created_at",
             "updated_at",
@@ -125,6 +125,8 @@ def update_user(id):
             userobj.tentang = user["tentang"]
         if user["is_alumni"] is not None:
             userobj.role = user["is_alumni"]
+        if user["is_pengurus"] is not None:
+            userobj.role = user["is_pengurus"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,
@@ -178,6 +180,7 @@ def authenticate_user():
                     "access_token": access_token,
                     "avatar": active_user.profpic,
                     "is_alumni": active_user.is_alumni,
+                    "is_pengurus": active_user.is_pengurus,
                 },
             )
         else:
@@ -213,10 +216,7 @@ def register_user():
                 "first_name",
                 "last_name",
                 "email",
-                "role",
-                "role_verified",
                 "is_alumni",
-                "is_admin",
                 "profpic",
             ]
         )  # definisikan ulang user_schema tanpa memasukkan plain password sehingga di exclude dari result/API response
