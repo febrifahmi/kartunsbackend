@@ -23,12 +23,12 @@ jwt = JWTManager(app)
 
 # IMPORT ROUTES BLUEPRINT (diimpor setelah seluruh konfigurasi app selesai agar tidak circular import)
 from webapp.api.routes.users import user_routes
-# from webapp.api.routes.pakets import paket_routes
+from webapp.api.routes.ads import ad_routes
 
 
 # REG BLUEPRINT
 app.register_blueprint(user_routes, url_prefix="/api/users")
-# app.register_blueprint(paket_routes, url_prefix="/api/pakets")
+app.register_blueprint(ad_routes, url_prefix="/api/ads")
 
 
 

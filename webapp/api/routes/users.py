@@ -53,7 +53,7 @@ def create_user():
 
 
 # READ (R)
-@user_routes.route("/", methods=["GET"])
+@user_routes.route("/all", methods=["GET"])
 def get_users():
     fetch = User.query.all()
     user_schema = UserSchema(

@@ -29,7 +29,9 @@ class User(db.Model):
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
     # relationship
-    # pakets = db.relationship("Paket", backref="Author", cascade="all, delete-orphan")
+    # ads = db.relationship("Ads", backref="Advertiser", cascade="all, delete-orphan")
+    # trainings = db.relationship("Trainings", backref="Participant", cascade="all, delete-orphan")
+    # certificates = db.relationship("Certificates", backref="Holder", cascade="all, delete-orphan")
 
     def __init__(self, username, first_name, last_name, email, is_alumni):
         self.username = username
