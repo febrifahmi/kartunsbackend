@@ -17,7 +17,30 @@ certificate_routes = Blueprint("certificate_routes", __name__)
 @jwt_required()
 def create_certificate():
     try:
-        pass
+        current_user = get_jwt_identity()
+        data = request.get_json()
+        certificate_schema = (
+            CertificateSchema()
+        )  # certificate schema pertama didefinisikan full utk menerima seluruh data yang diperlukan
+        certificate = certificate_schema.load(data)
+        # need validation in ad creation process
+        certobj = Certificate(
+            certtitle=certificate["certtitle"],
+            certbgimgurl=certificate["certbgimgurl"],
+            certnumber=certificate["certnumber"],
+            certtext=certificate["certtext"],
+            certdate=certificate["certdate"],
+            penerima_id=certificate["penerima_id"],
+        )
+        result = certificate_schema.dump(certobj)
+        return response_with(
+            resp.SUCCESS_201,
+            value={
+                "certificate": result,
+                "logged_in_as": current_user,
+                "message": "Certificate has been created successfully!",
+            },
+        )
     except Exception as e:
         print(e)
         return response_with(resp.INVALID_INPUT_422)

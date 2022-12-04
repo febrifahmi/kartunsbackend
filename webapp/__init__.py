@@ -29,6 +29,7 @@ from webapp.api.routes.agendas import agenda_routes
 from webapp.api.routes.announcements import pengumuman_routes
 from webapp.api.routes.articles import article_routes
 from webapp.api.routes.certificates import certificate_routes
+from webapp.api.routes.comments import comment_routes
 
 
 # REG BLUEPRINT
@@ -39,6 +40,7 @@ app.register_blueprint(agenda_routes, url_prefix="/api/agendas")
 app.register_blueprint(pengumuman_routes, url_prefix="/api/announcements")
 app.register_blueprint(article_routes, url_prefix="/api/articles")
 app.register_blueprint(certificate_routes, url_prefix="/api/certificates")
+app.register_blueprint(comment_routes, url_prefix="/api/comments")
 
 
 
