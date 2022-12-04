@@ -130,7 +130,3 @@ def delete_cover(id):
         resp.SUCCESS_200,
         value={"logged_in_as": current_user, "message": "A cover successfully deleted!"},
     )
-
-
-
-
