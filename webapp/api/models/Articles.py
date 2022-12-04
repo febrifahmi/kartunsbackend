@@ -16,6 +16,7 @@ class Article(db.Model):
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
     # fk
+    author_id = db.Column(db.Integer, db.ForeignKey("users.iduser"))
 
     # relationship
 
@@ -31,3 +32,18 @@ class Article(db.Model):
         db.session.add(self)
         db.session.commit()
         return self
+
+
+class ArticleSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Article
+        sqla_session = db.session
+
+    idarticle = fields.Integer(dump_only=True)
+    articletitle = fields.String(required=True)
+    articleimgurl = fields.String(required=True)
+    articledesc = fields.String()
+    articletext = fields.String(required=True)
+    created_at = fields.String(dump_only=True)
+    updated_at = fields.String(dump_only=True)
+    author_id = fields.Integer()
