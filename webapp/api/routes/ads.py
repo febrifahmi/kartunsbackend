@@ -17,7 +17,29 @@ ad_routes = Blueprint("ad_routes", __name__)
 @jwt_required()
 def create_ads():
     try:
-        pass
+        current_user = get_jwt_identity()
+        data = request.get_json()
+        ad_schema = (
+            AdSchema()
+        )  # ad schema pertama didefinisikan full utk menerima seluruh data yang diperlukan termasuk password
+        ad = ad_schema.load(data)
+        # need validation in ad creation process
+        adobj = Ad(
+            adcampaigntitle=ad["adcampaigntitle"],
+            adimgurl=ad["adimgurl"],
+            adcampaigndesc=ad["adcampaigndesc"],
+            adcampaigntext=ad["adcampaigntext"],
+            nrdaysserved=ad["nrdaysserved"],
+        )
+        result = ad_schema.dump(adobj)
+        return response_with(
+            resp.SUCCESS_201,
+            value={
+                "ad": result,
+                "logged_in_as": current_user,
+                "message": "An ad has been created successfully!",
+            },
+        )
     except Exception as e:
         print(e)
         return response_with(resp.INVALID_INPUT_422)
@@ -44,6 +66,7 @@ def get_ads():
     )
     ads = ad_schema.dump(fetch)
     return response_with(resp.SUCCESS_200, value={"ads": ads})
+
 
 @ad_routes.route("/<int:id>", methods=["GET"])
 def get_specific_ad(id):

@@ -17,7 +17,30 @@ pengurus_routes = Blueprint("pengurus_routes", __name__)
 @jwt_required()
 def create_pengurus():
     try:
-        pass
+        current_user = get_jwt_identity()
+        data = request.get_json()
+        pengurus_schema = (
+            PengurusSchema()
+        )  # ad schema pertama didefinisikan full utk menerima seluruh data yang diperlukan termasuk password
+        pengurus = pengurus_schema.load(data)
+        # need validation in ad creation process
+        pengurusobj = Pengurus(
+            namapengurus=pengurus["namapengurus"],
+            jabatan=pengurus["jabatan"],
+            tahunkepengurusan=pengurus["tahunkepengurusan"],
+            tanggalmulai=pengurus["tanggalmulai"],
+            tanggalselesai=pengurus["tanggalselesai"],
+            pengurus_id=pengurus["pengurus_id"]
+        )
+        result = pengurus_schema.dump(pengurusobj)
+        return response_with(
+            resp.SUCCESS_201,
+            value={
+                "pengurus": result,
+                "logged_in_as": current_user,
+                "message": "Pengurus has been created successfully!",
+            },
+        )
     except Exception as e:
         print(e)
         return response_with(resp.INVALID_INPUT_422)

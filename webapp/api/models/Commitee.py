@@ -51,4 +51,4 @@ class PengurusSchema(ma.SQLAlchemyAutoSchema):
     tanggalselesai = fields.String()
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
-    advertiser_id = fields.Integer()
+    pengurus_id = fields.Integer()
