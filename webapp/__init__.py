@@ -33,6 +33,7 @@ from webapp.api.routes.comments import comment_routes
 from webapp.api.routes.covers import cover_routes
 from webapp.api.routes.feedbacks import feedback_routes
 from webapp.api.routes.letters import letter_routes
+from webapp.api.routes.reactions import reaction_routes
 
 
 # REG BLUEPRINT
@@ -47,6 +48,7 @@ app.register_blueprint(comment_routes, url_prefix="/api/comments")
 app.register_blueprint(cover_routes, url_prefix="/api/covers")
 app.register_blueprint(feedback_routes, url_prefix="/api/feedbacks")
 app.register_blueprint(letter_routes, url_prefix="/api/letters")
+app.register_blueprint(reaction_routes, url_prefix="/api/reactions")
 
 
 

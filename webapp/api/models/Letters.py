@@ -17,9 +17,7 @@ class Letter(db.Model):
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
     # fk
-
-    # relationship
-    penandatangan = db.relationship("User", backref="Penandatangan", cascade="all, delete-orphan")
+    penandatangan_id = db.Column(db.Integer, db.ForeignKey("users.iduser"))
 
     def __init__(
         self, lettertitle, signimgurl, letterdesc, lettertext,
@@ -47,8 +45,4 @@ class LetterSchema(ma.SQLAlchemyAutoSchema):
     lettertext = fields.String(required=True)
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
-    penandatangan = fields.Nested(
-        UserSchema,
-        many=True,
-        only=["iduser","username", "first_name", "last_name"],
-    )
+    penandatangan_id = fields.Integer()
