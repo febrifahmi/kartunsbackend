@@ -21,7 +21,7 @@ def create_ads():
         data = request.get_json()
         ad_schema = (
             AdSchema()
-        )  # ad schema pertama didefinisikan full utk menerima seluruh data yang diperlukan termasuk password
+        )  # ad schema pertama didefinisikan full utk menerima seluruh data yang diperlukan
         ad = ad_schema.load(data)
         # need validation in ad creation process
         adobj = Ad(
