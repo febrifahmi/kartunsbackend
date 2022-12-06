@@ -31,6 +31,7 @@ def create_certificate():
             certtext=certificate["certtext"],
             certdate=certificate["certdate"],
             penerima_id=certificate["penerima_id"],
+            training_id=certificate["training_id"],
         )
         result = certificate_schema.dump(certobj)
         return response_with(
@@ -62,6 +63,7 @@ def get_certificates():
             "created_at",
             "updated_at",
             "penerima_id",
+            "training_id",
         ],
     )
     certificates = certificate_schema.dump(fetch)
@@ -83,6 +85,7 @@ def get_specific_certificate(id):
             "created_at",
             "updated_at",
             "penerima_id",
+            "training_id",
         ],
     )
     certificate = certificate_schema.dump(fetch)
@@ -109,6 +112,8 @@ def update_certificate(id):
             certobj.certtext = certificate["certtext"]
         if certificate["certdate"] is not None:
             certobj.certdate = certificate["certdate"]
+        if certificate["penerima_id"] is not None:
+            certobj.penerima_id = certificate["penerima_id"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

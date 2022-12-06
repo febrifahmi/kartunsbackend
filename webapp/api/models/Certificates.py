@@ -18,6 +18,7 @@ class Certificate(db.Model):
 
     # fk
     penerima_id = db.Column(db.Integer, db.ForeignKey("users.iduser"))
+    # training_id = db.Column(db.Integer, db.ForeignKey("trainings.idtraining"))
 
     # relationship
 
@@ -50,3 +51,4 @@ class CertificateSchema(ma.SQLAlchemyAutoSchema):
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
     penerima_id = fields.Integer()
+    # training_id = fields.Integer()
