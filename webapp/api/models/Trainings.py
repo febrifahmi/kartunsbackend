@@ -13,7 +13,7 @@ from marshmallow import fields
 
 class Training(db.Model):
     __tablename__ = "trainings"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    idtraining = db.Column(db.Integer, primary_key=True, autoincrement=True)
     trainingtitle = db.Column(db.String(50))
     trainingimgurl = db.Column(db.String(128))
     trainingdesc = db.Column(db.String(140))

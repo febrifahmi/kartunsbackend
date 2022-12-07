@@ -24,6 +24,7 @@ jwt = JWTManager(app)
 # IMPORT ROUTES BLUEPRINT (diimpor setelah seluruh konfigurasi app selesai agar tidak circular import)
 from webapp.api.routes.users import user_routes
 from webapp.api.routes.ads import ad_routes
+from webapp.api.routes.adsubs import adsub_routes
 from webapp.api.routes.pengurus import pengurus_routes
 from webapp.api.routes.agendas import agenda_routes
 from webapp.api.routes.announcements import pengumuman_routes
@@ -34,11 +35,14 @@ from webapp.api.routes.covers import cover_routes
 from webapp.api.routes.feedbacks import feedback_routes
 from webapp.api.routes.letters import letter_routes
 from webapp.api.routes.reactions import reaction_routes
+from webapp.api.routes.trainingmaterials import trainmat_routes
+from webapp.api.routes.trainings import training_routes
 
 
 # REG BLUEPRINT
 app.register_blueprint(user_routes, url_prefix="/api/users")
 app.register_blueprint(ad_routes, url_prefix="/api/ads")
+app.register_blueprint(adsub_routes, url_prefix="/api/adsubs")
 app.register_blueprint(pengurus_routes, url_prefix="/api/pengurus")
 app.register_blueprint(agenda_routes, url_prefix="/api/agendas")
 app.register_blueprint(pengumuman_routes, url_prefix="/api/announcements")
@@ -49,6 +53,8 @@ app.register_blueprint(cover_routes, url_prefix="/api/covers")
 app.register_blueprint(feedback_routes, url_prefix="/api/feedbacks")
 app.register_blueprint(letter_routes, url_prefix="/api/letters")
 app.register_blueprint(reaction_routes, url_prefix="/api/reactions")
+app.register_blueprint(trainmat_routes, url_prefix="/api/trainingmaterials")
+app.register_blueprint(training_routes, url_prefix="/api/trainings")
 
 
 
