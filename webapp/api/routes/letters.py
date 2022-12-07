@@ -58,7 +58,7 @@ def get_letters():
             "lettertext",
             "created_at",
             "updated_at",
-            "penandatangan",
+            "penandatangan_id",
         ],
     )
     letters = letter_schema.dump(fetch)
@@ -78,7 +78,7 @@ def get_specific_letter(id):
             "lettertext",
             "created_at",
             "updated_at",
-            "penandatangan",
+            "penandatangan_id",
         ],
     )
     letter = letter_schema.dump(fetch)

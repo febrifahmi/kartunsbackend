@@ -31,7 +31,6 @@ def create_certificate():
             certtext=certificate["certtext"],
             certdate=certificate["certdate"],
             penerima_id=certificate["penerima_id"],
-            training_id=certificate["training_id"],
         )
         result = certificate_schema.dump(certobj)
         return response_with(
@@ -63,7 +62,6 @@ def get_certificates():
             "created_at",
             "updated_at",
             "penerima_id",
-            "training_id",
         ],
     )
     certificates = certificate_schema.dump(fetch)
@@ -85,7 +83,6 @@ def get_specific_certificate(id):
             "created_at",
             "updated_at",
             "penerima_id",
-            "training_id",
         ],
     )
     certificate = certificate_schema.dump(fetch)

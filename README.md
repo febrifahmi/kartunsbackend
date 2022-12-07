@@ -4,7 +4,6 @@
 
 ## Project Milestones
 
-<p>
 1. Develop kerangka utama aplikasi backend (REST-API) web app KartUNS<br>
     a. Coding model data/struktur data:<br>
         - Ads (**finished**)<br>
@@ -41,4 +40,3 @@
         - users (**finished:CRUD**)<br>
 2. Develop automated API testing dengan Postman<br>
 3. Pembuatan Dokumentasi REST-API dengan Postman<br>
-</p>
