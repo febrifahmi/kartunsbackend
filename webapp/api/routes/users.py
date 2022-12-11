@@ -181,6 +181,8 @@ def authenticate_user():
                     "avatar": active_user.profpic,
                     "is_alumni": active_user.is_alumni,
                     "is_pengurus": active_user.is_pengurus,
+                    "is_trainer": active_user.is_trainer,
+                    "is_admin": active_user.is_admin,
                 },
             )
         else:
