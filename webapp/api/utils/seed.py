@@ -14,7 +14,7 @@ def seed():
          "email": "admin@kartuns.org",
          "is_alumni": 1,
          "password": "4Dm1n",
-         "is_admin": 1
+         "is_admin": 1,
         }
         user_schema = (
             UserSchema()
@@ -27,9 +27,9 @@ def seed():
             last_name=user["last_name"],
             email=user["email"],
             is_alumni=user["is_alumni"],
-            is_admin=user["is_alumni"],
         )
         userobj.set_password(user["password"])
+        userobj.is_admin=user["is_admin"]
         userobj.create()
         user_schema = UserSchema(
             only=["username", "first_name", "last_name", "email", "is_admin"]

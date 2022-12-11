@@ -34,7 +34,7 @@ def create_user():
         userobj.set_password(user["password"])
         userobj.create()
         user_schema = UserSchema(
-            only=["username", "first_name", "last_name", "email", "is_alumni"]
+            only=["username", "first_name", "last_name", "email", "is_alumni", "is_admin"]
         )  # definisikan ulang user_schema tanpa memasukkan plain password sehingga di exclude dari result/API response
         result = user_schema.dump(user)
         return response_with(

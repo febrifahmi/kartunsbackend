@@ -36,13 +36,12 @@ class User(db.Model):
     # trainings = db.relationship("Trainings", backref="Participant", cascade="all, delete-orphan")
     # certificates = db.relationship("Certificates", backref="Holder", cascade="all, delete-orphan")
 
-    def __init__(self, username, first_name, last_name, email, is_alumni, is_admin):
+    def __init__(self, username, first_name, last_name, email, is_alumni):
         self.username = username
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.is_alumni = is_alumni
-        self.is_admin = is_admin
 
     def set_password(self, password):
         self.passhash = bcrypt.generate_password_hash(password)
