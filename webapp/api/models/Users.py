@@ -1,5 +1,6 @@
 import datetime
-from webapp import bcrypt
+# from webapp import bcrypt
+from flask_bcrypt import Bcrypt
 from hashlib import md5
 from webapp.api.utils.database import db
 from webapp.api.utils.database import ma
@@ -9,6 +10,7 @@ from marshmallow import fields
 # import hmac to substitute hash checking, after werkzeug.security.safe_str_cm was deprecated in bcrypt check_password_hash implementation
 # import hmac
 
+bcrypt = Bcrypt()
 
 class User(db.Model):
     __tablename__ = "users"
@@ -34,12 +36,13 @@ class User(db.Model):
     # trainings = db.relationship("Trainings", backref="Participant", cascade="all, delete-orphan")
     # certificates = db.relationship("Certificates", backref="Holder", cascade="all, delete-orphan")
 
-    def __init__(self, username, first_name, last_name, email, is_alumni):
+    def __init__(self, username, first_name, last_name, email, is_alumni, is_admin):
         self.username = username
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.is_alumni = is_alumni
+        self.is_admin = is_admin
 
     def set_password(self, password):
         self.passhash = bcrypt.generate_password_hash(password)

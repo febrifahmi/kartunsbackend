@@ -6,6 +6,7 @@ from webapp.api.utils.database import db
 from webapp.api.utils.responses import response_with
 import webapp.api.utils.responses as resp
 from flask_jwt_extended import JWTManager
+from webapp.api.utils.seed import seed # nice it works seeding this way and put BCrypt outside init but without app config
 
 
 app = Flask(__name__)
@@ -18,7 +19,7 @@ else:
     appconfig = DevelopmentConfig
 
 app.config.from_object(appconfig)
-bcrypt = Bcrypt(app)
+# bcrypt = Bcrypt(app) // we use Bcrypt directly in User model to avoid circular import while seeding initial data to DB
 jwt = JWTManager(app)
 
 # IMPORT ROUTES BLUEPRINT (diimpor setelah seluruh konfigurasi app selesai agar tidak circular import)
@@ -86,7 +87,9 @@ def not_found(e):
 
 db.init_app(app)
 with app.app_context():
+    """Register CLI commands."""
     db.create_all()
+    seed() # nice it works, seeding this way
 
 if __name__ == "__main__":
     app.run(port=5000, host="0.0.0.0", use_reloader=False)
