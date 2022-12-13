@@ -89,7 +89,7 @@ db.init_app(app)
 with app.app_context():
     """Register CLI commands."""
     db.create_all()
-    seed() # nice it works, seeding this way
+    seed() # nice it works, seeding this way (need to check if there is existing user before seed)
 
 if __name__ == "__main__":
     app.run(port=5000, host="0.0.0.0", use_reloader=False)
