@@ -39,6 +39,7 @@ from webapp.api.routes.reactions import reaction_routes
 from webapp.api.routes.trainingmaterials import trainmat_routes
 from webapp.api.routes.trainings import training_routes
 from webapp.api.routes.trainingsubs import tsub_routes
+from webapp.api.routes.members import member_routes
 
 
 # REG BLUEPRINT
@@ -58,6 +59,7 @@ app.register_blueprint(reaction_routes, url_prefix="/api/reactions")
 app.register_blueprint(trainmat_routes, url_prefix="/api/trainingmaterials")
 app.register_blueprint(training_routes, url_prefix="/api/trainings")
 app.register_blueprint(tsub_routes, url_prefix="/api/tsubs")
+app.register_blueprint(member_routes, url_prefix="/api/members")
 
 
 
@@ -89,7 +91,7 @@ db.init_app(app)
 with app.app_context():
     """Register CLI commands."""
     db.create_all()
-    seed() # nice it works, seeding this way (need to check if there is existing user before seed)
+    seed() # nice it works, seeding this way (already fixed in seed.py: double adding admin when there is existing admin in table)
 
 if __name__ == "__main__":
     app.run(port=5000, host="0.0.0.0", use_reloader=False)
