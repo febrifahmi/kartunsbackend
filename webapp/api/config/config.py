@@ -12,6 +12,7 @@ class Config(object):
     JWT_SECRET_KEY = "JWT-SECRET"
     SECRET_KEY = "SECRET-KEY"
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
+    ACCEPTED_FILE_TYPES = ["doc", "docx", "odt", "pdf", "rtf", "png", "jpg"]
 
 
 class ProductionConfig(Config):

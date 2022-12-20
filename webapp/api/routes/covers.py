@@ -4,12 +4,16 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.Covers import Cover, CoverSchema
 from webapp.api.utils.database import db
+from werkzeug.utils import secure_filename
+import os, random, string
+from flask import current_app
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
 
 cover_routes = Blueprint("cover_routes", __name__)
+
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
@@ -26,11 +30,13 @@ def create_cover():
         # need validation in ad creation process
         coverobj = Cover(
             covertitle=cover["covertitle"],
-            coverimgurl=cover["coverimgurl"],
             coverdesc=cover["coverdesc"],
             covertext=cover["covertext"],
-            nrdaysserved=cover["nrdaysserved"],
+            coverimgurl=cover["coverimgurl"]
         )
+        # save to db
+        coverobj.create()
+        # cek apakah file yang diupload sesuai daftar jenis file yg diijinkan
         result = cover_schema.dump(coverobj)
         return response_with(
             resp.SUCCESS_201,
@@ -57,7 +63,6 @@ def get_covers():
             "coverimgurl",
             "coverdesc",
             "covertext",
-            "nrdaysserved",
             "created_at",
             "updated_at",
         ],
@@ -77,7 +82,6 @@ def get_specific_cover(id):
             "coverimgurl",
             "coverdesc",
             "covertext",
-            "nrdaysserved",
             "created_at",
             "updated_at",
         ],
@@ -102,8 +106,6 @@ def update_cover(id):
             coverobj.coverimgurl = cover["coverimgurl"]
         if cover["coverdesc"] is not None:
             coverobj.coverdesc = cover["coverdesc"]
-        if cover["nrdaysserved"] is not None:
-            coverobj.nrdaysserved = cover["nrdaysserved"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,
@@ -128,5 +130,8 @@ def delete_cover(id):
     db.session.commit()
     return response_with(
         resp.SUCCESS_200,
-        value={"logged_in_as": current_user, "message": "A cover successfully deleted!"},
+        value={
+            "logged_in_as": current_user,
+            "message": "A cover successfully deleted!",
+        },
     )
