@@ -26,6 +26,7 @@ def create_letter():
         # need validation in ad creation process
         letterobj = Letter(
             lettertitle=letter["lettertitle"],
+            letternr=letter["letternr"],
             signimgurl=letter["signimgurl"],
             letterdesc=letter["letterdesc"],
             lettertext=["lettertext"],
@@ -53,6 +54,7 @@ def get_letters():
         only=[
             "idletter",
             "lettertitle",
+            "letternr",
             "signimgurl",
             "letterdesc",
             "lettertext",
@@ -73,6 +75,7 @@ def get_specific_letter(id):
         only=[
             "idletter",
             "lettertitle",
+            "letternr",
             "signimgurl",
             "letterdesc",
             "lettertext",
@@ -97,6 +100,8 @@ def update_letter(id):
         letter = letter_schema.load(data, partial=True)
         if letter["lettertitle"] is not None:
             letterobj.lettertitle = letter["lettertitle"]
+        if letter["letternr"] is not None:
+            letterobj.letternr = letter["letternr"]
         if letter["signimgurl"] is not None:
             letterobj.signimgurl = letter["signimgurl"]
         if letter["letterdesc"] is not None:

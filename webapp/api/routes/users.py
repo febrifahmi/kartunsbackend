@@ -54,6 +54,7 @@ def create_user():
 
 # READ (R)
 @user_routes.route("/all", methods=["GET"])
+@jwt_required()
 def get_users():
     fetch = User.query.all()
     user_schema = UserSchema(
@@ -79,6 +80,7 @@ def get_users():
 
 
 @user_routes.route("/<int:id>", methods=["GET"])
+@jwt_required()
 def get_specific_user(id):
     fetch = User.query.get_or_404(id)
     user_schema = UserSchema(
