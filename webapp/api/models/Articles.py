@@ -11,7 +11,7 @@ class Article(db.Model):
     articletitle = db.Column(db.String(50))
     articleimgurl = db.Column(db.String(128))
     articledesc = db.Column(db.String(140))
-    articletext = db.Column(db.String(800))
+    articletext = db.Column(db.String())
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
@@ -21,12 +21,13 @@ class Article(db.Model):
     # relationship
 
     def __init__(
-        self, articletitle, articleimgurl, articledesc, articletext
+        self, articletitle, articleimgurl, articledesc, articletext, author_id
     ):
         self.articletitle = articletitle
         self.articleimgurl = articleimgurl
         self.articledesc = articledesc
         self.articletext = articletext
+        self.author_id = author_id
 
     def create(self):
         db.session.add(self)

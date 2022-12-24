@@ -131,6 +131,7 @@ def seed():
                 articledesc=artikel["articledesc"],
                 articleimgurl=artikel["articleimgurl"],
                 articletext=artikel["articletext"],
+                author_id=1
             )
             artikelobj.create()
 
@@ -164,6 +165,7 @@ def seed():
                 articledesc=artikel["articledesc"],
                 articleimgurl=artikel["articleimgurl"],
                 articletext=artikel["articletext"],
+                author_id=1
             )
             artikelobj.create()
 

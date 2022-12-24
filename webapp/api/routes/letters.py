@@ -47,6 +47,7 @@ def create_letter():
 
 # READ (R)
 @letter_routes.route("/all", methods=["GET"])
+@jwt_required()
 def get_letters():
     fetch = Letter.query.all()
     letter_schema = LetterSchema(
@@ -68,6 +69,7 @@ def get_letters():
 
 
 @letter_routes.route("/<int:id>", methods=["GET"])
+@jwt_required()
 def get_specific_letter(id):
     fetch = Letter.query.get_or_404(id)
     letter_schema = LetterSchema(
