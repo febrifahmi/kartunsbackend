@@ -30,6 +30,7 @@ def create_pengumuman():
             pengumumandesc=pengumuman["pengumumandesc"],
             pengumumantext=pengumuman["pengumumantext"],
         )
+        pengumumanobj.create()
         result = pengumuman_schema.dump(pengumumanobj)
         return response_with(
             resp.SUCCESS_201,

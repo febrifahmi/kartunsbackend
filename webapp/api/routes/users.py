@@ -75,8 +75,8 @@ def get_users():
             "updated_at",
         ],
     )
-    user = user_schema.dump(fetch)
-    return response_with(resp.SUCCESS_200, value={"user": user})
+    users = user_schema.dump(fetch)
+    return response_with(resp.SUCCESS_200, value={"users": users})
 
 
 @user_routes.route("/<int:id>", methods=["GET"])

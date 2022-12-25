@@ -12,8 +12,8 @@ class Pengumuman(db.Model):
     pengumumanimgurl = db.Column(db.String(128))
     pengumumandesc = db.Column(db.String(140))
     pengumumantext = db.Column(db.String(500))
-    created_at = fields.String(dump_only=True)
-    updated_at = fields.String(dump_only=True)
+    created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
     # fk
 

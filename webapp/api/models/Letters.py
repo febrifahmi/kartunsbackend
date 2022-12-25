@@ -11,7 +11,7 @@ class Letter(db.Model):
     idletter = db.Column(db.Integer, primary_key=True, autoincrement=True)
     lettertitle = db.Column(db.String(50))
     letternr = db.Column(db.String(20))
-    signimgurl = db.Column(db.String(128))
+    qrcodestring = db.Column(db.String(128))
     letterdesc = db.Column(db.String(140))
     lettertext = db.Column(db.String(1500))
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
@@ -21,13 +21,15 @@ class Letter(db.Model):
     penandatangan_id = db.Column(db.Integer, db.ForeignKey("users.iduser"))
 
     def __init__(
-        self, lettertitle, letternr, signimgurl, letterdesc, lettertext,
+        self, lettertitle, letternr, letterdesc, lettertext,
     ):
         self.lettertitle = lettertitle
         self.letternr = letternr
-        self.signimgurl = signimgurl
         self.letterdesc = letterdesc
         self.lettertext = lettertext
+    
+    def setQRcodeString(self, kode):
+        self.qrcodestring = "{}".format(kode)
 
     def create(self):
         db.session.add(self)
@@ -43,7 +45,7 @@ class LetterSchema(ma.SQLAlchemyAutoSchema):
     idletter = fields.Integer(dump_only=True)
     lettertitle = fields.String(required=True)
     letternr = fields.String(required=True)
-    signimgurl = fields.String(required=True)
+    qrcodestring = fields.String()
     letterdesc = fields.String()
     lettertext = fields.String(required=True)
     created_at = fields.String(dump_only=True)

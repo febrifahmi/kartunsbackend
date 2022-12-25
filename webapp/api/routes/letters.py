@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.Letters import Letter, LetterSchema
 from webapp.api.utils.database import db
+from webapp import qrcode
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -27,10 +28,11 @@ def create_letter():
         letterobj = Letter(
             lettertitle=letter["lettertitle"],
             letternr=letter["letternr"],
-            signimgurl=letter["signimgurl"],
             letterdesc=letter["letterdesc"],
-            lettertext=["lettertext"],
+            lettertext=letter["lettertext"],
         )
+        letterobj.setQRcodeString(current_user + "_" + "_" + letterobj.letternr)
+        letterobj.create()
         result = letter_schema.dump(letterobj)
         return response_with(
             resp.SUCCESS_201,
@@ -56,7 +58,7 @@ def get_letters():
             "idletter",
             "lettertitle",
             "letternr",
-            "signimgurl",
+            "qrcodestring",
             "letterdesc",
             "lettertext",
             "created_at",
@@ -78,7 +80,7 @@ def get_specific_letter(id):
             "idletter",
             "lettertitle",
             "letternr",
-            "signimgurl",
+            "qrcodestring",
             "letterdesc",
             "lettertext",
             "created_at",
@@ -104,8 +106,8 @@ def update_letter(id):
             letterobj.lettertitle = letter["lettertitle"]
         if letter["letternr"] is not None:
             letterobj.letternr = letter["letternr"]
-        if letter["signimgurl"] is not None:
-            letterobj.signimgurl = letter["signimgurl"]
+        if letter["qrcodestring"] is not None:
+            letterobj.qrcodestring = letter["qrcodestring"]
         if letter["letterdesc"] is not None:
             letterobj.letterdesc = letter["letterdesc"]
         if letter["lettertext"] is not None:
