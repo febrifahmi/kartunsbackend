@@ -5,10 +5,7 @@ from hashlib import md5
 from webapp.api.utils.database import db
 from webapp.api.utils.database import ma
 from marshmallow import fields
-# from webapp.api.models.Pakets import PaketSchema
 
-# import hmac to substitute hash checking, after werkzeug.security.safe_str_cm was deprecated in bcrypt check_password_hash implementation
-# import hmac
 
 bcrypt = Bcrypt()
 
@@ -19,7 +16,10 @@ class User(db.Model):
     first_name = db.Column(db.String(40))
     last_name = db.Column(db.String(40))
     email = db.Column(db.String(40))
+    telp = db.Column(db.String(20))
     tentang = db.Column(db.String(1500))
+    angkatan = db.Column(db.String(4))
+    profesi = db.Column(db.String(20))
     is_alumni = db.Column(db.Boolean(), default=0)
     is_pengurus = db.Column(db.Boolean(), default=0)
     is_trainer = db.Column(db.Boolean(), default=0)
@@ -81,7 +81,10 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     first_name = fields.String(required=True)
     last_name = fields.String()
     email = fields.String(required=True)
+    telp = fields.String()
     tentang = fields.String()    
+    angkatan = fields.String()
+    profesi = fields.String()    
     is_alumni = fields.Boolean()
     is_pengurus = fields.Boolean()
     is_trainer = fields.Boolean()

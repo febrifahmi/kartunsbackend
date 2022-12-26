@@ -12,10 +12,10 @@ class Agenda(db.Model):
     agendaimgurl = db.Column(db.String(128))
     agendadesc = db.Column(db.String(140))
     agendatext = db.Column(db.String(500))
-    tanggalmulai = db.Column(db.String(8))
-    tanggalselesai = db.Column(db.String(8))
-    created_at = fields.String(dump_only=True)
-    updated_at = fields.String(dump_only=True)
+    tanggalmulai = db.Column(db.String(10))
+    tanggalselesai = db.Column(db.String(10))
+    created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
 
     # fk

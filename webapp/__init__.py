@@ -7,7 +7,7 @@ from webapp.api.utils.responses import response_with
 import webapp.api.utils.responses as resp
 from flask_jwt_extended import JWTManager
 from webapp.api.utils.seed import seed # nice it works seeding this way and put BCrypt outside init but without app config
-
+from flask_qrcode import QRcode
 
 app = Flask(__name__)
 
@@ -21,6 +21,7 @@ else:
 app.config.from_object(appconfig)
 # bcrypt = Bcrypt(app) // we use Bcrypt directly in User model to avoid circular import while seeding initial data to DB
 jwt = JWTManager(app)
+qrcode = QRcode(app)
 
 # IMPORT ROUTES BLUEPRINT (diimpor setelah seluruh konfigurasi app selesai agar tidak circular import)
 from webapp.api.routes.users import user_routes

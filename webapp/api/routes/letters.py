@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.Letters import Letter, LetterSchema
 from webapp.api.utils.database import db
+from webapp import qrcode
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -26,10 +27,12 @@ def create_letter():
         # need validation in ad creation process
         letterobj = Letter(
             lettertitle=letter["lettertitle"],
-            signimgurl=letter["signimgurl"],
+            letternr=letter["letternr"],
             letterdesc=letter["letterdesc"],
-            lettertext=["lettertext"],
+            lettertext=letter["lettertext"],
         )
+        letterobj.setQRcodeString(current_user + "_" + "_" + letterobj.letternr)
+        letterobj.create()
         result = letter_schema.dump(letterobj)
         return response_with(
             resp.SUCCESS_201,
@@ -46,6 +49,7 @@ def create_letter():
 
 # READ (R)
 @letter_routes.route("/all", methods=["GET"])
+@jwt_required()
 def get_letters():
     fetch = Letter.query.all()
     letter_schema = LetterSchema(
@@ -53,7 +57,8 @@ def get_letters():
         only=[
             "idletter",
             "lettertitle",
-            "signimgurl",
+            "letternr",
+            "qrcodestring",
             "letterdesc",
             "lettertext",
             "created_at",
@@ -66,6 +71,7 @@ def get_letters():
 
 
 @letter_routes.route("/<int:id>", methods=["GET"])
+@jwt_required()
 def get_specific_letter(id):
     fetch = Letter.query.get_or_404(id)
     letter_schema = LetterSchema(
@@ -73,7 +79,8 @@ def get_specific_letter(id):
         only=[
             "idletter",
             "lettertitle",
-            "signimgurl",
+            "letternr",
+            "qrcodestring",
             "letterdesc",
             "lettertext",
             "created_at",
@@ -97,8 +104,10 @@ def update_letter(id):
         letter = letter_schema.load(data, partial=True)
         if letter["lettertitle"] is not None:
             letterobj.lettertitle = letter["lettertitle"]
-        if letter["signimgurl"] is not None:
-            letterobj.signimgurl = letter["signimgurl"]
+        if letter["letternr"] is not None:
+            letterobj.letternr = letter["letternr"]
+        if letter["qrcodestring"] is not None:
+            letterobj.qrcodestring = letter["qrcodestring"]
         if letter["letterdesc"] is not None:
             letterobj.letterdesc = letter["letterdesc"]
         if letter["lettertext"] is not None:

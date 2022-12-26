@@ -32,6 +32,7 @@ def create_agenda():
             tanggalmulai=agenda["tanggalmulai"],
             tanggalselesai=agenda["tanggalselesai"],
         )
+        agendaobj.create()
         result = agenda_schema.dump(agendaobj)
         return response_with(
             resp.SUCCESS_201,

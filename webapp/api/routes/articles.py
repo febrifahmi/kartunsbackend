@@ -31,6 +31,7 @@ def create_article():
             articletext=article["articletext"],
             author_id=article["author_id"],
         )
+        articleobj.create()
         result = article_schema.dump(articleobj)
         return response_with(
             resp.SUCCESS_201,
@@ -62,8 +63,8 @@ def get_article():
             "author_id",
         ],
     )
-    article = article_schema.dump(fetch)
-    return response_with(resp.SUCCESS_200, value={"article": article})
+    articles = article_schema.dump(fetch)
+    return response_with(resp.SUCCESS_200, value={"articles": articles})
 
 
 @article_routes.route("/<int:id>", methods=["GET"])
