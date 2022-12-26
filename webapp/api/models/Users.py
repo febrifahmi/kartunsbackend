@@ -5,10 +5,7 @@ from hashlib import md5
 from webapp.api.utils.database import db
 from webapp.api.utils.database import ma
 from marshmallow import fields
-# from webapp.api.models.Pakets import PaketSchema
 
-# import hmac to substitute hash checking, after werkzeug.security.safe_str_cm was deprecated in bcrypt check_password_hash implementation
-# import hmac
 
 bcrypt = Bcrypt()
 

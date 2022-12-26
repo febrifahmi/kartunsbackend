@@ -7,7 +7,7 @@
 1. Develop kerangka utama aplikasi backend (REST-API) web app KartUNS<br>
     a. Coding model data/struktur data:<br>
         - Ads (**finished**)<br>
-        - AdsSubscriptions (__waitinglist__)<br>
+        - AdsSubscriptions (**finished**)<br>
         - Agendas (**finished**)<br>
         - Announcements (**finished**)<br>
         - Articles (**finished**)<br>
@@ -21,8 +21,9 @@
         - Reactions (**finished**)<br>
         - TrainingMaterials (**finished**)<br>
         - Trainings (**finished**)<br>
-        - TrainingSubscriptions (__waitinglist__)<br>
+        - TrainingSubscriptions (**finished**)<br>
         - Users (**finished**)<br>
+        - SuratMasuk (**finished**)<br>
     b. Coding route (proses bisnis aplikasi)<br>
         - ads (**finished:CRUD**)<br>
         - agendas (**finished:CRUD**)<br>
@@ -38,5 +39,6 @@
         - trainingmaterials (**finished:CRUD**)<br>
         - trainings (**finished:CRUD**)<br>
         - users (**finished:CRUD**)<br>
+        - suratmasuks (**finished:CRUD**)<br>
 2. Develop automated API testing dengan Postman<br>
 3. Pembuatan Dokumentasi REST-API dengan Postman<br>
