@@ -34,6 +34,7 @@ def create_offer():
             offertext=offer["offertext"],
             companylogo=offer["companylogo"]
         )
+        offerobj.author_id = offer["author_id"]
         # save to db
         offerobj.create()
         # cek apakah file yang diupload sesuai daftar jenis file yg diijinkan
@@ -65,6 +66,7 @@ def get_offers():
             "offertext",
             "created_at",
             "updated_at",
+            "author_id",
         ],
     )
     offers = offer_schema.dump(fetch)
@@ -84,6 +86,7 @@ def get_specific_offer(id):
             "offertext",
             "created_at",
             "updated_at",
+            "author_id",
         ],
     )
     offer = offer_schema.dump(fetch)

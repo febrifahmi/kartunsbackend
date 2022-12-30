@@ -16,6 +16,7 @@ class JobOffer(db.Model):
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
     # fk
+    author_id = db.Column(db.Integer, db.ForeignKey("users.iduser"))
 
     def __init__(
         self, offertitle, offerdesc, offertext, companylogo
@@ -43,3 +44,4 @@ class JobOfferSchema(ma.SQLAlchemyAutoSchema):
     offertext = fields.String(required=True)
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
+    author_id = fields.Integer()
