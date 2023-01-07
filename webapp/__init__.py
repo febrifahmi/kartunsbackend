@@ -42,6 +42,7 @@ from webapp.api.routes.trainings import training_routes
 from webapp.api.routes.trainingsubs import tsub_routes
 from webapp.api.routes.members import member_routes
 from webapp.api.routes.joboffers import joboffer_routes
+from webapp.api.routes.suratmasuks import suratmasuk_routes
 
 
 # REG BLUEPRINT
@@ -63,6 +64,7 @@ app.register_blueprint(training_routes, url_prefix="/api/trainings")
 app.register_blueprint(tsub_routes, url_prefix="/api/tsubs")
 app.register_blueprint(member_routes, url_prefix="/api/members")
 app.register_blueprint(joboffer_routes, url_prefix="/api/joboffers")
+app.register_blueprint(suratmasuk_routes, url_prefix="/api/suratmasuks")
 
 
 

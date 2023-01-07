@@ -30,7 +30,10 @@ def create_ads():
             adcampaigndesc=ad["adcampaigndesc"],
             adcampaigntext=ad["adcampaigntext"],
             nrdaysserved=ad["nrdaysserved"],
+            kodetagihan=ad["kodetagihan"],
         )
+        adobj.advertiser_id=ad["advertiser_id"]
+        adobj.create()
         result = ad_schema.dump(adobj)
         return response_with(
             resp.SUCCESS_201,
@@ -58,6 +61,11 @@ def get_ads():
             "adcampaigndesc",
             "adcampaigntext",
             "nrdaysserved",
+            "kodetagihan",
+            "kodebayar",
+            "statusbayar",
+            "tanggalbayar",
+            "is_paid",
             "is_blocked",
             "created_at",
             "updated_at",
@@ -80,6 +88,11 @@ def get_specific_ad(id):
             "adcampaigndesc",
             "adcampaigntext",
             "nrdaysserved",
+            "kodetagihan",
+            "kodebayar",
+            "statusbayar",
+            "tanggalbayar",
+            "is_paid",
             "is_blocked",
             "created_at",
             "updated_at",
@@ -108,6 +121,14 @@ def update_ad(id):
             adobj.adcampaigndesc = ad["adcampaigndesc"]
         if ad["nrdaysserved"] is not None:
             adobj.nrdaysserved = ad["nrdaysserved"]
+        if ad["kodebayar"] is not None:
+            adobj.kodebayar = ad["kodebayar"]
+        if ad["statusbayar"] is not None:
+            adobj.statusbayar = ad["statusbayar"]
+        if ad["tanggalbayar"] is not None:
+            adobj.tanggalbayar = ad["tanggalbayar"]
+        if ad["is_paid"] is not None:
+            adobj.is_paid = ad["is_paid"]
         if ad["is_blocked"] is not None:
             adobj.is_blocked = ad["is_blocked"]
         db.session.commit()

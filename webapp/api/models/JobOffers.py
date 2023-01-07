@@ -12,6 +12,7 @@ class JobOffer(db.Model):
     companylogo = db.Column(db.String(128))
     offerdesc = db.Column(db.String(140))
     offertext = db.Column(db.String(800))
+    is_approved = db.Column(db.Boolean)
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
@@ -42,6 +43,7 @@ class JobOfferSchema(ma.SQLAlchemyAutoSchema):
     companylogo = fields.String()
     offerdesc = fields.String(required=True)
     offertext = fields.String(required=True)
+    is_approved = fields.Boolean()
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
     author_id = fields.Integer()

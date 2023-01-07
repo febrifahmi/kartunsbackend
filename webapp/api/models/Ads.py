@@ -20,6 +20,11 @@ class Ad(db.Model):
     adcampaigndesc = db.Column(db.String(140))
     adcampaigntext = db.Column(db.String(800))
     nrdaysserved = db.Column(db.Integer, default=7)
+    kodetagihan = db.Column(db.String())
+    kodebayar = db.Column(db.String())
+    statusbayar = db.Column(db.String())
+    tanggalbayar = db.Column(db.Integer())
+    is_paid = db.Column(db.Boolean(), default=0)
     is_blocked = db.Column(db.Boolean(), default=0)
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -28,13 +33,14 @@ class Ad(db.Model):
     advertiser_id = db.Column(db.Integer, db.ForeignKey("users.iduser"))
 
     def __init__(
-        self, adcampaigntitle, adimgurl, adcampaigndesc, adcampaigntext, nrdaysserved
+        self, adcampaigntitle, adimgurl, adcampaigndesc, adcampaigntext, nrdaysserved, kodetagihan
     ):
         self.adcampaigntitle = adcampaigntitle
         self.adimgurl = adimgurl
         self.adcampaigndesc = adcampaigndesc
         self.adcampaigntext = adcampaigntext
         self.nrdaysserved = nrdaysserved
+        self.kodetagihan = kodetagihan
 
     def create(self):
         db.session.add(self)
@@ -53,6 +59,11 @@ class AdSchema(ma.SQLAlchemyAutoSchema):
     adcampaigndesc = fields.String()
     adcampaigntext = fields.String(required=True)
     nrdaysserved = fields.Integer()
+    kodetagihan = fields.String(required=True)
+    kodebayar = fields.String()
+    statusbayar = fields.String()
+    tanggalbayar = fields.Integer()
+    is_paid = fields.Boolean()
     is_blocked = fields.Boolean()
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
