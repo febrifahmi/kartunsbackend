@@ -35,6 +35,7 @@ def create_offer():
             companylogo=offer["companylogo"]
         )
         offerobj.author_id = offer["author_id"]
+        offerobj.is_approved = 0
         # save to db
         offerobj.create()
         # cek apakah file yang diupload sesuai daftar jenis file yg diijinkan
@@ -64,6 +65,7 @@ def get_offers():
             "companylogo",
             "offerdesc",
             "offertext",
+            "is_approved",
             "created_at",
             "updated_at",
             "author_id",
@@ -84,6 +86,7 @@ def get_specific_offer(id):
             "companylogo",
             "offerdesc",
             "offertext",
+            "is_approved",
             "created_at",
             "updated_at",
             "author_id",
@@ -109,6 +112,10 @@ def update_offer(id):
             offerobj.companylogo = offer["companylogo"]
         if offer["offerdesc"] is not None:
             offerobj.offerdesc = offer["offerdesc"]
+        if offer["offertext"] is not None:
+            offerobj.offertext = offer["offertext"]
+        if offer["is_approved"] is not None:
+            offerobj.is_approved = offer["is_approved"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,
