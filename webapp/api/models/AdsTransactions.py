@@ -9,7 +9,7 @@ from marshmallow import fields
 class AdTransaction(db.Model):
     __tablename__ = "adtransaction"
     idadtransaction = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    statuscode = db.Column(db.String())
+    status_code = db.Column(db.String())
     status_message = db.Column(db.String())
     transaction_id = db.Column(db.String())
     order_id = db.Column(db.String())
@@ -19,7 +19,10 @@ class AdTransaction(db.Model):
     payment_type = db.Column(db.String())
     transaction_time = db.Column(db.String())
     transaction_status = db.Column(db.String())
+    signature_key = db.Column(db.String())
+    expire_time = db.Column(db.String())
     va_number = db.Column(db.String())
+    bank = db.Column(db.String())
     fraud_status = db.Column(db.String())
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -28,9 +31,9 @@ class AdTransaction(db.Model):
 
     def __init__(
         self,
-        statuscode, status_message, transaction_id, order_id, merchant_id, gross_amount, currency, payment_type, transaction_time, transaction_status, va_number, fraud_status
+        status_code, status_message, transaction_id, order_id, merchant_id, gross_amount, currency, payment_type, transaction_time, transaction_status, fraud_status, signature_key, expire_time, va_number, bank
     ):
-        self.statuscode = statuscode
+        self.status_code = status_code
         self.status_message = status_message
         self.transaction_id = transaction_id
         self.order_id = order_id
@@ -40,8 +43,11 @@ class AdTransaction(db.Model):
         self.payment_type = payment_type
         self.transaction_time = transaction_time
         self.transaction_status = transaction_status
-        self.va_number = va_number
         self.fraud_status = fraud_status
+        self.signature_key = signature_key
+        self.expire_time = expire_time
+        self.va_number = va_number
+        self.bank = bank
 
     def create(self):
         db.session.add(self)
@@ -63,9 +69,12 @@ class AdTransactionSchema(ma.SQLAlchemyAutoSchema):
     gross_amount = fields.String()
     currency = fields.String()
     payment_type = fields.String()
+    signature_key = fields.String()
+    expire_time = fields.String()
     transaction_time = fields.String()
     transaction_status = fields.String()
     va_number = fields.String()
+    bank = fields.String()
     fraud_status = fields.String()
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)

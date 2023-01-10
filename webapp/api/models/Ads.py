@@ -25,7 +25,7 @@ class Ad(db.Model):
     statusbayar = db.Column(db.String())
     tanggalbayar = db.Column(db.Integer())
     is_paid = db.Column(db.Boolean(), default=0)
-    is_blocked = db.Column(db.Boolean(), default=0)
+    is_blocked = db.Column(db.Boolean(), default=1)
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
