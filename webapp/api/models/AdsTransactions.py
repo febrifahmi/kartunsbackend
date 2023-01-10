@@ -24,6 +24,8 @@ class AdTransaction(db.Model):
     va_number = db.Column(db.String())
     bank = db.Column(db.String())
     fraud_status = db.Column(db.String())
+    settlement_time = db.Column(db.String())
+    paid_at = db.Column(db.String())
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
@@ -76,5 +78,7 @@ class AdTransactionSchema(ma.SQLAlchemyAutoSchema):
     va_number = fields.String()
     bank = fields.String()
     fraud_status = fields.String()
+    settlement_time = fields.String()
+    paid_at = fields.String()
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
