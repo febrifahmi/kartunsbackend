@@ -62,9 +62,6 @@ def get_ads():
             "adcampaigntext",
             "nrdaysserved",
             "kodetagihan",
-            "kodebayar",
-            "statusbayar",
-            "tanggalbayar",
             "is_paid",
             "is_blocked",
             "created_at",
@@ -89,9 +86,6 @@ def get_specific_ad(id):
             "adcampaigntext",
             "nrdaysserved",
             "kodetagihan",
-            "kodebayar",
-            "statusbayar",
-            "tanggalbayar",
             "is_paid",
             "is_blocked",
             "created_at",
@@ -121,12 +115,6 @@ def update_ad(id):
             adobj.adcampaigndesc = ad["adcampaigndesc"]
         if ad["nrdaysserved"] is not None:
             adobj.nrdaysserved = ad["nrdaysserved"]
-        if ad["kodebayar"] is not None:
-            adobj.kodebayar = ad["kodebayar"]
-        if ad["statusbayar"] is not None:
-            adobj.statusbayar = ad["statusbayar"]
-        if ad["tanggalbayar"] is not None:
-            adobj.tanggalbayar = ad["tanggalbayar"]
         if ad["is_paid"] is not None:
             adobj.is_paid = ad["is_paid"]
         if ad["is_blocked"] is not None:

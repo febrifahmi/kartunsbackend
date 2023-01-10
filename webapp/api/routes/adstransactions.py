@@ -3,7 +3,9 @@ from flask.globals import request
 from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.AdsTransactions import AdTransaction, AdTransactionSchema
+from webapp.api.models.Ads import Ad, AdSchema
 from webapp.api.utils.database import db
+import json
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -43,24 +45,40 @@ def create_adtransaction():
             many=True,
             only=[
                 "order_id",
+                "idadtransaction",
             ],
         )
+        existingads = Ad.query.all()
+        existingads_schema = AdSchema(
+            many=True,
+            only=[
+                "kodetagihan",
+                "idad",
+            ],
+        )
+        ads = existingads_schema.dump(existingads)
+        for item in ads:
+            if item["kodetagihan"] == adtransactionobj.order_id and adtransactionobj.transaction_status == "settlement":
+                adobj = Ad.query.get_or_404(item["idad"])
+                adobj.is_blocked = 0
+                db.session.commit()
         existingtransactions = existingtransaction_schema.dump(existingtransaction)
         transactionexist = False
         for item in existingtransactions:
             if item["order_id"] == adtransactionobj.order_id:
                 update_adtransaction(item["idadtransaction"])
                 transactionexist = True
+                result = adtransaction_schema.dump(adtransactionobj)
         if transactionexist == False:
             adtransactionobj.create()
             result = adtransaction_schema.dump(adtransactionobj)
-            return response_with(
-                resp.SUCCESS_201,
-                value={
-                    "adtransaction": result,
-                    "message": "An ad transaction has been created successfully!",
-                },
-            )
+        return response_with(
+            resp.SUCCESS_201,
+            value={
+                "adtransaction": result,
+                "message": "An ad transaction has been created successfully!",
+            },
+        )
     except Exception as e:
         print(e)
         return response_with(resp.INVALID_INPUT_422)
@@ -127,39 +145,38 @@ def update_adtransaction(id):
     try:
         adtransactionobj = AdTransaction.query.get_or_404(id)
         data = request.get_json()
-        adtransaction_schema = AdTransactionSchema()
-        adtransaction = adtransaction_schema.load(data, partial=True)
-        if adtransaction["status_code"] is not None:
-            adtransactionobj.status_code = adtransaction["status_code"]
-        if adtransaction["status_message"] is not None:
-            adtransactionobj.status_message = adtransaction["status_message"]
-        if adtransaction["transaction_id"] is not None:
-            adtransactionobj.transaction_id = adtransaction["transaction_id"]
-        if adtransaction["gross_amount"] is not None:
-            adtransactionobj.gross_amount = adtransaction["gross_amount"]
-        if adtransaction["currency"] is not None:
-            adtransactionobj.currency = adtransaction["currency"]
-        if adtransaction["payment_type"] is not None:
-            adtransactionobj.payment_type = adtransaction["payment_type"]
-        if adtransaction["signature_key"] is not None:
-            adtransactionobj.signature_key = adtransaction["signature_key"]
-        if adtransaction["expire_time"] is not None:
-            adtransactionobj.expire_time = adtransaction["expire_time"]
-        if adtransaction["transaction_time"] is not None:
-            adtransactionobj.transaction_time = adtransaction["transaction_time"]
-        if adtransaction["transaction_status"] is not None:
-            adtransactionobj.transaction_status = adtransaction["transaction_status"]
-        if adtransaction["fraud_status"] is not None:
-            adtransactionobj.fraud_status = adtransaction["fraud_status"]
-        if adtransaction["va_number"] is not None:
-            adtransactionobj.va_number = adtransaction["va_number"]
-        if adtransaction["bank"] is not None:
-            adtransactionobj.bank = adtransaction["bank"]
+        if data["status_code"] is not None:
+            adtransactionobj.status_code = data["status_code"]
+        if data["status_message"] is not None:
+            adtransactionobj.status_message = data["status_message"]
+        if data["transaction_id"] is not None:
+            adtransactionobj.transaction_id = data["transaction_id"]
+        if data["gross_amount"] is not None:
+            adtransactionobj.gross_amount = data["gross_amount"]
+        if data["currency"] is not None:
+            adtransactionobj.currency = data["currency"]
+        if data["payment_type"] is not None:
+            adtransactionobj.payment_type = data["payment_type"]
+        if data["signature_key"] is not None:
+            adtransactionobj.signature_key = data["signature_key"]
+        if data["expire_time"] is not None:
+            adtransactionobj.expire_time = data["expire_time"]
+        if data["transaction_time"] is not None:
+            adtransactionobj.transaction_time = data["transaction_time"]
+        if data["transaction_status"] is not None:
+            adtransactionobj.transaction_status = data["transaction_status"]
+        if data["fraud_status"] is not None:
+            adtransactionobj.fraud_status = data["fraud_status"]
+        if data["va_numbers"] is not None:
+            adtransactionobj.va_number = data["va_numbers"][0]["va_number"]
+        if data["va_numbers"] is not None:
+            adtransactionobj.bank = data["va_numbers"][0]["bank"]
+        if data["settlement_time"] is not None:
+            adtransactionobj.settlement_time = data["settlement_time"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,
             value={
-                "adtransaction": adtransaction,
                 "message": "Ad transaction details successfully updated!",
             },
         )
@@ -178,6 +195,8 @@ def delete_adsub(id):
     db.session.commit()
     return response_with(
         resp.SUCCESS_200,
-        value={"logged_in_as": current_user, "message": "Ads transaction successfully deleted!"},
+        value={
+            "logged_in_as": current_user,
+            "message": "Ads transaction successfully deleted!",
+        },
     )
-
