@@ -48,7 +48,7 @@ from webapp.api.routes.suratmasuks import suratmasuk_routes
 # REG BLUEPRINT
 app.register_blueprint(user_routes, url_prefix="/api/users")
 app.register_blueprint(ad_routes, url_prefix="/api/ads")
-app.register_blueprint(adtransaction_routes, url_prefix="/api/adsubs")
+app.register_blueprint(adtransaction_routes, url_prefix="/api/adtransaction")
 app.register_blueprint(pengurus_routes, url_prefix="/api/pengurus")
 app.register_blueprint(agenda_routes, url_prefix="/api/agendas")
 app.register_blueprint(pengumuman_routes, url_prefix="/api/announcements")
