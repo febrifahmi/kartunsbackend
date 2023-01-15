@@ -8,12 +8,13 @@ import webapp.api.utils.responses as resp
 from flask_jwt_extended import JWTManager
 from webapp.api.utils.seed import seed # nice it works seeding this way and put BCrypt outside init but without app config
 from flask_qrcode import QRcode
+from sqlalchemy import create_engine
 
 app = Flask(__name__)
 
-if os.environ.get("WORK_ENV") == "PROD":
+if os.environ.get("ENV") == "PROD":
     appconfig = ProductionConfig
-elif os.environ.get("WORK_ENV") == "TEST":
+elif os.environ.get("ENV") == "TEST":
     appconfig = TestingConfig
 else:
     appconfig = DevelopmentConfig
@@ -94,7 +95,7 @@ def not_found(e):
 
 db.init_app(app)
 with app.app_context():
-    """Register CLI commands."""
+    """to do: If using mysql, create db if not exist."""
     db.create_all()
     seed() # nice it works, seeding this way (already fixed in seed.py: double adding admin when there is existing admin in table)
 

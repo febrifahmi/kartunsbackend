@@ -18,7 +18,7 @@ class Config(object):
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL"
-    ) or "sqlite:///" + os.path.join(basedir, "../../../production.db")
+        ) or "sqlite:///" + os.path.join(basedir, "../../../production.db")
     SECRET_KEY = "SECRET-KEY"
     SECURITY_PASSWORD_SALT = "PASSWORD-SALT"
 
@@ -26,8 +26,8 @@ class ProductionConfig(Config):
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DEVDATABASE_URL"
-    ) or "sqlite:///" + os.path.join(basedir, "../../../development.db")
+        "DATABASE_URL"
+        ) or "sqlite:///" + os.path.join(basedir, "../../../development.db")
     SQLALCHEMY_ECHO = False
 
 

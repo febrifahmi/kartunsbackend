@@ -29,6 +29,15 @@ def create_member():
             validfrom=member["validfrom"],
             validthru=member["validthru"],
         )
+        memberobj.alamat=member["alamat"]
+        memberobj.notelp=member["notelp"]
+        memberobj.pekerjaan=member["pekerjaan"]
+        memberobj.perusahaan=member["perusahaan"]
+        memberobj.kantor=member["kantor"]
+        memberobj.alamatkantor=member["alamatkantor"]
+        memberobj.mulaibekerja=member["mulaibekerja"]
+        memberobj.user_id=member["user_id"]
+        memberobj.create()
         result = member_schema.dump(memberobj)
         return response_with(
             resp.SUCCESS_201,
@@ -53,6 +62,13 @@ def get_members():
             "nomoranggota",
             "validfrom",
             "validthru",
+            "alamat",
+            "notelp",
+            "pekerjaan",
+            "perusahaan",
+            "kantor",
+            "alamatkantor",
+            "mulaibekerja",
             "user_id",
         ],
     )
@@ -70,6 +86,13 @@ def get_specific_member(id):
             "nomoranggota",
             "validfrom",
             "validthru",
+            "alamat",
+            "notelp",
+            "pekerjaan",
+            "perusahaan",
+            "kantor",
+            "alamatkantor",
+            "mulaibekerja",
             "user_id",
         ],
     )
@@ -91,6 +114,20 @@ def update_member(id):
             memberobj.validfrom = member["validfrom"]
         if member["validthru"] is not None:
             memberobj.validthru = member["validthru"]
+        if member["alamat"] is not None:
+            memberobj.alamat = member["alamat"]
+        if member["notelp"] is not None:
+            memberobj.notelp = member["notelp"]
+        if member["pekerjaan"] is not None:
+            memberobj.pekerjaan = member["pekerjaan"]
+        if member["perusahaan"] is not None:
+            memberobj.perusahaan = member["perusahaan"]
+        if member["kantor"] is not None:
+            memberobj.kantor = member["kantor"]
+        if member["alamatkantor"] is not None:
+            memberobj.alamatkantor = member["alamatkantor"]
+        if member["mulaibekerja"] is not None:
+            memberobj.mulaibekerja = member["mulaibekerja"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,
