@@ -30,6 +30,9 @@ def create_letter():
             letternr=letter["letternr"],
             letterdesc=letter["letterdesc"],
             lettertext=letter["lettertext"],
+            lampiran=letter["lampiran"],
+            kota=letter["kota"],
+            kepada=letter["kepada"],
         )
         letterobj.setQRcodeString(current_user + "_" + "_" + letterobj.letternr)
         letterobj.create()
@@ -61,6 +64,9 @@ def get_letters():
             "qrcodestring",
             "letterdesc",
             "lettertext",
+            "lampiran",
+            "kota",
+            "kepada",
             "created_at",
             "updated_at",
             "penandatangan_id",
@@ -83,6 +89,9 @@ def get_specific_letter(id):
             "qrcodestring",
             "letterdesc",
             "lettertext",
+            "lampiran",
+            "kota",
+            "kepada",
             "created_at",
             "updated_at",
             "penandatangan_id",
@@ -112,6 +121,12 @@ def update_letter(id):
             letterobj.letterdesc = letter["letterdesc"]
         if letter["lettertext"] is not None:
             letterobj.lettertext = letter["lettertext"]
+        if letter["lampiran"] is not None:
+            letterobj.lampiran = letter["lampiran"]
+        if letter["kota"] is not None:
+            letterobj.kota = letter["kota"]
+        if letter["kepada"] is not None:
+            letterobj.kepada = letter["kepada"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

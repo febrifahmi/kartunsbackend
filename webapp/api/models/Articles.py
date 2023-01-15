@@ -11,7 +11,7 @@ class Article(db.Model):
     articletitle = db.Column(db.String(50))
     articleimgurl = db.Column(db.String(128))
     articledesc = db.Column(db.String(140))
-    articletext = db.Column(db.String())
+    articletext = db.Column(db.String(15000))
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
