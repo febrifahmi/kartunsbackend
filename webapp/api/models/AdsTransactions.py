@@ -20,7 +20,7 @@ class AdTransaction(db.Model):
     transaction_time = db.Column(db.String)
     transaction_status = db.Column(db.String)
     signature_key = db.Column(db.String)
-    expire_time = db.Column(db.String)
+    expiry_time = db.Column(db.String)
     va_number = db.Column(db.String)
     bank = db.Column(db.String)
     fraud_status = db.Column(db.String)
@@ -33,7 +33,7 @@ class AdTransaction(db.Model):
 
     def __init__(
         self,
-        status_code, status_message, transaction_id, order_id, merchant_id, gross_amount, currency, payment_type, transaction_time, transaction_status, fraud_status, signature_key, expire_time, va_number, bank
+        status_code, status_message, transaction_id, order_id, merchant_id, gross_amount, currency, payment_type, transaction_time, transaction_status, fraud_status, signature_key, expiry_time, va_number, bank
     ):
         self.status_code = status_code
         self.status_message = status_message
@@ -47,7 +47,7 @@ class AdTransaction(db.Model):
         self.transaction_status = transaction_status
         self.fraud_status = fraud_status
         self.signature_key = signature_key
-        self.expire_time = expire_time
+        self.expiry_time = expiry_time
         self.va_number = va_number
         self.bank = bank
 
@@ -72,7 +72,7 @@ class AdTransactionSchema(ma.SQLAlchemyAutoSchema):
     currency = fields.String()
     payment_type = fields.String()
     signature_key = fields.String()
-    expire_time = fields.String()
+    expiry_time = fields.String()
     transaction_time = fields.String()
     transaction_status = fields.String()
     va_number = fields.String()

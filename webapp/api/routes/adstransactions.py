@@ -32,13 +32,15 @@ def create_adtransaction():
             currency=data["currency"],
             payment_type=data["payment_type"],
             signature_key=data["signature_key"],
-            expire_time=data["expire_time"],
+            expiry_time=data["expiry_time"],
             transaction_time=data["transaction_time"],
             transaction_status=data["transaction_status"],
             fraud_status=data["fraud_status"],
             va_number=data["va_numbers"][0]["va_number"],
             bank=data["va_numbers"][0]["bank"],
         )
+        if data["settlement_time"] is not None:
+            adtransactionobj.settlement_time=data["settlement_time"]
         print("Object: ", adtransactionobj)
         existingtransaction = AdTransaction.query.all()
         existingtransaction_schema = AdTransactionSchema(
@@ -100,7 +102,7 @@ def get_adtransaction():
             "currency",
             "payment_type",
             "signature_key",
-            "expire_time",
+            "expiry_time",
             "transaction_time",
             "transaction_status",
             "fraud_status",
@@ -127,7 +129,7 @@ def get_specific_adtransaction(id):
             "currency",
             "payment_type",
             "signature_key",
-            "expire_time",
+            "expiry_time",
             "transaction_time",
             "transaction_status",
             "fraud_status",
@@ -159,8 +161,8 @@ def update_adtransaction(id):
             adtransactionobj.payment_type = data["payment_type"]
         if data["signature_key"] is not None:
             adtransactionobj.signature_key = data["signature_key"]
-        if data["expire_time"] is not None:
-            adtransactionobj.expire_time = data["expire_time"]
+        if data["expiry_time"] is not None:
+            adtransactionobj.expiry_time = data["expiry_time"]
         if data["transaction_time"] is not None:
             adtransactionobj.transaction_time = data["transaction_time"]
         if data["transaction_status"] is not None:
