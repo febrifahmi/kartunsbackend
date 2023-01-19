@@ -9,7 +9,7 @@ class Feed(db.Model):
     __tablename__ = "feeds"
     idfeed = db.Column(db.Integer, primary_key=True, autoincrement=True)
     feedtext = db.Column(db.String(140))
-    reply_to_feed_id = db.Column(db.String())
+    reply_to_feed_id = db.Column(db.String(), default="")
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
@@ -19,9 +19,10 @@ class Feed(db.Model):
     # relationship
 
     def __init__(
-        self, feedtext
+        self, feedtext, feed_author_id
     ):
         self.feedtext = feedtext
+        self.feed_author_id = feed_author_id
 
     def create(self):
         db.session.add(self)
