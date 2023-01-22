@@ -10,6 +10,7 @@ from webapp.api.utils.seed import seed # nice it works seeding this way and put 
 from flask_qrcode import QRcode
 from sqlalchemy import create_engine
 
+
 app = Flask(__name__)
 
 if os.environ.get("ENV") == "PROD":
@@ -99,7 +100,8 @@ db.init_app(app)
 with app.app_context():
     """to do: If using mysql, create db if not exist."""
     db.create_all()
-    seed() # nice it works, seeding this way (already fixed in seed.py: double adding admin when there is existing admin in table)
+    #seed() # nice it works, seeding this way (already fixed in seed.py: double adding admin when there is existing admin in table)
+    app.cli.add_command(seed) # instead of seeding directly up which causes error in pipenv click when running uwsgi, we register custom flask cli
 
 if __name__ == "__main__":
     app.run(port=5000, host="0.0.0.0", use_reloader=False)
