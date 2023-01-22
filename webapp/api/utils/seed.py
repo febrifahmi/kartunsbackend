@@ -3,8 +3,10 @@ from webapp.api.models.Users import User, UserSchema
 from webapp.api.models.Articles import Article, ArticleSchema
 from webapp.api.utils import responses as resp
 from webapp.api.utils.responses import response_with
+import click
 
 
+@click.command()
 @with_appcontext
 def seed():
     """Seed the database."""
