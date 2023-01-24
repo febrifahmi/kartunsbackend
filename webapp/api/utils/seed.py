@@ -5,11 +5,9 @@ from webapp.api.utils import responses as resp
 from webapp.api.utils.responses import response_with
 import click
 
-
-@click.command()
 @with_appcontext
-def seed():
-    """Seed the database."""
+def seedAdminUser():
+    """Seed default admin user data."""
     try:
         # seed user admin
         adminexist = 0
@@ -52,23 +50,25 @@ def seed():
             userobj.is_admin = user["is_admin"]
             userobj.avatar(48)
             userobj.create()
-            user_schema = UserSchema(
-                only=["username", "first_name", "last_name", "email", "is_admin"]
-            )  # definisikan ulang user_schema tanpa memasukkan plain password sehingga di exclude dari result/API response
-            result = user_schema.dump(user)
-            return response_with(
-                resp.SUCCESS_201,
-                value={
-                    "status": "success",
-                    "user": result,
-                    "message": "An account has been created for {} successfully!".format(
-                        user["email"]
-                    ),
-                },
-            )
+    except Exception as e:
+        print(e)
+        return response_with(resp.INVALID_INPUT_422)
+
+@with_appcontext
+def seedPengurusUser():
+    """Seed default pengurus user data."""
+    try:
         # seed user pengurus
         adapengurus = 0
         fetch = User.query.all()
+        existinguserschema = UserSchema(
+            many=True,
+            only=[
+                "iduser",
+                "username",
+                "email",
+            ],
+        )
         existinguser = existinguserschema.dump(fetch)
         for item in existinguser:
             if item["username"] == "pengurus":
@@ -101,7 +101,14 @@ def seed():
             userobj.is_admin = user["is_admin"]
             userobj.avatar(48)
             userobj.create()
+    except Exception as e:
+        print(e)
+        return response_with(resp.INVALID_INPUT_422)
 
+@with_appcontext
+def seedArtikelData():
+    """Seed default artikel data."""
+    try:
         # seed artikel (generate article using ChatGPT)
         # artikel #1
         artikelexist = 0
@@ -174,7 +181,20 @@ def seed():
         # artikel #3
 
         # seed cover
+    
+    except Exception as e:
+        print(e)
+        return response_with(resp.INVALID_INPUT_422)
 
+
+@click.command()
+@with_appcontext
+def seed():
+    """Seed the database."""
+    try:
+        seedAdminUser()
+        seedPengurusUser()
+        seedArtikelData()
     except Exception as e:
         print(e)
         return response_with(resp.INVALID_INPUT_422)
