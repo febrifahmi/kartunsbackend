@@ -94,7 +94,7 @@ def server_error(e):
 def not_found(e):
     logging.error(e)
     return response_with(resp.SERVER_ERROR_404)
-
+    
 
 db.init_app(app)
 with app.app_context():
