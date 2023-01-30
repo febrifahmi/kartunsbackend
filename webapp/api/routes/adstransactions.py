@@ -39,7 +39,7 @@ def create_adtransaction():
             va_number=data["va_numbers"][0]["va_number"],
             bank=data["va_numbers"][0]["bank"],
         )
-        if data["settlement_time"]:
+        if "settlement_time" in data:
             adtransactionobj.settlement_time=data["settlement_time"]
         print("Object: ", adtransactionobj)
         existingtransaction = AdTransaction.query.all()
