@@ -75,6 +75,6 @@ def response_with(response, value=None, message=None, error=None, headers={}, pa
 
     headers.update({'Access-Control-Allow-Origin': 'localhost'})
     headers.update({'Content-Type': 'application/json; charset=utf-8'})
-    headers.update({'server': 'SimProcu API'})
+    headers.update({'server': 'KartUNS API'})
 
     return make_response(jsonify(result), response['http_code'], headers)
