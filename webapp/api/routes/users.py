@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.Users import User, UserSchema
 from webapp.api.utils.database import db
+import traceback
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -115,20 +116,22 @@ def update_user(id):
         data = request.get_json()
         user_schema = UserSchema()
         user = user_schema.load(data, partial=True)
-        if user["username"] is not None:
+        if "username" in user and user["username"] is not None:
             userobj.username = user["username"]
-        if user["first_name"] is not None:
+        if "first_name" in user and user["first_name"] is not None:
             userobj.first_name = user["first_name"]
-        if user["last_name"] is not None:
+        if "last_name" in user and user["last_name"] is not None:
             userobj.last_name = user["last_name"]
-        if user["email"] is not None:
+        if "email" in user and user["email"] is not None:
             userobj.email = user["email"]
-        if user["tentang"] is not None:
+        if "tentang" in user and user["tentang"] is not None:
             userobj.tentang = user["tentang"]
-        if user["is_alumni"] is not None:
-            userobj.role = user["is_alumni"]
-        if user["is_pengurus"] is not None:
-            userobj.role = user["is_pengurus"]
+        if "is_alumni" in user and user["is_alumni"] is not None:
+            userobj.is_alumni = user["is_alumni"]
+        if "is_pengurus" in user and user["is_pengurus"] is not None:
+            userobj.is_pengurus = user["is_pengurus"]
+        if "password" in user and user["password"] is not None:
+            userobj.set_password(user["password"])
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,
@@ -140,6 +143,7 @@ def update_user(id):
         )
     except Exception as e:
         print(e)
+        traceback.print_exc()
         return response_with(resp.INVALID_INPUT_422)
 
 
