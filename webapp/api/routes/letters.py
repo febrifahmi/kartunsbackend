@@ -111,21 +111,21 @@ def update_letter(id):
         data = request.get_json()
         letter_schema = LetterSchema()
         letter = letter_schema.load(data, partial=True)
-        if letter["lettertitle"] is not None:
+        if "lettertitle" in letter and letter["lettertitle"] is not None:
             letterobj.lettertitle = letter["lettertitle"]
-        if letter["letternr"] is not None:
+        if "letternr" in letter and letter["letternr"] is not None:
             letterobj.letternr = letter["letternr"]
-        if letter["qrcodestring"] is not None:
+        if "qrcodestring" in letter and letter["qrcodestring"] is not None:
             letterobj.qrcodestring = letter["qrcodestring"]
-        if letter["letterdesc"] is not None:
+        if "letterdesc" in letter and letter["letterdesc"] is not None:
             letterobj.letterdesc = letter["letterdesc"]
-        if letter["lettertext"] is not None:
+        if "lettertext" in letter and letter["lettertext"] is not None:
             letterobj.lettertext = letter["lettertext"]
-        if letter["lampiran"] is not None:
+        if "lampiran" in letter and letter["lampiran"] is not None:
             letterobj.lampiran = letter["lampiran"]
-        if letter["kota"] is not None:
+        if "kota" in letter and letter["kota"] is not None:
             letterobj.kota = letter["kota"]
-        if letter["kepada"] is not None:
+        if "kepada" in letter and letter["kepada"] is not None:
             letterobj.kepada = letter["kepada"]
         db.session.commit()
         return response_with(

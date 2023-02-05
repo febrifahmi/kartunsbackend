@@ -100,11 +100,11 @@ def update_cover(id):
         data = request.get_json()
         cover_schema = CoverSchema()
         cover = cover_schema.load(data, partial=True)
-        if cover["covertitle"] is not None:
+        if "covertitle" in cover and cover["covertitle"] is not None:
             coverobj.covertitle = cover["covertitle"]
-        if cover["coverimgurl"] is not None:
+        if "coverimgurl" in cover and cover["coverimgurl"] is not None:
             coverobj.coverimgurl = cover["coverimgurl"]
-        if cover["coverdesc"] is not None:
+        if "coverdesc" in cover and cover["coverdesc"] is not None:
             coverobj.coverdesc = cover["coverdesc"]
         db.session.commit()
         return response_with(

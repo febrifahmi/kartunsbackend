@@ -99,17 +99,17 @@ def update_agenda(id):
         data = request.get_json()
         agenda_schema = AgendaSchema()
         agenda = agenda_schema.load(data, partial=True)
-        if agenda["judul"] is not None:
+        if "judul" in agenda and agenda["judul"] is not None:
             agendaobj.judul = agenda["judul"]
-        if agenda["agendaimgurl"] is not None:
+        if "agendaimgurl" in agenda and agenda["agendaimgurl"] is not None:
             agendaobj.agendaimgurl = agenda["agendaimgurl"]
-        if agenda["agendadesc"] is not None:
+        if "agendadesc" in agenda and agenda["agendadesc"] is not None:
             agendaobj.agendadesc = agenda["agendadesc"]
-        if agenda["agendatext"] is not None:
+        if "agendadesc" in agenda and agenda["agendatext"] is not None:
             agendaobj.agendatext = agenda["agendatext"]
-        if agenda["tanggalmulai"] is not None:
+        if "tanggalmulai" in agenda and agenda["tanggalmulai"] is not None:
             agendaobj.tanggalmulai = agenda["tanggalmulai"]
-        if agenda["tanggalselesai"] is not None:
+        if "tanggalselesai" in agenda and agenda["tanggalselesai"] is not None:
             agendaobj.tanggalselesai = agenda["tanggalselesai"]
         db.session.commit()
         return response_with(

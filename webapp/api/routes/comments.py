@@ -86,7 +86,7 @@ def update_comment(id):
         data = request.get_json()
         comment_schema = CommentSchema()
         comment = comment_schema.load(data, partial=True)
-        if comment["comment"] is not None:
+        if "comment" in comment and comment["comment"] is not None:
             commentobj.comment = comment["comment"]
         db.session.commit()
         return response_with(

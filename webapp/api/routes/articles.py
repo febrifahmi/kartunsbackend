@@ -98,13 +98,13 @@ def update_article(id):
         data = request.get_json()
         article_schema = ArticleSchema()
         article = article_schema.load(data, partial=True)
-        if article["articletitle"] is not None:
+        if "articletitle" in article and article["articletitle"] is not None:
             articleobj.articletitle = article["articletitle"]
-        if article["articleimgurl"] is not None:
+        if "articleimgurl" in article and article["articleimgurl"] is not None:
             articleobj.articleimgurl = article["articleimgurl"]
-        if article["articledesc"] is not None:
+        if "articledesc" in article and article["articledesc"] is not None:
             articleobj.articledesc = article["articledesc"]
-        if article["articletext"] is not None:
+        if "articletext" in article and article["articletext"] is not None:
             articleobj.articletext = article["articletext"]
         db.session.commit()
         return response_with(
