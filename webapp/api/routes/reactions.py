@@ -93,7 +93,7 @@ def update_reaction(id):
         data = request.get_json()
         reaction_schema = ReactionSchema()
         reaction = reaction_schema.load(data, partial=True)
-        if reaction["reactioncontent"] is not None:
+        if "reactioncontent" in reaction and reaction["reactioncontent"] is not None:
             reactionobj.reactioncontent = reaction["reactioncontent"]
         db.session.commit()
         return response_with(

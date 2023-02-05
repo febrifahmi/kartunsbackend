@@ -110,23 +110,23 @@ def update_member(id):
         data = request.get_json()
         member_schema = MemberSchema()
         member = member_schema.load(data, partial=True)
-        if member["validfrom"] is not None:
+        if "validfrom" in member and member["validfrom"] is not None:
             memberobj.validfrom = member["validfrom"]
-        if member["validthru"] is not None:
+        if "validthru" in member and member["validthru"] is not None:
             memberobj.validthru = member["validthru"]
-        if member["alamat"] is not None:
+        if "alamat" in member and member["alamat"] is not None:
             memberobj.alamat = member["alamat"]
-        if member["notelp"] is not None:
+        if "notelp" in member and member["notelp"] is not None:
             memberobj.notelp = member["notelp"]
-        if member["pekerjaan"] is not None:
+        if "pekerjaan" in member and member["pekerjaan"] is not None:
             memberobj.pekerjaan = member["pekerjaan"]
-        if member["perusahaan"] is not None:
+        if "perusahaan" in member and member["perusahaan"] is not None:
             memberobj.perusahaan = member["perusahaan"]
-        if member["kantor"] is not None:
+        if "kantor" in member and member["kantor"] is not None:
             memberobj.kantor = member["kantor"]
-        if member["alamatkantor"] is not None:
+        if "alamatkantor" in member and member["alamatkantor"] is not None:
             memberobj.alamatkantor = member["alamatkantor"]
-        if member["mulaibekerja"] is not None:
+        if "mulaibekerja" in member and member["mulaibekerja"] is not None:
             memberobj.mulaibekerja = member["mulaibekerja"]
         db.session.commit()
         return response_with(

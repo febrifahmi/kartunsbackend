@@ -99,17 +99,17 @@ def update_certificate(id):
         data = request.get_json()
         certificate_schema = CertificateSchema()
         certificate = certificate_schema.load(data, partial=True)
-        if certificate["certtitle"] is not None:
+        if "certtitle" in certificate and certificate["certtitle"] is not None:
             certobj.certtitle = certificate["certtitle"]
-        if certificate["certbgimgurl"] is not None:
+        if "certbgimgurl" in certificate and certificate["certbgimgurl"] is not None:
             certobj.certbgimgurl = certificate["certbgimgurl"]
-        if certificate["certnumber"] is not None:
+        if "certnumber" in certificate and certificate["certnumber"] is not None:
             certobj.certnumber = certificate["certnumber"]
-        if certificate["certtex"] is not None:
+        if "certtex" in certificate and certificate["certtex"] is not None:
             certobj.certtext = certificate["certtext"]
-        if certificate["certdate"] is not None:
+        if "certdate" in certificate and certificate["certdate"] is not None:
             certobj.certdate = certificate["certdate"]
-        if certificate["penerima_id"] is not None:
+        if "penerima_id" in certificate and certificate["penerima_id"] is not None:
             certobj.penerima_id = certificate["penerima_id"]
         db.session.commit()
         return response_with(

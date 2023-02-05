@@ -94,13 +94,13 @@ def update_pengumuman(id):
         data = request.get_json()
         pengumuman_schema = PengumumanSchema()
         pengumuman = pengumuman_schema.load(data, partial=True)
-        if pengumuman["judul"] is not None:
+        if "judul" in pengumuman and pengumuman["judul"] is not None:
             pengumumanobj.judul = pengumuman["judul"]
-        if pengumuman["pengumumanimgurl"] is not None:
+        if "pengumumanimgurl" in pengumuman and pengumuman["pengumumanimgurl"] is not None:
             pengumumanobj.pengumumanimgurl = pengumuman["pengumumanimgurl"]
-        if pengumuman["pengumumandesc"] is not None:
+        if "pengumumandesc" in pengumuman and pengumuman["pengumumandesc"] is not None:
             pengumumanobj.pengumumandesc = pengumuman["pengumumandesc"]
-        if pengumuman["pengumumantext"] is not None:
+        if "pengumumantext" in pengumuman and pengumuman["pengumumantext"] is not None:
             pengumumanobj.pengumumantext = pengumuman["pengumumantext"]
         db.session.commit()
         return response_with(

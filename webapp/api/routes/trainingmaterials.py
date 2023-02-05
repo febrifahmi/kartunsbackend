@@ -101,17 +101,17 @@ def update_trainmat(id):
         data = request.get_json()
         trainmat_schema = TrainMatSchema()
         trainmat = trainmat_schema.load(data, partial=True)
-        if trainmat["tmtitle"] is not None:
+        if "tmtitle" in trainmat and trainmat["tmtitle"] is not None:
             trainmatobj.tmtitle = trainmat["tmtitle"]
-        if trainmat["tmimgurl"] is not None:
+        if "tmimgurl" in trainmat and trainmat["tmimgurl"] is not None:
             trainmatobj.tmimgurl = trainmat["tmimgurl"]
-        if trainmat["tmdesc"] is not None:
+        if "tmdesc" in trainmat and trainmat["tmdesc"] is not None:
             trainmatobj.tmdesc = trainmat["tmdesc"]
-        if trainmat["tmtext"] is not None:
+        if "tmtext" in trainmat and trainmat["tmtext"] is not None:
             trainmatobj.tmtext = trainmat["tmtext"]
-        if trainmat["urifile"] is not None:
+        if "urifile" in trainmat and trainmat["urifile"] is not None:
             trainmatobj.urifile = trainmat["urifile"]
-        if trainmat["is_verified"] is not None:
+        if "is_verified" in trainmat and trainmat["is_verified"] is not None:
             trainmatobj.is_verified = trainmat["is_verified"]
         db.session.commit()
         return response_with(

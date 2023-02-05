@@ -99,17 +99,17 @@ def update_pengurus(id):
         data = request.get_json()
         pengurus_schema = PengurusSchema()
         pengurus = pengurus_schema.load(data, partial=True)
-        if pengurus["namapengurus"] is not None:
+        if "namapengurus" in pengurus and pengurus["namapengurus"] is not None:
             pengurusobj.namapengurus = pengurus["namapengurus"]
-        if pengurus["jabatan"] is not None:
+        if "jabatan" in pengurus and pengurus["jabatan"] is not None:
             pengurusobj.jabatan = pengurus["jabatan"]
-        if pengurus["tahunkepengurusan"] is not None:
+        if "tahunkepengurusan" in pengurus and pengurus["tahunkepengurusan"] is not None:
             pengurusobj.tahunkepengurusan = pengurus["tahunkepengurusan"]
-        if pengurus["tanggalmulai"] is not None:
+        if "tanggalmulai" in pengurus and pengurus["tanggalmulai"] is not None:
             pengurusobj.tanggalmulai = pengurus["tanggalmulai"]
-        if pengurus["tanggalselesai"] is not None:
+        if "tanggalselesai" in pengurus and pengurus["tanggalselesai"] is not None:
             pengurusobj.tanggalselesai = pengurus["tanggalselesai"]
-        if pengurus["pengurus_id"] is not None:
+        if "pengurus_id" in pengurus and pengurus["pengurus_id"] is not None:
             pengurusobj.pengurus_id = pengurus["pengurus_id"]
         db.session.commit()
         return response_with(
@@ -126,3 +126,14 @@ def update_pengurus(id):
 
 
 # DELETE (D)
+@pengurus_routes.route("/delete/<int:id>", methods=["DELETE"])
+@jwt_required()
+def delete_pengurus(id):
+    current_user = get_jwt_identity()
+    pengurusobj = Pengurus.query.get_or_404(id)
+    db.session.delete(pengurusobj)
+    db.session.commit()
+    return response_with(
+        resp.SUCCESS_200,
+        value={"logged_in_as": current_user, "message": "Pengurus successfully deleted!"},
+    )

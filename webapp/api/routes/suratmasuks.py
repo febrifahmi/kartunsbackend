@@ -97,13 +97,13 @@ def update_suratmasuk(id):
         data = request.get_json()
         suratmasuk_schema = SuratMasukSchema()
         suratmasuk = suratmasuk_schema.load(data, partial=True)
-        if suratmasuk["suratmasuktitle"] is not None:
+        if "suratmasuktitle" in suratmasuk and suratmasuk["suratmasuktitle"] is not None:
             suratmasukobj.suratmasuktitle = suratmasuk["suratmasuktitle"]
-        if suratmasuk["suratmasuknr"] is not None:
+        if "suratmasuknr" in suratmasuk and suratmasuk["suratmasuknr"] is not None:
             suratmasukobj.suratmasuknr = suratmasuk["suratmasuknr"]
-        if suratmasuk["filesurat"] is not None:
+        if "filesurat" in suratmasuk and suratmasuk["filesurat"] is not None:
             suratmasukobj.filesurat = suratmasuk["filesurat"]
-        if suratmasuk["suratmasukdesc"] is not None:
+        if "suratmasukdesc" in suratmasuk and suratmasuk["suratmasukdesc"] is not None:
             suratmasukobj.suratmasukdesc = suratmasuk["suratmasukdesc"]
         db.session.commit()
         return response_with(

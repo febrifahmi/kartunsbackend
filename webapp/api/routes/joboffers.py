@@ -106,15 +106,15 @@ def update_offer(id):
         data = request.get_json()
         offer_schema = JobOfferSchema()
         offer = offer_schema.load(data, partial=True)
-        if offer["offertitle"] is not None:
+        if "offertitle" in offer and offer["offertitle"] is not None:
             offerobj.offertitle = offer["offertitle"]
-        if offer["companylogo"] is not None:
+        if "companylogo" in offer and offer["companylogo"] is not None:
             offerobj.companylogo = offer["companylogo"]
-        if offer["offerdesc"] is not None:
+        if "offerdesc" in offer and offer["offerdesc"] is not None:
             offerobj.offerdesc = offer["offerdesc"]
-        if offer["offertext"] is not None:
+        if "offertext" in offer and offer["offertext"] is not None:
             offerobj.offertext = offer["offertext"]
-        if offer["is_approved"] is not None:
+        if "is_approved" in offer and offer["is_approved"] is not None:
             offerobj.is_approved = offer["is_approved"]
         db.session.commit()
         return response_with(

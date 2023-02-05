@@ -106,21 +106,21 @@ def update_training(id):
         data = request.get_json()
         training_schema = TrainingSchema()
         training = training_schema.load(data, partial=True)
-        if training["trainingtitle"] is not None:
+        if "trainingtitle" in training and training["trainingtitle"] is not None:
             trainingobj.trainingtitle = training["trainingtitle"]
-        if training["trainingimgurl"] is not None:
+        if "trainingimgurl" in training and training["trainingimgurl"] is not None:
             trainingobj.trainingimgurl = training["trainingimgurl"]
-        if training["trainingdesc"] is not None:
+        if "trainingdesc" in training and training["trainingdesc"] is not None:
             trainingobj.trainingdesc = training["trainingdesc"]
-        if training["trainingtext"] is not None:
+        if "trainingtext" in training and training["trainingtext"] is not None:
             trainingobj.trainingtext = training["trainingtext"]
-        if training["durationday"] is not None:
+        if "durationday" in training and training["durationday"] is not None:
             trainingobj.durationday = training["durationday"]
-        if training["startdate"] is not None:
+        if "startdate" in training and training["startdate"] is not None:
             trainingobj.startdate = training["startdate"]
-        if training["level"] is not None:
+        if "level" in training and training["level"] is not None:
             trainingobj.level = training["level"]
-        if training["price"] is not None:
+        if "price" in training and training["price"] is not None:
             trainingobj.price = training["price"]
         db.session.commit()
         return response_with(
