@@ -102,17 +102,23 @@ def update_trainmat(id):
         trainmat_schema = TrainMatSchema()
         trainmat = trainmat_schema.load(data, partial=True)
         if "tmtitle" in trainmat and trainmat["tmtitle"] is not None:
-            trainmatobj.tmtitle = trainmat["tmtitle"]
+            if trainmat["tmtitle"] != "":
+                trainmatobj.tmtitle = trainmat["tmtitle"]
         if "tmimgurl" in trainmat and trainmat["tmimgurl"] is not None:
-            trainmatobj.tmimgurl = trainmat["tmimgurl"]
+            if trainmat["tmimgurl"] != "":
+                trainmatobj.tmimgurl = trainmat["tmimgurl"]
         if "tmdesc" in trainmat and trainmat["tmdesc"] is not None:
-            trainmatobj.tmdesc = trainmat["tmdesc"]
+            if trainmat["tmdesc"] != "":
+                trainmatobj.tmdesc = trainmat["tmdesc"]
         if "tmtext" in trainmat and trainmat["tmtext"] is not None:
-            trainmatobj.tmtext = trainmat["tmtext"]
+            if trainmat["tmtext"] != "":
+                trainmatobj.tmtext = trainmat["tmtext"]
         if "urifile" in trainmat and trainmat["urifile"] is not None:
-            trainmatobj.urifile = trainmat["urifile"]
+            if trainmat["urifile"] != "":
+                trainmatobj.urifile = trainmat["urifile"]
         if "is_verified" in trainmat and trainmat["is_verified"] is not None:
-            trainmatobj.is_verified = trainmat["is_verified"]
+            if trainmat["is_verified"] != "":
+                trainmatobj.is_verified = trainmat["is_verified"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

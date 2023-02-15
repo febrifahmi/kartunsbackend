@@ -112,21 +112,29 @@ def update_letter(id):
         letter_schema = LetterSchema()
         letter = letter_schema.load(data, partial=True)
         if "lettertitle" in letter and letter["lettertitle"] is not None:
-            letterobj.lettertitle = letter["lettertitle"]
+            if letter["lettertitle"] != "":
+                letterobj.lettertitle = letter["lettertitle"]
         if "letternr" in letter and letter["letternr"] is not None:
-            letterobj.letternr = letter["letternr"]
+            if letter["letternr"] != "":
+                letterobj.letternr = letter["letternr"]
         if "qrcodestring" in letter and letter["qrcodestring"] is not None:
-            letterobj.qrcodestring = letter["qrcodestring"]
+            if letter["qrcodestring"] != "":
+                letterobj.qrcodestring = letter["qrcodestring"]
         if "letterdesc" in letter and letter["letterdesc"] is not None:
-            letterobj.letterdesc = letter["letterdesc"]
+            if letter["letterdesc"] != "":
+                letterobj.letterdesc = letter["letterdesc"]
         if "lettertext" in letter and letter["lettertext"] is not None:
-            letterobj.lettertext = letter["lettertext"]
+            if letter["lettertext"] != "":
+                letterobj.lettertext = letter["lettertext"]
         if "lampiran" in letter and letter["lampiran"] is not None:
-            letterobj.lampiran = letter["lampiran"]
+            if letter["lampiran"] != "":
+                letterobj.lampiran = letter["lampiran"]
         if "kota" in letter and letter["kota"] is not None:
-            letterobj.kota = letter["kota"]
+            if letter["kota"] != "":
+                letterobj.kota = letter["kota"]
         if "kepada" in letter and letter["kepada"] is not None:
-            letterobj.kepada = letter["kepada"]
+            if letter["kepada"] != "":
+                letterobj.kepada = letter["kepada"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

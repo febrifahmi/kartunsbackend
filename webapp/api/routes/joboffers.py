@@ -107,15 +107,20 @@ def update_offer(id):
         offer_schema = JobOfferSchema()
         offer = offer_schema.load(data, partial=True)
         if "offertitle" in offer and offer["offertitle"] is not None:
-            offerobj.offertitle = offer["offertitle"]
+            if offer["offertitle"] != "":
+                offerobj.offertitle = offer["offertitle"]
         if "companylogo" in offer and offer["companylogo"] is not None:
-            offerobj.companylogo = offer["companylogo"]
+            if offer["companylogo"] != "":
+                offerobj.companylogo = offer["companylogo"]
         if "offerdesc" in offer and offer["offerdesc"] is not None:
-            offerobj.offerdesc = offer["offerdesc"]
+            if offer["offerdesc"] != "":
+                offerobj.offerdesc = offer["offerdesc"]
         if "offertext" in offer and offer["offertext"] is not None:
-            offerobj.offertext = offer["offertext"]
+            if offer["offertext"] != "":
+                offerobj.offertext = offer["offertext"]
         if "is_approved" in offer and offer["is_approved"] is not None:
-            offerobj.is_approved = offer["is_approved"]
+            if offer["is_approved"] != "":
+                offerobj.is_approved = offer["is_approved"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

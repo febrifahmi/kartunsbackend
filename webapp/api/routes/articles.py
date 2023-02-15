@@ -99,13 +99,17 @@ def update_article(id):
         article_schema = ArticleSchema()
         article = article_schema.load(data, partial=True)
         if "articletitle" in article and article["articletitle"] is not None:
-            articleobj.articletitle = article["articletitle"]
+            if article["articletitle"] != "":
+                articleobj.articletitle = article["articletitle"]
         if "articleimgurl" in article and article["articleimgurl"] is not None:
-            articleobj.articleimgurl = article["articleimgurl"]
+            if article["articleimgurl"] != "":
+                articleobj.articleimgurl = article["articleimgurl"]
         if "articledesc" in article and article["articledesc"] is not None:
-            articleobj.articledesc = article["articledesc"]
+            if article["articledesc"] != "":
+                articleobj.articledesc = article["articledesc"]
         if "articletext" in article and article["articletext"] is not None:
-            articleobj.articletext = article["articletext"]
+            if article["articletext"] != "":
+                articleobj.articletext = article["articletext"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

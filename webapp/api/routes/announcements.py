@@ -95,13 +95,17 @@ def update_pengumuman(id):
         pengumuman_schema = PengumumanSchema()
         pengumuman = pengumuman_schema.load(data, partial=True)
         if "judul" in pengumuman and pengumuman["judul"] is not None:
-            pengumumanobj.judul = pengumuman["judul"]
+            if pengumuman["judul"] != "":
+                pengumumanobj.judul = pengumuman["judul"]
         if "pengumumanimgurl" in pengumuman and pengumuman["pengumumanimgurl"] is not None:
-            pengumumanobj.pengumumanimgurl = pengumuman["pengumumanimgurl"]
+            if pengumuman["pengumumanimgurl"] != "":
+                pengumumanobj.pengumumanimgurl = pengumuman["pengumumanimgurl"]
         if "pengumumandesc" in pengumuman and pengumuman["pengumumandesc"] is not None:
-            pengumumanobj.pengumumandesc = pengumuman["pengumumandesc"]
+            if pengumuman["pengumumandesc"] != "":
+                pengumumanobj.pengumumandesc = pengumuman["pengumumandesc"]
         if "pengumumantext" in pengumuman and pengumuman["pengumumantext"] is not None:
-            pengumumanobj.pengumumantext = pengumuman["pengumumantext"]
+            if pengumuman["pengumumantext"] != "":
+                pengumumanobj.pengumumantext = pengumuman["pengumumantext"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

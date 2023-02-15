@@ -100,17 +100,23 @@ def update_certificate(id):
         certificate_schema = CertificateSchema()
         certificate = certificate_schema.load(data, partial=True)
         if "certtitle" in certificate and certificate["certtitle"] is not None:
-            certobj.certtitle = certificate["certtitle"]
+            if certificate["certtitle"] != "":
+                certobj.certtitle = certificate["certtitle"]
         if "certbgimgurl" in certificate and certificate["certbgimgurl"] is not None:
-            certobj.certbgimgurl = certificate["certbgimgurl"]
+            if certificate["certbgimgurl"] != "":
+                certobj.certbgimgurl = certificate["certbgimgurl"]
         if "certnumber" in certificate and certificate["certnumber"] is not None:
-            certobj.certnumber = certificate["certnumber"]
+            if certificate["certnumber"] != "":
+                certobj.certnumber = certificate["certnumber"]
         if "certtex" in certificate and certificate["certtex"] is not None:
-            certobj.certtext = certificate["certtext"]
+            if certificate["certtex"] != "":
+                certobj.certtext = certificate["certtext"]
         if "certdate" in certificate and certificate["certdate"] is not None:
-            certobj.certdate = certificate["certdate"]
+            if certificate["certdate"] != "":
+                certobj.certdate = certificate["certdate"]
         if "penerima_id" in certificate and certificate["penerima_id"] is not None:
-            certobj.penerima_id = certificate["penerima_id"]
+            if certificate["penerima_id"] != "":
+                certobj.penerima_id = certificate["penerima_id"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

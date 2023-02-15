@@ -98,13 +98,17 @@ def update_feedback(id):
         feedback_schema = FeedbackSchema()
         feedback = feedback_schema.load(data, partial=True)
         if "feedbacktitle" in feedback and feedback["feedbacktitle"] is not None:
-            feedbackobj.feedbacktitle = feedback["feedbacktitle"]
+            if feedback["feedbacktitle"] != "":
+                feedbackobj.feedbacktitle = feedback["feedbacktitle"]
         if "feedbackimgurl" in feedback and feedback["feedbackimgurl"] is not None:
-            feedbackobj.feedbackimgurl = feedback["feedbackimgurl"]
+            if feedback["feedbackimgurl"] != "":
+                feedbackobj.feedbackimgurl = feedback["feedbackimgurl"]
         if "feedbackdesc" in feedback and feedback["feedbackdesc"] is not None:
-            feedbackobj.feedbackdesc = feedback["feedbackdesc"]
+            if feedback["feedbackdesc"] != "":
+                feedbackobj.feedbackdesc = feedback["feedbackdesc"]
         if "feedbacktext" in feedback and feedback["feedbacktext"] is not None:
-            feedbackobj.feedbacktext = feedback["feedbacktext"]
+            if feedback["feedbacktext"] != "":
+                feedbackobj.feedbacktext = feedback["feedbacktext"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

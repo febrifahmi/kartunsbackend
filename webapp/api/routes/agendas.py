@@ -100,17 +100,23 @@ def update_agenda(id):
         agenda_schema = AgendaSchema()
         agenda = agenda_schema.load(data, partial=True)
         if "judul" in agenda and agenda["judul"] is not None:
-            agendaobj.judul = agenda["judul"]
+            if agenda["judul"] != "":
+                agendaobj.judul = agenda["judul"]
         if "agendaimgurl" in agenda and agenda["agendaimgurl"] is not None:
-            agendaobj.agendaimgurl = agenda["agendaimgurl"]
+            if agenda["agendaimgurl"] != "":
+                agendaobj.agendaimgurl = agenda["agendaimgurl"]
         if "agendadesc" in agenda and agenda["agendadesc"] is not None:
-            agendaobj.agendadesc = agenda["agendadesc"]
+            if agenda["agendadesc"] != "":
+                agendaobj.agendadesc = agenda["agendadesc"]
         if "agendadesc" in agenda and agenda["agendatext"] is not None:
-            agendaobj.agendatext = agenda["agendatext"]
+            if agenda["agendatext"] != "":
+                agendaobj.agendatext = agenda["agendatext"]
         if "tanggalmulai" in agenda and agenda["tanggalmulai"] is not None:
-            agendaobj.tanggalmulai = agenda["tanggalmulai"]
+            if agenda["tanggalmulai"] != "":
+                agendaobj.tanggalmulai = agenda["tanggalmulai"]
         if "tanggalselesai" in agenda and agenda["tanggalselesai"] is not None:
-            agendaobj.tanggalselesai = agenda["tanggalselesai"]
+            if agenda["tanggalselesai"] != "":
+                agendaobj.tanggalselesai = agenda["tanggalselesai"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,
