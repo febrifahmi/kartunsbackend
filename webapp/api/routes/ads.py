@@ -107,18 +107,24 @@ def update_ad(id):
         data = request.get_json()
         ad_schema = AdSchema()
         ad = ad_schema.load(data, partial=True)
-        if ad["adcampaigntitle"] is not None:
-            adobj.adcampaigntitle = ad["adcampaigntitle"]
-        if ad["adimgurl"] is not None:
-            adobj.adimgurl = ad["adimgurl"]
-        if ad["adcampaigndesc"] is not None:
-            adobj.adcampaigndesc = ad["adcampaigndesc"]
-        if ad["nrdaysserved"] is not None:
-            adobj.nrdaysserved = ad["nrdaysserved"]
-        if ad["is_paid"] is not None:
-            adobj.is_paid = ad["is_paid"]
-        if ad["is_blocked"] is not None:
-            adobj.is_blocked = ad["is_blocked"]
+        if "adcampaigntitle" in ad and ad["adcampaigntitle"] is not None:
+            if ad["adcampaigntitle"] != "":
+                adobj.adcampaigntitle = ad["adcampaigntitle"]
+        if "adimgurl" in ad and ad["adimgurl"] is not None:
+            if ad["adimgurl"] != "":
+                adobj.adimgurl = ad["adimgurl"]
+        if "adcampaigndesc" in ad and ad["adcampaigndesc"] is not None:
+            if ad["adcampaigndesc"] != "":
+                adobj.adcampaigndesc = ad["adcampaigndesc"]
+        if "nrdaysserved" in ad and ad["nrdaysserved"] is not None:
+            if ad["nrdaysserved"] != "":
+                adobj.nrdaysserved = ad["nrdaysserved"]
+        if "is_paid" in ad and ad["is_paid"] is not None:
+            if ad["is_paid"] != "":
+                adobj.is_paid = ad["is_paid"]
+        if "is_blocked" in ad and ad["is_blocked"] is not None:
+            if ad["is_blocked"] != "":
+                adobj.is_blocked = ad["is_blocked"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

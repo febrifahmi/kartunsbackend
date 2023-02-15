@@ -32,7 +32,7 @@ def create_cover():
             covertitle=cover["covertitle"],
             coverdesc=cover["coverdesc"],
             covertext=cover["covertext"],
-            coverimgurl=cover["coverimgurl"]
+            coverimgurl=cover["coverimgurl"],
         )
         # save to db
         coverobj.create()
@@ -101,11 +101,17 @@ def update_cover(id):
         cover_schema = CoverSchema()
         cover = cover_schema.load(data, partial=True)
         if "covertitle" in cover and cover["covertitle"] is not None:
-            coverobj.covertitle = cover["covertitle"]
+            if cover["covertitle"] != "":
+                coverobj.covertitle = cover["covertitle"]
         if "coverimgurl" in cover and cover["coverimgurl"] is not None:
-            coverobj.coverimgurl = cover["coverimgurl"]
+            if cover["coverimgurl"] != "":
+                coverobj.coverimgurl = cover["coverimgurl"]
         if "coverdesc" in cover and cover["coverdesc"] is not None:
-            coverobj.coverdesc = cover["coverdesc"]
+            if cover["coverdesc"] != "":
+                coverobj.coverdesc = cover["coverdesc"]
+        if "covertext" in cover and cover["covertext"] is not None:
+            if cover["covertext"] != "":
+                coverobj.covertext = cover["covertext"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

@@ -93,7 +93,8 @@ def update_feed(id):
         feed_schema = FeedSchema()
         feed = feed_schema.load(data, partial=True)
         if "feedtext" in feed and feed["feedtext"] is not None:
-            feedobj.feedtext = feed["feedtext"]
+            if feed["feedtext"] != "":
+                feedobj.feedtext = feed["feedtext"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

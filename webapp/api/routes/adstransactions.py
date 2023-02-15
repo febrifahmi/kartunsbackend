@@ -147,34 +147,48 @@ def update_adtransaction(id):
     try:
         adtransactionobj = AdTransaction.query.get_or_404(id)
         data = request.get_json()
-        if data["status_code"] is not None:
-            adtransactionobj.status_code = data["status_code"]
-        if data["status_message"] is not None:
-            adtransactionobj.status_message = data["status_message"]
-        if data["transaction_id"] is not None:
-            adtransactionobj.transaction_id = data["transaction_id"]
-        if data["gross_amount"] is not None:
-            adtransactionobj.gross_amount = data["gross_amount"]
-        if data["currency"] is not None:
-            adtransactionobj.currency = data["currency"]
-        if data["payment_type"] is not None:
-            adtransactionobj.payment_type = data["payment_type"]
-        if data["signature_key"] is not None:
-            adtransactionobj.signature_key = data["signature_key"]
-        if data["expiry_time"] is not None:
-            adtransactionobj.expiry_time = data["expiry_time"]
-        if data["transaction_time"] is not None:
-            adtransactionobj.transaction_time = data["transaction_time"]
-        if data["transaction_status"] is not None:
-            adtransactionobj.transaction_status = data["transaction_status"]
-        if data["fraud_status"] is not None:
-            adtransactionobj.fraud_status = data["fraud_status"]
-        if data["va_numbers"] is not None:
-            adtransactionobj.va_number = data["va_numbers"][0]["va_number"]
-        if data["va_numbers"] is not None:
-            adtransactionobj.bank = data["va_numbers"][0]["bank"]
-        if data["settlement_time"] is not None:
-            adtransactionobj.settlement_time = data["settlement_time"]
+        if "status_code" in data and data["status_code"] is not None:
+            if data["status_code"] != "":
+                adtransactionobj.status_code = data["status_code"]
+        if "status_message" in data and data["status_message"] is not None:
+            if data["status_message"] != "":
+                adtransactionobj.status_message = data["status_message"]
+        if "transaction_id" in data and data["transaction_id"] is not None:
+            if data["transaction_id"] != "":
+                adtransactionobj.transaction_id = data["transaction_id"]
+        if "gross_amount" in data and data["gross_amount"] is not None:
+            if data["gross_amount"] != "":
+                adtransactionobj.gross_amount = data["gross_amount"]
+        if "currency" in data and data["currency"] is not None:
+            if data["currency"] != "":
+                adtransactionobj.currency = data["currency"]
+        if "payment_type" in data and data["payment_type"] is not None:
+            if data["payment_type"] != "":
+                adtransactionobj.payment_type = data["payment_type"]
+        if "signature_key" in data and data["signature_key"] is not None:
+            if data["signature_key"] != "":
+                adtransactionobj.signature_key = data["signature_key"]
+        if "expiry_time" in data and data["expiry_time"] is not None:
+            if data["expiry_time"] != "":
+                adtransactionobj.expiry_time = data["expiry_time"]
+        if "transaction_time" in data and data["transaction_time"] is not None:
+            if data["transaction_time"] != "":
+                adtransactionobj.transaction_time = data["transaction_time"]
+        if "transaction_status" in data and data["transaction_status"] is not None:
+            if data["transaction_status"] != "":
+                adtransactionobj.transaction_status = data["transaction_status"]
+        if "fraud_status" in data and data["fraud_status"] is not None:
+            if data["fraud_status"] != "":
+                adtransactionobj.fraud_status = data["fraud_status"]
+        if "va_numbers" in data and data["va_numbers"] is not None: 
+            if data["va_numbers"] != "":
+                adtransactionobj.va_number = data["va_numbers"][0]["va_number"]
+        if "va_numbers" in data and data["va_numbers"] is not None:
+            if data["va_numbers"] != "":
+                adtransactionobj.bank = data["va_numbers"][0]["bank"]
+        if "settlement_time" in data and data["settlement_time"] is not None:
+            if data["settlement_time"] != "":
+                adtransactionobj.settlement_time = data["settlement_time"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

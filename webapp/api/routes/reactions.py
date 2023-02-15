@@ -94,7 +94,8 @@ def update_reaction(id):
         reaction_schema = ReactionSchema()
         reaction = reaction_schema.load(data, partial=True)
         if "reactioncontent" in reaction and reaction["reactioncontent"] is not None:
-            reactionobj.reactioncontent = reaction["reactioncontent"]
+            if reaction["reactioncontent"] != "":
+                reactionobj.reactioncontent = reaction["reactioncontent"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

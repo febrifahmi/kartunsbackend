@@ -100,17 +100,23 @@ def update_pengurus(id):
         pengurus_schema = PengurusSchema()
         pengurus = pengurus_schema.load(data, partial=True)
         if "namapengurus" in pengurus and pengurus["namapengurus"] is not None:
-            pengurusobj.namapengurus = pengurus["namapengurus"]
+            if pengurus["namapengurus"] != "":
+                pengurusobj.namapengurus = pengurus["namapengurus"]
         if "jabatan" in pengurus and pengurus["jabatan"] is not None:
-            pengurusobj.jabatan = pengurus["jabatan"]
+            if pengurus["jabatan"] != "":
+                pengurusobj.jabatan = pengurus["jabatan"]
         if "tahunkepengurusan" in pengurus and pengurus["tahunkepengurusan"] is not None:
-            pengurusobj.tahunkepengurusan = pengurus["tahunkepengurusan"]
+            if pengurus["tahunkepengurusan"] != "":
+                pengurusobj.tahunkepengurusan = pengurus["tahunkepengurusan"]
         if "tanggalmulai" in pengurus and pengurus["tanggalmulai"] is not None:
-            pengurusobj.tanggalmulai = pengurus["tanggalmulai"]
+            if pengurus["tanggalmulai"] != "":
+                pengurusobj.tanggalmulai = pengurus["tanggalmulai"]
         if "tanggalselesai" in pengurus and pengurus["tanggalselesai"] is not None:
-            pengurusobj.tanggalselesai = pengurus["tanggalselesai"]
+            if pengurus["tanggalselesai"] != "":
+                pengurusobj.tanggalselesai = pengurus["tanggalselesai"]
         if "pengurus_id" in pengurus and pengurus["pengurus_id"] is not None:
-            pengurusobj.pengurus_id = pengurus["pengurus_id"]
+            if pengurus["pengurus_id"] != "":
+                pengurusobj.pengurus_id = pengurus["pengurus_id"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

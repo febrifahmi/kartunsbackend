@@ -98,13 +98,17 @@ def update_suratmasuk(id):
         suratmasuk_schema = SuratMasukSchema()
         suratmasuk = suratmasuk_schema.load(data, partial=True)
         if "suratmasuktitle" in suratmasuk and suratmasuk["suratmasuktitle"] is not None:
-            suratmasukobj.suratmasuktitle = suratmasuk["suratmasuktitle"]
+            if suratmasuk["suratmasuktitle"] != "":
+                suratmasukobj.suratmasuktitle = suratmasuk["suratmasuktitle"]
         if "suratmasuknr" in suratmasuk and suratmasuk["suratmasuknr"] is not None:
-            suratmasukobj.suratmasuknr = suratmasuk["suratmasuknr"]
+            if suratmasuk["suratmasuknr"] != "":
+                suratmasukobj.suratmasuknr = suratmasuk["suratmasuknr"]
         if "filesurat" in suratmasuk and suratmasuk["filesurat"] is not None:
-            suratmasukobj.filesurat = suratmasuk["filesurat"]
+            if suratmasuk["filesurat"] != "":
+                suratmasukobj.filesurat = suratmasuk["filesurat"]
         if "suratmasukdesc" in suratmasuk and suratmasuk["suratmasukdesc"] is not None:
-            suratmasukobj.suratmasukdesc = suratmasuk["suratmasukdesc"]
+            if suratmasuk["suratmasukdesc"] != '':
+                suratmasukobj.suratmasukdesc = suratmasuk["suratmasukdesc"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

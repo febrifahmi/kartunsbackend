@@ -89,7 +89,8 @@ def update_tsub(id):
         tsub_schema = TsubsSchema()
         tsub = tsub_schema.load(data, partial=True)
         if "tsubnumber" in tsub and tsub["tsubnumber"] is not None:
-            tsubobj.tsubnumber = tsub["tsubnumber"]
+            if tsub["tsubnumber"] != "":
+                tsubobj.tsubnumber = tsub["tsubnumber"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

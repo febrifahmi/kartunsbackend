@@ -107,21 +107,29 @@ def update_training(id):
         training_schema = TrainingSchema()
         training = training_schema.load(data, partial=True)
         if "trainingtitle" in training and training["trainingtitle"] is not None:
-            trainingobj.trainingtitle = training["trainingtitle"]
+            if training["trainingtitle"] != "":
+                trainingobj.trainingtitle = training["trainingtitle"]
         if "trainingimgurl" in training and training["trainingimgurl"] is not None:
-            trainingobj.trainingimgurl = training["trainingimgurl"]
+            if training["trainingimgurl"] != "":
+                trainingobj.trainingimgurl = training["trainingimgurl"]
         if "trainingdesc" in training and training["trainingdesc"] is not None:
-            trainingobj.trainingdesc = training["trainingdesc"]
+            if training["trainingdesc"] != "":
+                trainingobj.trainingdesc = training["trainingdesc"]
         if "trainingtext" in training and training["trainingtext"] is not None:
-            trainingobj.trainingtext = training["trainingtext"]
+            if training["trainingtext"] != "":
+                trainingobj.trainingtext = training["trainingtext"]
         if "durationday" in training and training["durationday"] is not None:
-            trainingobj.durationday = training["durationday"]
-        if "startdate" in training and training["startdate"] is not None:
-            trainingobj.startdate = training["startdate"]
+            if training["durationday"] != "":
+                trainingobj.durationday = training["durationday"]
+        if "startdate" in training and  training["startdate"] is not None:
+            if training["startdate"] != "":
+                trainingobj.startdate = training["startdate"]
         if "level" in training and training["level"] is not None:
-            trainingobj.level = training["level"]
+            if training["level"] != "":
+                trainingobj.level = training["level"]
         if "price" in training and training["price"] is not None:
-            trainingobj.price = training["price"]
+            if training["price"] != "":
+                trainingobj.price = training["price"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

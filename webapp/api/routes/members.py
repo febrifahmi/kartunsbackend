@@ -111,23 +111,32 @@ def update_member(id):
         member_schema = MemberSchema()
         member = member_schema.load(data, partial=True)
         if "validfrom" in member and member["validfrom"] is not None:
-            memberobj.validfrom = member["validfrom"]
+            if member["validfrom"] != "":
+                memberobj.validfrom = member["validfrom"]
         if "validthru" in member and member["validthru"] is not None:
-            memberobj.validthru = member["validthru"]
+            if member["validthru"] != "":
+                memberobj.validthru = member["validthru"]
         if "alamat" in member and member["alamat"] is not None:
-            memberobj.alamat = member["alamat"]
+            if member["alamat"] != "":
+                memberobj.alamat = member["alamat"]
         if "notelp" in member and member["notelp"] is not None:
-            memberobj.notelp = member["notelp"]
+            if member["notelp"] != "":
+                memberobj.notelp = member["notelp"]
         if "pekerjaan" in member and member["pekerjaan"] is not None:
-            memberobj.pekerjaan = member["pekerjaan"]
+            if member["pekerjaan"] != "":
+                memberobj.pekerjaan = member["pekerjaan"]
         if "perusahaan" in member and member["perusahaan"] is not None:
-            memberobj.perusahaan = member["perusahaan"]
+            if member["perusahaan"] != "":
+                memberobj.perusahaan = member["perusahaan"]
         if "kantor" in member and member["kantor"] is not None:
-            memberobj.kantor = member["kantor"]
+            if member["kantor"] != "":
+                memberobj.kantor = member["kantor"]
         if "alamatkantor" in member and member["alamatkantor"] is not None:
-            memberobj.alamatkantor = member["alamatkantor"]
+            if member["alamatkantor"] != "":
+                memberobj.alamatkantor = member["alamatkantor"]
         if "mulaibekerja" in member and member["mulaibekerja"] is not None:
-            memberobj.mulaibekerja = member["mulaibekerja"]
+            if member["mulaibekerja"] != "":
+                memberobj.mulaibekerja = member["mulaibekerja"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,
