@@ -47,8 +47,11 @@ def create_article():
 
 
 # READ (R)
-@article_routes.route("/all", methods=["GET"])
+@article_routes.route("/all", methods=["GET", "OPTIONS"])
 def get_article():
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = Article.query.all()
     article_schema = ArticleSchema(
         many=True,
@@ -85,7 +88,6 @@ def get_specific_article(id):
     )
     article = article_schema.dump(fetch)
     return response_with(resp.SUCCESS_200, value={"article": article})
-
 
 
 # UPDATE (U)
@@ -134,5 +136,8 @@ def delete_article(id):
     db.session.commit()
     return response_with(
         resp.SUCCESS_200,
-        value={"logged_in_as": current_user, "message": "Article successfully deleted!"},
+        value={
+            "logged_in_as": current_user,
+            "message": "Article successfully deleted!",
+        },
     )

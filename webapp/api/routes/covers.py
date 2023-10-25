@@ -7,20 +7,28 @@ from webapp.api.utils.database import db
 from werkzeug.utils import secure_filename
 import os, random, string
 from flask import current_app
+from PIL import Image
+from base64 import b64decode, decodebytes
+import io
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
+
+UPLOADDIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ),"..","..","uploads"))
 
 cover_routes = Blueprint("cover_routes", __name__)
 
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
-@cover_routes.route("/create", methods=["POST"])
+@cover_routes.route("/create", methods=["POST", "OPTIONS"])
 @jwt_required()
 def create_cover():
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         current_user = get_jwt_identity()
         data = request.get_json()
         cover_schema = (
@@ -33,7 +41,13 @@ def create_cover():
             coverdesc=cover["coverdesc"],
             covertext=cover["covertext"],
             coverimgurl=cover["coverimgurl"],
+            file=cover["file"]
         )
+        imgfile = b64decode(coverobj.file.split(",")[1] + '==')
+        print(imgfile)
+        print(UPLOADDIR)
+        with open(UPLOADDIR + "\\" + coverobj.coverimgurl, "wb") as f:
+            f.write(imgfile)
         # save to db
         coverobj.create()
         # cek apakah file yang diupload sesuai daftar jenis file yg diijinkan
@@ -52,8 +66,11 @@ def create_cover():
 
 
 # READ (R)
-@cover_routes.route("/all", methods=["GET"])
+@cover_routes.route("/all", methods=["GET", "OPTIONS"])
 def get_covers():
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = Cover.query.all()
     cover_schema = CoverSchema(
         many=True,
@@ -71,8 +88,11 @@ def get_covers():
     return response_with(resp.SUCCESS_200, value={"covers": covers})
 
 
-@cover_routes.route("/<int:id>", methods=["GET"])
+@cover_routes.route("/<int:id>", methods=["GET", "OPTIONS"])
 def get_specific_cover(id):
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = Cover.query.get_or_404(id)
     cover_schema = CoverSchema(
         many=False,
@@ -91,10 +111,13 @@ def get_specific_cover(id):
 
 
 # UPDATE (U)
-@cover_routes.route("/update/<int:id>", methods=["PUT"])
+@cover_routes.route("/update/<int:id>", methods=["PUT", "OPTIONS"])
 @jwt_required()
 def update_cover(id):
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         current_user = get_jwt_identity()
         coverobj = Cover.query.get_or_404(id)
         data = request.get_json()
@@ -127,9 +150,12 @@ def update_cover(id):
 
 
 # DELETE (D)
-@cover_routes.route("/delete/<int:id>", methods=["DELETE"])
+@cover_routes.route("/delete/<int:id>", methods=["DELETE", "OPTIONS"])
 @jwt_required()
 def delete_cover(id):
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     current_user = get_jwt_identity()
     coverobj = Cover.query.get_or_404(id)
     db.session.delete(coverobj)

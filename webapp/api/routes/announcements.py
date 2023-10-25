@@ -46,8 +46,11 @@ def create_pengumuman():
 
 
 # READ (R)
-@pengumuman_routes.route("/all", methods=["GET"])
+@pengumuman_routes.route("/all", methods=["GET", "OPTIONS"])
 def get_pengumuman():
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = Pengumuman.query.all()
     pengumuman_schema = PengumumanSchema(
         many=True,
@@ -62,11 +65,14 @@ def get_pengumuman():
         ],
     )
     pengumuman = pengumuman_schema.dump(fetch)
-    return response_with(resp.SUCCESS_200, value={"pengumuman": pengumuman})
+    return response_with(resp.SUCCESS_200, value={"pengumumans": pengumuman})
 
 
-@pengumuman_routes.route("/<int:id>", methods=["GET"])
+@pengumuman_routes.route("/<int:id>", methods=["GET", "OPTIONS"])
 def get_specific_agenda(id):
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = Pengumuman.query.get_or_404(id)
     pengumuman_schema = PengumumanSchema(
         many=False,
@@ -97,7 +103,10 @@ def update_pengumuman(id):
         if "judul" in pengumuman and pengumuman["judul"] is not None:
             if pengumuman["judul"] != "":
                 pengumumanobj.judul = pengumuman["judul"]
-        if "pengumumanimgurl" in pengumuman and pengumuman["pengumumanimgurl"] is not None:
+        if (
+            "pengumumanimgurl" in pengumuman
+            and pengumuman["pengumumanimgurl"] is not None
+        ):
             if pengumuman["pengumumanimgurl"] != "":
                 pengumumanobj.pengumumanimgurl = pengumuman["pengumumanimgurl"]
         if "pengumumandesc" in pengumuman and pengumuman["pengumumandesc"] is not None:
@@ -130,7 +139,8 @@ def delete_pengumuman(id):
     db.session.commit()
     return response_with(
         resp.SUCCESS_200,
-        value={"logged_in_as": current_user, "message": "Pengumuman successfully deleted!"},
+        value={
+            "logged_in_as": current_user,
+            "message": "Pengumuman successfully deleted!",
+        },
     )
-
-

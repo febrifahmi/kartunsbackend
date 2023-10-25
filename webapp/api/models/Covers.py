@@ -20,13 +20,12 @@ class Cover(db.Model):
 
     # fk
 
-    def __init__(
-        self, covertitle, coverdesc, covertext, coverimgurl
-    ):
+    def __init__(self, covertitle, coverdesc, covertext, coverimgurl, file):
         self.covertitle = covertitle
         self.coverdesc = coverdesc
         self.covertext = covertext
         self.coverimgurl = coverimgurl
+        self.file = file
 
     def create(self):
         db.session.add(self)
@@ -44,5 +43,6 @@ class CoverSchema(ma.SQLAlchemyAutoSchema):
     coverimgurl = fields.String()
     coverdesc = fields.String(required=True)
     covertext = fields.String(required=True)
+    file = fields.String()
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
