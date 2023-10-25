@@ -51,9 +51,12 @@ def create_letter():
 
 
 # READ (R)
-@letter_routes.route("/all", methods=["GET"])
+@letter_routes.route("/all", methods=["GET", "OPTIONS"])
 @jwt_required()
 def get_letters():
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = Letter.query.all()
     letter_schema = LetterSchema(
         many=True,

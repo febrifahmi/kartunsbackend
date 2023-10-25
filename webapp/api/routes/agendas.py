@@ -48,8 +48,11 @@ def create_agenda():
 
 
 # READ (R)
-@agenda_routes.route("/all", methods=["GET"])
+@agenda_routes.route("/all", methods=["GET", "OPTIONS"])
 def get_agenda():
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = Agenda.query.all()
     agenda_schema = AgendaSchema(
         many=True,
@@ -65,8 +68,8 @@ def get_agenda():
             "updated_at",
         ],
     )
-    agenda = agenda_schema.dump(fetch)
-    return response_with(resp.SUCCESS_200, value={"agenda": agenda})
+    agendas = agenda_schema.dump(fetch)
+    return response_with(resp.SUCCESS_200, value={"agendas": agendas})
 
 @agenda_routes.route("/<int:id>", methods=["GET"])
 def get_specific_agenda(id):

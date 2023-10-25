@@ -35,7 +35,14 @@ def create_user():
         userobj.set_password(user["password"])
         userobj.create()
         user_schema = UserSchema(
-            only=["username", "first_name", "last_name", "email", "is_alumni", "is_admin"]
+            only=[
+                "username",
+                "first_name",
+                "last_name",
+                "email",
+                "is_alumni",
+                "is_admin",
+            ]
         )  # definisikan ulang user_schema tanpa memasukkan plain password sehingga di exclude dari result/API response
         result = user_schema.dump(user)
         return response_with(
@@ -54,9 +61,12 @@ def create_user():
 
 
 # READ (R)
-@user_routes.route("/all", methods=["GET"])
+@user_routes.route("/all", methods=["GET", "OPTIONS"])
 @jwt_required()
 def get_users():
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = User.query.all()
     user_schema = UserSchema(
         many=True,
@@ -170,9 +180,12 @@ def delete_user(id):
 
 
 # LOGIN (L)
-@user_routes.route("/login", methods=["POST"])
+@user_routes.route("/login", methods=["POST", "OPTIONS"])
 def authenticate_user():
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         data = request.get_json()
         active_user = User.query.filter_by(username=data["username"]).first()
         # print(active_user.username,active_user.first_name,active_user.passhash)
@@ -207,9 +220,12 @@ def authenticate_user():
 
 
 # REGISTER (REG)
-@user_routes.route("/register", methods=["POST"])
+@user_routes.route("/register", methods=["POST", "OPTIONS"])
 def register_user():
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         data = request.get_json()
         user_schema = (
             UserSchema()
@@ -252,6 +268,9 @@ def register_user():
 
 
 # LOGOUT (LO)
-@user_routes.route("/logout", methods=["GET"])
+@user_routes.route("/logout", methods=["GET", "OPTIONS"])
 def logout_user():
-    return "UserLogout"
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
+    return response_with(resp.SUCCESS_200)
