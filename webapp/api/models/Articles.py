@@ -21,13 +21,14 @@ class Article(db.Model):
     # relationship
 
     def __init__(
-        self, articletitle, articleimgurl, articledesc, articletext, author_id
+        self, articletitle, articleimgurl, articledesc, articletext, author_id, file
     ):
         self.articletitle = articletitle
         self.articleimgurl = articleimgurl
         self.articledesc = articledesc
         self.articletext = articletext
         self.author_id = author_id
+        self.file = file
 
     def create(self):
         db.session.add(self)
@@ -45,6 +46,7 @@ class ArticleSchema(ma.SQLAlchemyAutoSchema):
     articleimgurl = fields.String(required=True)
     articledesc = fields.String()
     articletext = fields.String(required=True)
+    file = fields.String()
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
     author_id = fields.Integer()

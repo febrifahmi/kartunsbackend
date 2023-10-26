@@ -4,19 +4,27 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.Articles import Article, ArticleSchema
 from webapp.api.utils.database import db
+import os, random, string
+from PIL import Image
+from base64 import b64decode, decodebytes
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
 
+UPLOADDIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ),"..","..","static","uploads"))
+
 article_routes = Blueprint("article_routes", __name__)
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
-@article_routes.route("/create", methods=["POST"])
+@article_routes.route("/create", methods=["POST", "OPTIONS"])
 @jwt_required()
 def create_article():
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         current_user = get_jwt_identity()
         data = request.get_json()
         article_schema = (
@@ -30,7 +38,14 @@ def create_article():
             articledesc=article["articledesc"],
             articletext=article["articletext"],
             author_id=article["author_id"],
+            file=article["file"],
         )
+        imgfile = b64decode(articleobj.file.split(",")[1] + '==')
+        print(imgfile)
+        print(UPLOADDIR)
+        with open(UPLOADDIR + "\\" + articleobj.articleimgurl, "wb") as f:
+            f.write(imgfile)
+        # save to db
         articleobj.create()
         result = article_schema.dump(articleobj)
         return response_with(

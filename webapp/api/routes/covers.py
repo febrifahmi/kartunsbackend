@@ -15,7 +15,7 @@ import io
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
 
-UPLOADDIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ),"..","..","uploads"))
+UPLOADDIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ),"..","..","static","uploads"))
 
 cover_routes = Blueprint("cover_routes", __name__)
 
