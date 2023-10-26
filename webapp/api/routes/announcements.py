@@ -4,19 +4,29 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.Announcements import Pengumuman, PengumumanSchema
 from webapp.api.utils.database import db
+import os, random, string
+from PIL import Image
+from base64 import b64decode, decodebytes
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
 
+UPLOADDIR = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "static", "uploads")
+)
+
 pengumuman_routes = Blueprint("pengumuman_routes", __name__)
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
-@pengumuman_routes.route("/create", methods=["POST"])
+@pengumuman_routes.route("/create", methods=["POST", "OPTIONS"])
 @jwt_required()
 def create_pengumuman():
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         current_user = get_jwt_identity()
         data = request.get_json()
         pengumuman_schema = (
@@ -29,7 +39,14 @@ def create_pengumuman():
             pengumumanimgurl=pengumuman["pengumumanimgurl"],
             pengumumandesc=pengumuman["pengumumandesc"],
             pengumumantext=pengumuman["pengumumantext"],
+            file=pengumuman["file"],
         )
+        imgfile = b64decode(pengumumanobj.file.split(",")[1] + "==")
+        print(imgfile)
+        print(UPLOADDIR)
+        with open(UPLOADDIR + "\\" + pengumumanobj.pengumumanimgurl, "wb") as f:
+            f.write(imgfile)
+        # save to db
         pengumumanobj.create()
         result = pengumuman_schema.dump(pengumumanobj)
         return response_with(
