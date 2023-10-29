@@ -85,7 +85,8 @@ def get_covers():
         ],
     )
     covers = cover_schema.dump(fetch)
-    return response_with(resp.SUCCESS_200, value={"covers": covers})
+    descendingcovers = sorted(covers, key=lambda x: x["idcover"], reverse=True)
+    return response_with(resp.SUCCESS_200, value={"covers": descendingcovers})
 
 
 @cover_routes.route("/<int:id>", methods=["GET", "OPTIONS"])

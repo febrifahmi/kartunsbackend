@@ -5,19 +5,26 @@ from webapp.api.utils import responses as resp
 from webapp.api.models.SuratMasuks import SuratMasuk, SuratMasukSchema
 from webapp.api.utils.database import db
 from webapp import qrcode
+import os, random, string
+from base64 import b64decode, decodebytes
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
 
+SURATDIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ),"..","..","static","surat","masuk"))
+
 suratmasuk_routes = Blueprint("suratmasuk_routes", __name__)
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
-@suratmasuk_routes.route("/create", methods=["POST"])
+@suratmasuk_routes.route("/create", methods=["POST", "OPTIONS"])
 @jwt_required()
 def create_suratmasuk():
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         current_user = get_jwt_identity()
         data = request.get_json()
         suratmasuk_schema = (
@@ -29,8 +36,16 @@ def create_suratmasuk():
             suratmasuktitle=suratmasuk["suratmasuktitle"],
             suratmasuknr=suratmasuk["suratmasuknr"],
             suratmasukdesc=suratmasuk["suratmasukdesc"],
-            filesurat=suratmasuk["filesurat"],
+            pengirim=suratmasuk["pengirim"],
+            filesuraturi=suratmasuk["filesuraturi"],
+            file=suratmasuk["file"],
         )
+        pdffile = b64decode(suratmasukobj.file.split(",")[1] + '==')
+        print(pdffile)
+        print(SURATDIR)
+        with open(SURATDIR + "\\" + suratmasukobj.filesuraturi, "wb") as f:
+            f.write(pdffile)
+        # save to db
         suratmasukobj.create()
         result = suratmasuk_schema.dump(suratmasukobj)
         return response_with(
@@ -47,9 +62,12 @@ def create_suratmasuk():
 
 
 # READ (R)
-@suratmasuk_routes.route("/all", methods=["GET"])
+@suratmasuk_routes.route("/all", methods=["GET", "OPTIONS"])
 @jwt_required()
 def get_suratmasuk():
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = SuratMasuk.query.all()
     suratmasuk_schema = SuratMasukSchema(
         many=True,
@@ -57,7 +75,7 @@ def get_suratmasuk():
             "idsuratmasuk",
             "suratmasuktitle",
             "suratmasuknr",
-            "filesurat",
+            "filesuraturi",
             "suratmasukdesc",
             "created_at",
             "updated_at",
@@ -77,7 +95,7 @@ def get_specific_suratmasuk(id):
             "idsuratmasuk",
             "suratmasuktitle",
             "suratmasuknr",
-            "filesurat",
+            "filesuraturi",
             "suratmasukdesc",
             "created_at",
             "updated_at",

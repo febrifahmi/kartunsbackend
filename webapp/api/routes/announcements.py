@@ -82,7 +82,8 @@ def get_pengumuman():
         ],
     )
     pengumuman = pengumuman_schema.dump(fetch)
-    return response_with(resp.SUCCESS_200, value={"pengumumans": pengumuman})
+    descendingpengumuman = sorted(pengumuman, key=lambda x: x["idpengumuman"], reverse=True)
+    return response_with(resp.SUCCESS_200, value={"pengumumans": descendingpengumuman})
 
 
 @pengumuman_routes.route("/<int:id>", methods=["GET", "OPTIONS"])

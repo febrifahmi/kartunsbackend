@@ -82,7 +82,8 @@ def get_article():
         ],
     )
     articles = article_schema.dump(fetch)
-    return response_with(resp.SUCCESS_200, value={"articles": articles})
+    descendingarticle = sorted(articles, key=lambda x: x["idarticle"], reverse=True)
+    return response_with(resp.SUCCESS_200, value={"articles": descendingarticle})
 
 
 @article_routes.route("/<int:id>", methods=["GET"])
