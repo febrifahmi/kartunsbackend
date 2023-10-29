@@ -11,21 +11,29 @@ class SuratMasuk(db.Model):
     idsuratmasuk = db.Column(db.Integer, primary_key=True, autoincrement=True)
     suratmasuktitle = db.Column(db.String(50))
     suratmasuknr = db.Column(db.String(20))
-    filesurat = db.Column(db.String(128))
     suratmasukdesc = db.Column(db.String(140))
+    pengirim = db.Column(db.String(128))
+    filesuraturi = db.Column(db.String(128))
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
     # fk
 
     def __init__(
-        self, suratmasuktitle, suratmasuknr, suratmasukdesc, filesurat
+        self,
+        suratmasuktitle,
+        suratmasuknr,
+        suratmasukdesc,
+        pengirim,
+        filesuraturi,
+        file,
     ):
         self.suratmasuktitle = suratmasuktitle
         self.suratmasuknr = suratmasuknr
         self.suratmasukdesc = suratmasukdesc
-        self.filesurat = filesurat
-    
+        self.pengirim = pengirim
+        self.filesuraturi = filesuraturi
+        self.file = file
 
     def create(self):
         db.session.add(self)
@@ -41,7 +49,9 @@ class SuratMasukSchema(ma.SQLAlchemyAutoSchema):
     idsuratmasuk = fields.Integer(dump_only=True)
     suratmasuktitle = fields.String(required=True)
     suratmasuknr = fields.String(required=True)
-    filesurat = fields.String()
     suratmasukdesc = fields.String()
+    pengirim = fields.String()
+    filesuraturi = fields.String()
+    file = fields.String()
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)

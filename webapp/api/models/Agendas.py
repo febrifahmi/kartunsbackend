@@ -17,13 +17,19 @@ class Agenda(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
-
     # fk
 
     # relationship
 
     def __init__(
-        self, judul, agendaimgurl, agendadesc, agendatext, tanggalmulai, tanggalselesai
+        self,
+        judul,
+        agendaimgurl,
+        agendadesc,
+        agendatext,
+        tanggalmulai,
+        tanggalselesai,
+        file,
     ):
         self.judul = judul
         self.agendaimgurl = agendaimgurl
@@ -31,6 +37,7 @@ class Agenda(db.Model):
         self.agendatext = agendatext
         self.tanggalmulai = tanggalmulai
         self.tanggalselesai = tanggalselesai
+        self.file = file
 
     def create(self):
         db.session.add(self)
@@ -50,5 +57,6 @@ class AgendaSchema(ma.SQLAlchemyAutoSchema):
     agendatext = fields.String(required=True)
     tanggalmulai = fields.String()
     tanggalselesai = fields.String()
+    file = fields.String()
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)

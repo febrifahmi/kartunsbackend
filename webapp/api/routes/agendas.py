@@ -4,19 +4,29 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.Agendas import Agenda, AgendaSchema
 from webapp.api.utils.database import db
+import os, random, string
+from PIL import Image
+from base64 import b64decode, decodebytes
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
 
+UPLOADDIR = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "static", "uploads")
+)
+
 agenda_routes = Blueprint("agenda_routes", __name__)
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
-@agenda_routes.route("/create", methods=["POST"])
+@agenda_routes.route("/create", methods=["POST", "OPTIONS"])
 @jwt_required()
 def create_agenda():
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         current_user = get_jwt_identity()
         data = request.get_json()
         agenda_schema = (
@@ -31,7 +41,14 @@ def create_agenda():
             agendatext=agenda["agendatext"],
             tanggalmulai=agenda["tanggalmulai"],
             tanggalselesai=agenda["tanggalselesai"],
+            file=agenda["file"],
         )
+        imgfile = b64decode(agendaobj.file.split(",")[1] + "==")
+        print(imgfile)
+        print(UPLOADDIR)
+        with open(UPLOADDIR + "\\" + agendaobj.agendaimgurl, "wb") as f:
+            f.write(imgfile)
+        # save to db
         agendaobj.create()
         result = agenda_schema.dump(agendaobj)
         return response_with(
@@ -69,7 +86,9 @@ def get_agenda():
         ],
     )
     agendas = agenda_schema.dump(fetch)
-    return response_with(resp.SUCCESS_200, value={"agendas": agendas})
+    descendingagendas = sorted(agendas, key=lambda x: x["idagenda"], reverse=True)
+    return response_with(resp.SUCCESS_200, value={"agendas": descendingagendas})
+
 
 @agenda_routes.route("/<int:id>", methods=["GET"])
 def get_specific_agenda(id):
