@@ -74,7 +74,7 @@ def get_anggarankas():
     anggarankas_schema = AnggaranArusKasSchema(
         many=True,
         only=[
-            "idkas",
+            "idaruskas",
             "aruskastitle",
             "aruskasdesc",
             "aruskasmonth",
@@ -98,7 +98,7 @@ def get_specific_anggarankas(id):
     anggarankas_schema = AnggaranArusKasSchema(
         many=False,
         only=[
-            "idkas",
+            "idaruskas",
             "aruskastitle",
             "aruskasdesc",
             "aruskasmonth",
