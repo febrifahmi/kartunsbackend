@@ -5,19 +5,28 @@ from webapp.api.utils import responses as resp
 from webapp.api.models.Letters import Letter, LetterSchema
 from webapp.api.utils.database import db
 from webapp import qrcode
+import os, random, string
+from base64 import b64decode, decodebytes
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
 
+SURATDIR = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "static", "surat", "keluar")
+)
+
 letter_routes = Blueprint("letter_routes", __name__)
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
-@letter_routes.route("/create", methods=["POST"])
+@letter_routes.route("/create", methods=["POST", "OPTIONS"])
 @jwt_required()
 def create_letter():
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         current_user = get_jwt_identity()
         data = request.get_json()
         letter_schema = (
@@ -26,15 +35,19 @@ def create_letter():
         letter = letter_schema.load(data)
         # need validation in ad creation process
         letterobj = Letter(
-            lettertitle=letter["lettertitle"],
-            letternr=letter["letternr"],
-            letterdesc=letter["letterdesc"],
-            lettertext=letter["lettertext"],
-            lampiran=letter["lampiran"],
-            kota=letter["kota"],
+            suratkeluartitle=letter["suratkeluartitle"],
+            suratkeluarnr=letter["suratkeluarnr"],
+            suratkeluardesc=letter["suratkeluardesc"],
             kepada=letter["kepada"],
+            filesuratkeluaruri=letter["filesuratkeluaruri"],
+            file=letter["file"],
         )
-        letterobj.setQRcodeString(current_user + "_" + "_" + letterobj.letternr)
+        pdffile = b64decode(letterobj.file.split(",")[1] + "==")
+        print(pdffile)
+        print(SURATDIR)
+        with open(SURATDIR + "\\" + letterobj.filesuratkeluaruri, "wb") as f:
+            f.write(pdffile)
+        # save to db
         letterobj.create()
         result = letter_schema.dump(letterobj)
         return response_with(
@@ -61,43 +74,38 @@ def get_letters():
     letter_schema = LetterSchema(
         many=True,
         only=[
-            "idletter",
-            "lettertitle",
-            "letternr",
-            "qrcodestring",
-            "letterdesc",
-            "lettertext",
-            "lampiran",
-            "kota",
+            "idsuratkeluar",
+            "suratkeluartitle",
+            "suratkeluarnr",
+            "suratkeluardesc",
             "kepada",
+            "filesuratkeluaruri",
             "created_at",
             "updated_at",
-            "penandatangan_id",
         ],
     )
     letters = letter_schema.dump(fetch)
     return response_with(resp.SUCCESS_200, value={"letters": letters})
 
 
-@letter_routes.route("/<int:id>", methods=["GET"])
+@letter_routes.route("/<int:id>", methods=["GET", "OPTIONS"])
 @jwt_required()
 def get_specific_letter(id):
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = Letter.query.get_or_404(id)
     letter_schema = LetterSchema(
         many=False,
         only=[
-            "idletter",
-            "lettertitle",
-            "letternr",
-            "qrcodestring",
-            "letterdesc",
-            "lettertext",
-            "lampiran",
-            "kota",
+            "idsuratkeluar",
+            "suratkeluartitle",
+            "suratkeluarnr",
+            "suratkeluardesc",
             "kepada",
+            "filesuratkeluaruri",
             "created_at",
             "updated_at",
-            "penandatangan_id",
         ],
     )
     letter = letter_schema.dump(fetch)
