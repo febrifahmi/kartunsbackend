@@ -48,6 +48,7 @@ from webapp.api.routes.suratmasuks import suratmasuk_routes
 from webapp.api.routes.feeds import feed_routes
 from webapp.api.routes.anggaranrabs import anggaranrab_routes
 from webapp.api.routes.anggaranaruskas import anggarankas_routes
+from webapp.api.routes.trainingwebinars import trainingwebinar_routes
 
 
 # REG BLUEPRINT
@@ -73,6 +74,7 @@ app.register_blueprint(suratmasuk_routes, url_prefix="/api/suratmasuks")
 app.register_blueprint(feed_routes, url_prefix="/api/feeds")
 app.register_blueprint(anggaranrab_routes, url_prefix="/api/anggaranrabs")
 app.register_blueprint(anggarankas_routes, url_prefix="/api/anggarankas")
+app.register_blueprint(trainingwebinar_routes, url_prefix="/api/webinars")
 
 
 
