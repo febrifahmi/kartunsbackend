@@ -42,6 +42,7 @@ def create_anggarankas():
             filekasuri=anggarankas["filekasuri"],
             file=anggarankas["file"],
         )
+        anggarankasobj.author_id = anggarankas["author_id"]
         xlsfile = b64decode(anggarankasobj.file.split(",")[1] + "==")
         print(xlsfile)
         print(ANGGARANDIR)
@@ -74,7 +75,7 @@ def get_anggarankas():
     anggarankas_schema = AnggaranArusKasSchema(
         many=True,
         only=[
-            "idkas",
+            "idaruskas",
             "aruskastitle",
             "aruskasdesc",
             "aruskasmonth",
@@ -82,6 +83,7 @@ def get_anggarankas():
             "filekasuri",
             "created_at",
             "updated_at",
+            "author_id",
         ],
     )
     anggarankas = anggarankas_schema.dump(fetch)
@@ -98,7 +100,7 @@ def get_specific_anggarankas(id):
     anggarankas_schema = AnggaranArusKasSchema(
         many=False,
         only=[
-            "idkas",
+            "idaruskas",
             "aruskastitle",
             "aruskasdesc",
             "aruskasmonth",
@@ -106,6 +108,7 @@ def get_specific_anggarankas(id):
             "filekasuri",
             "created_at",
             "updated_at",
+            "author_id",
         ],
     )
     anggarankas = anggarankas_schema.dump(fetch)

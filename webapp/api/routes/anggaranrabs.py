@@ -41,6 +41,7 @@ def create_anggaranrab():
             fileraburi=anggaranrab["fileraburi"],
             file=anggaranrab["file"],
         )
+        anggaranrabobj.author_id = anggaranrab["author_id"]
         xlsfile = b64decode(anggaranrabobj.file.split(",")[1] + "==")
         print(xlsfile)
         print(ANGGARANDIR)
@@ -80,6 +81,7 @@ def get_anggaranrab():
             "fileraburi",
             "created_at",
             "updated_at",
+            "author_id",
         ],
     )
     anggaranrabs = anggaranrab_schema.dump(fetch)
@@ -100,6 +102,7 @@ def get_specific_anggaranrab(id):
             "fileraburi",
             "created_at",
             "updated_at",
+            "author_id",
         ],
     )
     anggaranrabs = anggaranrab_schema.dump(fetch)

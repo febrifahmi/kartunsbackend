@@ -2,7 +2,7 @@ from flask import Blueprint, Request
 from flask.globals import request
 from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
-from webapp.api.models.Commitee import Pengurus, PengurusSchema
+from webapp.api.models.Pengurus import Pengurus, PengurusSchema
 from webapp.api.utils.database import db
 
 # Flask-JWT-Extended preparation

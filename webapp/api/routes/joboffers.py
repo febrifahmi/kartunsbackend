@@ -7,20 +7,27 @@ from webapp.api.utils.database import db
 from werkzeug.utils import secure_filename
 import os, random, string
 from flask import current_app
+from PIL import Image
+from base64 import b64decode, decodebytes
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
+
+UPLOADDIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ),"..","..","static","uploads"))
 
 joboffer_routes = Blueprint("joboffer_routes", __name__)
 
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
-@joboffer_routes.route("/create", methods=["POST"])
+@joboffer_routes.route("/create", methods=["POST", "OPTIONS"])
 @jwt_required()
 def create_offer():
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         current_user = get_jwt_identity()
         data = request.get_json()
         offer_schema = (
@@ -31,11 +38,20 @@ def create_offer():
         offerobj = JobOffer(
             offertitle=offer["offertitle"],
             offerdesc=offer["offerdesc"],
+            offertype=offer["offertype"],
+            salaryrange=offer["salaryrange"],
             offertext=offer["offertext"],
-            companylogo=offer["companylogo"]
+            companylogo=offer["companylogo"],
+            file=offer["file"]
         )
         offerobj.author_id = offer["author_id"]
         offerobj.is_approved = 0
+        offerobj.is_blocked = 0
+        imgfile = b64decode(offerobj.file.split(",")[1] + '==')
+        print(imgfile)
+        print(UPLOADDIR)
+        with open(UPLOADDIR + "\\" + offerobj.companylogo, "wb") as f:
+            f.write(imgfile)
         # save to db
         offerobj.create()
         # cek apakah file yang diupload sesuai daftar jenis file yg diijinkan
@@ -54,8 +70,11 @@ def create_offer():
 
 
 # READ (R)
-@joboffer_routes.route("/all", methods=["GET"])
+@joboffer_routes.route("/all", methods=["GET", "OPTIONS"])
 def get_offers():
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = JobOffer.query.all()
     offer_schema = JobOfferSchema(
         many=True,
@@ -64,19 +83,26 @@ def get_offers():
             "offertitle",
             "companylogo",
             "offerdesc",
+            "offertype",
+            "salaryrange",
             "offertext",
             "is_approved",
+            "is_blocked",
             "created_at",
             "updated_at",
             "author_id",
         ],
     )
     offers = offer_schema.dump(fetch)
-    return response_with(resp.SUCCESS_200, value={"offer": offers})
+    descendingoffers = sorted(offers, key=lambda x: x["idoffer"], reverse=True)
+    return response_with(resp.SUCCESS_200, value={"offers": descendingoffers})
 
 
-@joboffer_routes.route("/<int:id>", methods=["GET"])
+@joboffer_routes.route("/<int:id>", methods=["GET", "OPTIONS"])
 def get_specific_offer(id):
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = JobOffer.query.get_or_404(id)
     offer_schema = JobOfferSchema(
         many=False,
@@ -85,8 +111,11 @@ def get_specific_offer(id):
             "offertitle",
             "companylogo",
             "offerdesc",
+            "offertype",
+            "salaryrange",
             "offertext",
             "is_approved",
+            "is_blocked",
             "created_at",
             "updated_at",
             "author_id",
@@ -101,6 +130,9 @@ def get_specific_offer(id):
 @jwt_required()
 def update_offer(id):
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         current_user = get_jwt_identity()
         offerobj = JobOffer.query.get_or_404(id)
         data = request.get_json()
@@ -115,12 +147,24 @@ def update_offer(id):
         if "offerdesc" in offer and offer["offerdesc"] is not None:
             if offer["offerdesc"] != "":
                 offerobj.offerdesc = offer["offerdesc"]
+        if "offertype" in offer and offer["offertype"] is not None:
+            if offer["offertype"] != "":
+                offerobj.offertype = offer["offertype"]
+        if "salaryrange" in offer and offer["salaryrange"] is not None:
+            if offer["salaryrange"] != "":
+                offerobj.salaryrange = offer["salaryrange"]
         if "offertext" in offer and offer["offertext"] is not None:
             if offer["offertext"] != "":
                 offerobj.offertext = offer["offertext"]
         if "is_approved" in offer and offer["is_approved"] is not None:
             if offer["is_approved"] != "":
                 offerobj.is_approved = offer["is_approved"]
+        if "is_blocked" in offer and offer["is_blocked"] is not None:
+            if offer["is_blocked"] != "":
+                offerobj.is_blocked = offer["is_blocked"]
+        if "author_id" in offer and offer["author_id"] is not None:
+            if offer["author_id"] != "":
+                offerobj.author_id = offer["author_id"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

@@ -40,6 +40,7 @@ def create_suratmasuk():
             filesuraturi=suratmasuk["filesuraturi"],
             file=suratmasuk["file"],
         )
+        suratmasukobj.author_id = suratmasuk["author_id"]
         pdffile = b64decode(suratmasukobj.file.split(",")[1] + '==')
         print(pdffile)
         print(SURATDIR)
@@ -80,6 +81,7 @@ def get_suratmasuk():
             "pengirim",
             "created_at",
             "updated_at",
+            "author_id",
         ],
     )
     suratmasuks = suratmasuk_schema.dump(fetch)
@@ -101,6 +103,7 @@ def get_specific_suratmasuk(id):
             "pengirim",
             "created_at",
             "updated_at",
+            "author_id",
         ],
     )
     suratmasuk = suratmasuk_schema.dump(fetch)
@@ -129,6 +132,9 @@ def update_suratmasuk(id):
         if "suratmasukdesc" in suratmasuk and suratmasuk["suratmasukdesc"] is not None:
             if suratmasuk["suratmasukdesc"] != '':
                 suratmasukobj.suratmasukdesc = suratmasuk["suratmasukdesc"]
+        if "author_id" in suratmasuk and suratmasuk["author_id"] is not None:
+            if suratmasuk["author_id"] != '':
+                suratmasukobj.author_id = suratmasuk["author_id"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,
