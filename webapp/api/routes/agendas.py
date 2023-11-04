@@ -43,6 +43,7 @@ def create_agenda():
             tanggalselesai=agenda["tanggalselesai"],
             file=agenda["file"],
         )
+        agendaobj.author_id = agenda["author_id"]
         imgfile = b64decode(agendaobj.file.split(",")[1] + "==")
         print(imgfile)
         print(UPLOADDIR)
@@ -83,6 +84,7 @@ def get_agenda():
             "tanggalselesai",
             "created_at",
             "updated_at",
+            "author_id",
         ],
     )
     agendas = agenda_schema.dump(fetch)
@@ -105,6 +107,7 @@ def get_specific_agenda(id):
             "tanggalselesai",
             "created_at",
             "updated_at",
+            "author_id",
         ],
     )
     agenda = agenda_schema.dump(fetch)
@@ -139,6 +142,9 @@ def update_agenda(id):
         if "tanggalselesai" in agenda and agenda["tanggalselesai"] is not None:
             if agenda["tanggalselesai"] != "":
                 agendaobj.tanggalselesai = agenda["tanggalselesai"]
+        if "author_id" in agenda and agenda["author_id"] is not None:
+            if agenda["author_id"] != "":
+                agendaobj.author_id = agenda["author_id"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

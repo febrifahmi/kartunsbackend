@@ -19,6 +19,10 @@ class Cover(db.Model):
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
     # fk
+    author_id = db.Column(db.Integer, db.ForeignKey("users.iduser"))
+
+    # relationship
+
 
     def __init__(self, covertitle, coverdesc, covertext, coverimgurl, file):
         self.covertitle = covertitle
@@ -46,3 +50,4 @@ class CoverSchema(ma.SQLAlchemyAutoSchema):
     file = fields.String()
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
+    author_id = fields.Integer()

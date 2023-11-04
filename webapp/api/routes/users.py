@@ -90,9 +90,12 @@ def get_users():
     return response_with(resp.SUCCESS_200, value={"users": users})
 
 
-@user_routes.route("/<int:id>", methods=["GET"])
+@user_routes.route("/<int:id>", methods=["GET", "OPTIONS"])
 @jwt_required()
 def get_specific_user(id):
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = User.query.get_or_404(id)
     user_schema = UserSchema(
         many=False,

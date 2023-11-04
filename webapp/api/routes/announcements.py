@@ -41,6 +41,7 @@ def create_pengumuman():
             pengumumantext=pengumuman["pengumumantext"],
             file=pengumuman["file"],
         )
+        pengumumanobj.author_id = pengumuman["author_id"]
         imgfile = b64decode(pengumumanobj.file.split(",")[1] + "==")
         print(imgfile)
         print(UPLOADDIR)
@@ -79,6 +80,7 @@ def get_pengumuman():
             "pengumumantext",
             "created_at",
             "updated_at",
+            "author_id",
         ],
     )
     pengumuman = pengumuman_schema.dump(fetch)
@@ -102,6 +104,7 @@ def get_specific_agenda(id):
             "pengumumantext",
             "created_at",
             "updated_at",
+            "author_id",
         ],
     )
     pengumuman = pengumuman_schema.dump(fetch)
@@ -133,6 +136,9 @@ def update_pengumuman(id):
         if "pengumumantext" in pengumuman and pengumuman["pengumumantext"] is not None:
             if pengumuman["pengumumantext"] != "":
                 pengumumanobj.pengumumantext = pengumuman["pengumumantext"]
+        if "author_id" in pengumuman and pengumuman["author_id"] is not None:
+            if pengumuman["author_id"] != "":
+                pengumumanobj.author_id = pengumuman["author_id"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

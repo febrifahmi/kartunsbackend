@@ -43,6 +43,7 @@ def create_cover():
             coverimgurl=cover["coverimgurl"],
             file=cover["file"]
         )
+        coverobj.author_id = cover["author_id"]
         imgfile = b64decode(coverobj.file.split(",")[1] + '==')
         print(imgfile)
         print(UPLOADDIR)
@@ -82,6 +83,7 @@ def get_covers():
             "covertext",
             "created_at",
             "updated_at",
+            "author_id",
         ],
     )
     covers = cover_schema.dump(fetch)
@@ -105,6 +107,7 @@ def get_specific_cover(id):
             "covertext",
             "created_at",
             "updated_at",
+            "author_id",
         ],
     )
     cover = cover_schema.dump(fetch)
@@ -136,6 +139,9 @@ def update_cover(id):
         if "covertext" in cover and cover["covertext"] is not None:
             if cover["covertext"] != "":
                 coverobj.covertext = cover["covertext"]
+        if "author_id" in cover and cover["author_id"] is not None:
+            if cover["author_id"] != "":
+                coverobj.author_id = cover["author_id"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

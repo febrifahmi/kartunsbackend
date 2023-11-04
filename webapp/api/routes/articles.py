@@ -128,6 +128,9 @@ def update_article(id):
         if "articletext" in article and article["articletext"] is not None:
             if article["articletext"] != "":
                 articleobj.articletext = article["articletext"]
+        if "author_id" in article and article["author_id"] is not None:
+            if article["author_id"] != "":
+                articleobj.author_id = article["author_id"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

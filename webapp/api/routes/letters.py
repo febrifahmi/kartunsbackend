@@ -42,6 +42,7 @@ def create_letter():
             filesuratkeluaruri=letter["filesuratkeluaruri"],
             file=letter["file"],
         )
+        letterobj.author_id = letter["author_id"]
         pdffile = b64decode(letterobj.file.split(",")[1] + "==")
         print(pdffile)
         print(SURATDIR)
@@ -82,6 +83,7 @@ def get_letters():
             "filesuratkeluaruri",
             "created_at",
             "updated_at",
+            "author_id",
         ],
     )
     letters = letter_schema.dump(fetch)
@@ -106,6 +108,7 @@ def get_specific_letter(id):
             "filesuratkeluaruri",
             "created_at",
             "updated_at",
+            "author_id",
         ],
     )
     letter = letter_schema.dump(fetch)
@@ -146,6 +149,9 @@ def update_letter(id):
         if "kepada" in letter and letter["kepada"] is not None:
             if letter["kepada"] != "":
                 letterobj.kepada = letter["kepada"]
+        if "author_id" in letter and letter["author_id"] is not None:
+            if letter["author_id"] != "":
+                letterobj.author_id = letter["author_id"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,
