@@ -30,9 +30,9 @@ def seedAdminUser():
                 "first_name": "Admin",
                 "last_name": "KartUNS",
                 "email": "admin@kartuns.org",
-                "is_alumni": 1,
+                "is_alumni": 0,
                 "password": "4Dm1n",
-                "is_admin": 1,
+                "is_admin": 0,
             }
             user_schema = (
                 UserSchema()
@@ -79,7 +79,7 @@ def seedPengurusUser():
                 "first_name": "Pengurus",
                 "last_name": "KartUNS",
                 "email": "pengurus@kartuns.org",
-                "is_alumni": 1,
+                "is_alumni": 0,
                 "password": "P3ngurU5",
                 "is_admin": 0,
                 "is_pengurus": 1,
