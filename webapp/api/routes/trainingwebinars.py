@@ -44,6 +44,7 @@ def create_trainingwebinar():
             price=trainingwebinar["price"],
             file=trainingwebinar["file"],
         )
+        trainingwebinarobj.author_id = trainingwebinar["author_id"]
         imgfile = b64decode(trainingwebinarobj.file.split(",")[1] + "==")
         print(imgfile)
         print(UPLOADDIR)
