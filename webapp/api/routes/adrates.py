@@ -47,7 +47,54 @@ def create_adrate():
 
 
 # READ (C)
+@adrates_routes.route("/all", methods=["GET"])
+def get_adrates():
+    fetch = AdRates.query.all()
+    adrate_schema = AdSchema(
+        many=True,
+        only=[
+            "idadrate",
+            "adratetitle",
+            "adrateperhariharian",
+            "adrateperharibulanan",
+            "adrateperharitahunan",
+            "is_active",
+            "created_at",
+            "updated_at",
+            "manager_id",
+        ],
+    )
+    adrates = adrate_schema.dump(fetch)
+    return response_with(resp.SUCCESS_200, value={"adrates": adrates})
+
+
+@adrates_routes.route("/<int:id>", methods=["GET"])
+def get_specific_adrate(id):
+    fetch = AdRates.query.get_or_404(id)
+    adrate_schema = AdRatesSchema(
+        many=False,
+        only=[
+            "idadrate",
+            "adratetitle",
+            "adrateperhariharian",
+            "adrateperharibulanan",
+            "adrateperharitahunan",
+            "is_active",
+            "created_at",
+            "updated_at",
+            "manager_id",
+        ],
+    )
+    adrate = adrate_schema.dump(fetch)
+    return response_with(resp.SUCCESS_200, value={"adrate": adrate})
+
 
 # UPDATE (U)
+
+
+
+
+
+
 
 # DELETE (D)
