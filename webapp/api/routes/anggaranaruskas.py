@@ -87,7 +87,8 @@ def get_anggarankas():
         ],
     )
     anggarankas = anggarankas_schema.dump(fetch)
-    return response_with(resp.SUCCESS_200, value={"anggarankas": anggarankas})
+    descendingaruskas = sorted(anggarankas, key=lambda x: x["idaruskas"], reverse=True)
+    return response_with(resp.SUCCESS_200, value={"anggarankas": descendingaruskas})
 
 
 @anggarankas_routes.route("/<int:id>", methods=["GET", "OPTIONS"])
@@ -116,5 +117,8 @@ def get_specific_anggarankas(id):
 
 
 # UPDATE (U)
+
+
+
 
 # DELETE (D)

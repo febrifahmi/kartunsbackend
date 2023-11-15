@@ -32,7 +32,7 @@ def seedAdminUser():
                 "email": "admin@kartuns.org",
                 "is_alumni": 0,
                 "password": "4Dm1n",
-                "is_admin": 0,
+                "is_admin": 1,
             }
             user_schema = (
                 UserSchema()
