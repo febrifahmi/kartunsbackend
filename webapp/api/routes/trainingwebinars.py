@@ -48,7 +48,7 @@ def create_trainingwebinar():
         imgfile = b64decode(trainingwebinarobj.file.split(",")[1] + "==")
         print(imgfile)
         print(UPLOADDIR)
-        with open(UPLOADDIR + "\\" + trainingwebinarobj.webinarimgurl, "wb") as f:
+        with open(UPLOADDIR + "/" + trainingwebinarobj.webinarimgurl, "wb") as f:
             f.write(imgfile)
         # save to db
         trainingwebinarobj.create()
