@@ -6,7 +6,7 @@ from webapp.api.models.AnggaranRAB import AnggaranRAB, AnggaranRABSchema
 from webapp.api.utils.database import db
 import os, random, string
 from PIL import Image
-from base64 import b64decode, decodebytes
+from base64 import b64decode, decodebytes, b64encode
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -85,7 +85,12 @@ def get_anggaranrab():
         ],
     )
     anggaranrabs = anggaranrab_schema.dump(fetch)
-    return response_with(resp.SUCCESS_200, value={"anggaranrab": anggaranrabs})
+    descendingrabs = sorted(anggaranrabs, key=lambda x: x["idrab"], reverse=True)
+    for x in descendingrabs:
+        with open(ANGGARANDIR + "\\" + x['fileraburi'], "rb") as f:
+            xlsencoded = b64encode(f.read())
+            x['fileraburi'] = str(xlsencoded.decode("utf-8"))
+    return response_with(resp.SUCCESS_200, value={"anggaranrab": descendingrabs})
 
 
 @anggaranrab_routes.route("/<int:id>", methods=["GET"])
@@ -105,8 +110,11 @@ def get_specific_anggaranrab(id):
             "author_id",
         ],
     )
-    anggaranrabs = anggaranrab_schema.dump(fetch)
-    return response_with(resp.SUCCESS_200, value={"anggaranrab": anggaranrabs})
+    anggaranrab = anggaranrab_schema.dump(fetch)
+    with open(ANGGARANDIR + "\\" + anggaranrab['fileraburi'], "rb") as f:
+        xlsencoded = b64encode(f.read())
+        anggaranrab['fileraburi'] = str(xlsencoded.decode("utf-8"))
+    return response_with(resp.SUCCESS_200, value={"anggaranrab": anggaranrab})
 
 
 # UPDATE (U)
