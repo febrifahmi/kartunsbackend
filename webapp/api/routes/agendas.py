@@ -47,7 +47,7 @@ def create_agenda():
         imgfile = b64decode(agendaobj.file.split(",")[1] + "==")
         print(imgfile)
         print(UPLOADDIR)
-        with open(UPLOADDIR + "\\" + agendaobj.agendaimgurl, "wb") as f:
+        with open(UPLOADDIR + "/" + agendaobj.agendaimgurl, "wb") as f:
             f.write(imgfile)
         # save to db
         agendaobj.create()

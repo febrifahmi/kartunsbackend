@@ -45,7 +45,7 @@ def create_pengumuman():
         imgfile = b64decode(pengumumanobj.file.split(",")[1] + "==")
         print(imgfile)
         print(UPLOADDIR)
-        with open(UPLOADDIR + "\\" + pengumumanobj.pengumumanimgurl, "wb") as f:
+        with open(UPLOADDIR + "/" + pengumumanobj.pengumumanimgurl, "wb") as f:
             f.write(imgfile)
         # save to db
         pengumumanobj.create()

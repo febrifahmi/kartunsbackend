@@ -47,7 +47,7 @@ def create_cover():
         imgfile = b64decode(coverobj.file.split(",")[1] + '==')
         print(imgfile)
         print(UPLOADDIR)
-        with open(UPLOADDIR + "\\" + coverobj.coverimgurl, "wb") as f:
+        with open(UPLOADDIR + "/" + coverobj.coverimgurl, "wb") as f:
             f.write(imgfile)
         # save to db
         coverobj.create()

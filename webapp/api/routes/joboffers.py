@@ -50,7 +50,7 @@ def create_offer():
         imgfile = b64decode(offerobj.file.split(",")[1] + '==')
         print(imgfile)
         print(UPLOADDIR)
-        with open(UPLOADDIR + "\\" + offerobj.companylogo, "wb") as f:
+        with open(UPLOADDIR + "/" + offerobj.companylogo, "wb") as f:
             f.write(imgfile)
         # save to db
         offerobj.create()

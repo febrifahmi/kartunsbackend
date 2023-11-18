@@ -43,7 +43,7 @@ def create_article():
         imgfile = b64decode(articleobj.file.split(",")[1] + '==')
         print(imgfile)
         print(UPLOADDIR)
-        with open(UPLOADDIR + "\\" + articleobj.articleimgurl, "wb") as f:
+        with open(UPLOADDIR + "/" + articleobj.articleimgurl, "wb") as f:
             f.write(imgfile)
         # save to db
         articleobj.create()

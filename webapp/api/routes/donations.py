@@ -43,7 +43,7 @@ def create_donation():
         imgfile = b64decode(donationobj.file.split(",")[1] + '==')
         print(imgfile)
         print(UPLOADDIR)
-        with open(UPLOADDIR + "\\" + donationobj.donasiimgurl, "wb") as f:
+        with open(UPLOADDIR + "/" + donationobj.donasiimgurl, "wb") as f:
             f.write(imgfile)
         # save to db
         donationobj.create()
