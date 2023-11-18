@@ -6,7 +6,7 @@ from webapp.api.models.AnggaranArusKas import AnggaranArusKas, AnggaranArusKasSc
 from webapp.api.utils.database import db
 import os, random, string
 from PIL import Image
-from base64 import b64decode, decodebytes
+from base64 import b64decode, decodebytes, b64encode
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -88,6 +88,10 @@ def get_anggarankas():
     )
     anggarankas = anggarankas_schema.dump(fetch)
     descendingaruskas = sorted(anggarankas, key=lambda x: x["idaruskas"], reverse=True)
+    for x in descendingaruskas:
+        with open(ANGGARANDIR + "\\" + x['filekasuri'], "rb") as f:
+            xlsencoded = b64encode(f.read())
+            x['filekasuri'] = str(xlsencoded.decode("utf-8"))
     return response_with(resp.SUCCESS_200, value={"anggarankas": descendingaruskas})
 
 
@@ -113,6 +117,9 @@ def get_specific_anggarankas(id):
         ],
     )
     anggarankas = anggarankas_schema.dump(fetch)
+    with open(ANGGARANDIR + "\\" + anggarankas['filekasuri'], "rb") as f:
+        xlsencoded = b64encode(f.read())
+        anggarankas['filekasuri'] = str(xlsencoded.decode("utf-8"))
     return response_with(resp.SUCCESS_200, value={"anggarankas": anggarankas})
 
 
