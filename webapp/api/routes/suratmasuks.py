@@ -6,7 +6,7 @@ from webapp.api.models.SuratMasuks import SuratMasuk, SuratMasukSchema
 from webapp.api.utils.database import db
 from webapp import qrcode
 import os, random, string
-from base64 import b64decode, decodebytes
+from base64 import b64decode, decodebytes, b64encode
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -85,12 +85,20 @@ def get_suratmasuk():
         ],
     )
     suratmasuks = suratmasuk_schema.dump(fetch)
+    for x in suratmasuks:
+        with open(SURATDIR + "\\" + x['filesuraturi'], "rb") as f:
+            pdfencoded = b64encode(f.read())
+            x['filesuraturi'] = str(pdfencoded.decode("utf-8"))
+    print("Surat Masuk: ",suratmasuks)
     return response_with(resp.SUCCESS_200, value={"suratmasuks": suratmasuks})
 
 
-@suratmasuk_routes.route("/<int:id>", methods=["GET"])
+@suratmasuk_routes.route("/<int:id>", methods=["GET", "OPTIONS"])
 @jwt_required()
 def get_specific_suratmasuk(id):
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = SuratMasuk.query.get_or_404(id)
     suratmasuk_schema = SuratMasukSchema(
         many=False,
@@ -107,6 +115,9 @@ def get_specific_suratmasuk(id):
         ],
     )
     suratmasuk = suratmasuk_schema.dump(fetch)
+    with open(SURATDIR + "\\" + suratmasuk['filesuraturi'], "rb") as f:
+        pdfencoded = b64encode(f.read())
+        suratmasuk['filesuraturi'] = str(pdfencoded.decode("utf-8"))
     return response_with(resp.SUCCESS_200, value={"suratmasuk": suratmasuk})
 
 

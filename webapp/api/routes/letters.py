@@ -6,7 +6,7 @@ from webapp.api.models.Letters import Letter, LetterSchema
 from webapp.api.utils.database import db
 from webapp import qrcode
 import os, random, string
-from base64 import b64decode, decodebytes
+from base64 import b64decode, decodebytes, b64encode
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -87,6 +87,11 @@ def get_letters():
         ],
     )
     letters = letter_schema.dump(fetch)
+    for x in letters:
+        with open(SURATDIR + "\\" + x['filesuratkeluaruri'], "rb") as f:
+            pdfencoded = b64encode(f.read())
+            x['filesuratkeluaruri'] = str(pdfencoded.decode("utf-8"))
+    # print("Letters: ",letters)
     return response_with(resp.SUCCESS_200, value={"letters": letters})
 
 
@@ -112,6 +117,9 @@ def get_specific_letter(id):
         ],
     )
     letter = letter_schema.dump(fetch)
+    with open(SURATDIR + "\\" + letter['filesuratkeluaruri'], "rb") as f:
+        pdfencoded = b64encode(f.read())
+        letter['filesuratkeluaruri'] = str(pdfencoded.decode("utf-8"))
     return response_with(resp.SUCCESS_200, value={"letter": letter})
 
 
