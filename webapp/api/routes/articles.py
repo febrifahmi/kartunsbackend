@@ -86,8 +86,11 @@ def get_article():
     return response_with(resp.SUCCESS_200, value={"articles": descendingarticle})
 
 
-@article_routes.route("/<int:id>", methods=["GET"])
+@article_routes.route("/<int:id>", methods=["GET", "OPTIONS"])
 def get_specific_article(id):
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = Article.query.get_or_404(id)
     article_schema = ArticleSchema(
         many=False,
