@@ -12,6 +12,8 @@ class JobOffer(db.Model):
     companylogo = db.Column(db.String(128))
     offerdesc = db.Column(db.String(140))
     offertype = db.Column(db.String(20))
+    startdate = db.Column(db.String(10))
+    enddate = db.Column(db.String(10))
     salaryrange = db.Column(db.String(50))
     offertext = db.Column(db.String(800))
     is_approved = db.Column(db.Boolean)
@@ -23,11 +25,22 @@ class JobOffer(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey("users.iduser"))
 
     def __init__(
-        self, offertitle, offerdesc, offertype, salaryrange, offertext, companylogo, file
+        self,
+        offertitle,
+        offerdesc,
+        offertype,
+        startdate,
+        enddate,
+        salaryrange,
+        offertext,
+        companylogo,
+        file,
     ):
         self.offertitle = offertitle
         self.offerdesc = offerdesc
         self.offertype = offertype
+        self.startdate = startdate
+        self.enddate = enddate
         self.salaryrange = salaryrange
         self.offertext = offertext
         self.companylogo = companylogo
@@ -49,6 +62,8 @@ class JobOfferSchema(ma.SQLAlchemyAutoSchema):
     companylogo = fields.String()
     offerdesc = fields.String(required=True)
     offertype = fields.String(required=True)
+    startdate = fields.String(required=True)
+    enddate = fields.String(required=True)
     salaryrange = fields.String(required=True)
     offertext = fields.String(required=True)
     is_approved = fields.Boolean()

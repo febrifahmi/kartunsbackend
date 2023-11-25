@@ -11,12 +11,16 @@ from datetime import timedelta
 
 member_routes = Blueprint("member_routes", __name__)
 
+
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
-@member_routes.route("/create", methods=["POST"])
+@member_routes.route("/create", methods=["POST", "OPTIONS"])
 @jwt_required()
 def create_member():
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         current_user = get_jwt_identity()
         data = request.get_json()
         member_schema = (
@@ -29,14 +33,14 @@ def create_member():
             validfrom=member["validfrom"],
             validthru=member["validthru"],
         )
-        memberobj.alamat=member["alamat"]
-        memberobj.notelp=member["notelp"]
-        memberobj.pekerjaan=member["pekerjaan"]
-        memberobj.perusahaan=member["perusahaan"]
-        memberobj.kantor=member["kantor"]
-        memberobj.alamatkantor=member["alamatkantor"]
-        memberobj.mulaibekerja=member["mulaibekerja"]
-        memberobj.user_id=member["user_id"]
+        memberobj.alamat = member["alamat"]
+        memberobj.notelp = member["notelp"]
+        memberobj.pekerjaan = member["pekerjaan"]
+        memberobj.perusahaan = member["perusahaan"]
+        memberobj.kantor = member["kantor"]
+        memberobj.alamatkantor = member["alamatkantor"]
+        memberobj.mulaibekerja = member["mulaibekerja"]
+        memberobj.user_id = member["user_id"]
         memberobj.create()
         result = member_schema.dump(memberobj)
         return response_with(
@@ -51,9 +55,14 @@ def create_member():
         print(e)
         return response_with(resp.INVALID_INPUT_422)
 
+
 # READ (R)
-@member_routes.route("/all", methods=["GET"])
+@member_routes.route("/all", methods=["GET", "OPTIONS"])
+@jwt_required()
 def get_members():
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = Member.query.all()
     member_schema = MemberSchema(
         many=True,
@@ -76,8 +85,12 @@ def get_members():
     return response_with(resp.SUCCESS_200, value={"members": members})
 
 
-@member_routes.route("/<int:id>", methods=["GET"])
+@member_routes.route("/<int:id>", methods=["GET", "OPTIONS"])
+@jwt_required()
 def get_specific_member(id):
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = Member.query.get_or_404(id)
     member_schema = MemberSchema(
         many=False,
@@ -101,10 +114,13 @@ def get_specific_member(id):
 
 
 # UPDATE (U)
-@member_routes.route("/update/<int:id>", methods=["PUT"])
+@member_routes.route("/update/<int:id>", methods=["PUT", "OPTIONS"])
 @jwt_required()
 def update_member(id):
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         current_user = get_jwt_identity()
         memberobj = Member.query.get_or_404(id)
         data = request.get_json()

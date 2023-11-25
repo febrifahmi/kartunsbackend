@@ -13,10 +13,13 @@ adrates_routes = Blueprint("adrates_routes", __name__)
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
-@adrates_routes.route("/create", methods=["POST"])
+@adrates_routes.route("/create", methods=["POST", "OPTIONS"])
 @jwt_required()
 def create_adrate():
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         current_user = get_jwt_identity()
         data = request.get_json()
         adrate_schema = (
@@ -47,8 +50,11 @@ def create_adrate():
 
 
 # READ (C)
-@adrates_routes.route("/all", methods=["GET"])
+@adrates_routes.route("/all", methods=["GET", "OPTIONS"])
 def get_adrates():
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = AdRates.query.all()
     adrate_schema = AdSchema(
         many=True,
@@ -68,8 +74,11 @@ def get_adrates():
     return response_with(resp.SUCCESS_200, value={"adrates": adrates})
 
 
-@adrates_routes.route("/<int:id>", methods=["GET"])
+@adrates_routes.route("/<int:id>", methods=["GET", "OPTIONS"])
 def get_specific_adrate(id):
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = AdRates.query.get_or_404(id)
     adrate_schema = AdRatesSchema(
         many=False,

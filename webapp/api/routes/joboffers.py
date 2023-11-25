@@ -14,7 +14,9 @@ from base64 import b64decode, decodebytes
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
 
-UPLOADDIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ),"..","..","static","uploads"))
+UPLOADDIR = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "static", "uploads")
+)
 
 joboffer_routes = Blueprint("joboffer_routes", __name__)
 
@@ -39,15 +41,19 @@ def create_offer():
             offertitle=offer["offertitle"],
             offerdesc=offer["offerdesc"],
             offertype=offer["offertype"],
+            startdate=offer["startdate"],
+            enddate=offer["enddate"],
             salaryrange=offer["salaryrange"],
             offertext=offer["offertext"],
             companylogo=offer["companylogo"],
-            file=offer["file"]
+            file=offer["file"],
         )
+        filename = secure_filename(offerobj.companylogo)
+        offerobj.companylogo = filename
         offerobj.author_id = offer["author_id"]
         offerobj.is_approved = 0
         offerobj.is_blocked = 0
-        imgfile = b64decode(offerobj.file.split(",")[1] + '==')
+        imgfile = b64decode(offerobj.file.split(",")[1] + "==")
         print(imgfile)
         print(UPLOADDIR)
         with open(UPLOADDIR + "/" + offerobj.companylogo, "wb") as f:
@@ -84,6 +90,8 @@ def get_offers():
             "companylogo",
             "offerdesc",
             "offertype",
+            "startdate",
+            "enddate",
             "salaryrange",
             "offertext",
             "is_approved",
@@ -112,6 +120,8 @@ def get_specific_offer(id):
             "companylogo",
             "offerdesc",
             "offertype",
+            "startdate",
+            "enddate",
             "salaryrange",
             "offertext",
             "is_approved",

@@ -43,6 +43,8 @@ def create_cover():
             coverimgurl=cover["coverimgurl"],
             file=cover["file"]
         )
+        filename = secure_filename(coverobj.coverimgurl)
+        coverobj.coverimgurl = filename
         coverobj.author_id = cover["author_id"]
         imgfile = b64decode(coverobj.file.split(",")[1] + '==')
         print(imgfile)

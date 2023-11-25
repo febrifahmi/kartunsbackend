@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.Agendas import Agenda, AgendaSchema
 from webapp.api.utils.database import db
+from werkzeug.utils import secure_filename
 import os, random, string
 from PIL import Image
 from base64 import b64decode, decodebytes
@@ -43,6 +44,8 @@ def create_agenda():
             tanggalselesai=agenda["tanggalselesai"],
             file=agenda["file"],
         )
+        filename = secure_filename(agendaobj.agendaimgurl)
+        agendaobj.agendaimgurl = filename
         agendaobj.author_id = agenda["author_id"]
         imgfile = b64decode(agendaobj.file.split(",")[1] + "==")
         print(imgfile)

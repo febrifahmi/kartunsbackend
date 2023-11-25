@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.AnggaranRAB import AnggaranRAB, AnggaranRABSchema
 from webapp.api.utils.database import db
+from werkzeug.utils import secure_filename
 import os, random, string
 from PIL import Image
 from base64 import b64decode, decodebytes, b64encode
@@ -41,6 +42,8 @@ def create_anggaranrab():
             fileraburi=anggaranrab["fileraburi"],
             file=anggaranrab["file"],
         )
+        filename = secure_filename(anggaranrabobj.fileraburi)
+        anggaranrabobj.fileraburi = filename
         anggaranrabobj.author_id = anggaranrab["author_id"]
         xlsfile = b64decode(anggaranrabobj.file.split(",")[1] + "==")
         print(xlsfile)

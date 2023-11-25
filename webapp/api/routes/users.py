@@ -4,11 +4,16 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.Users import User, UserSchema
 from webapp.api.utils.database import db
+from werkzeug.utils import secure_filename
 import traceback
+import os, random, string
+from base64 import b64decode, decodebytes, b64encode
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
+
+PROFILEDIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ),"..","..","static","profiles"))
 
 user_routes = Blueprint("user_routes", __name__)
 
@@ -120,10 +125,13 @@ def get_specific_user(id):
 
 
 # UPDATE (U)
-@user_routes.route("/update/<int:id>", methods=["PUT"])
+@user_routes.route("/update/<int:id>", methods=["PUT", "OPTIONS"])
 @jwt_required()
 def update_user(id):
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         current_user = get_jwt_identity()
         userobj = User.query.get_or_404(id)
         data = request.get_json()
@@ -153,6 +161,17 @@ def update_user(id):
         if "password" in user and user["password"] is not None:
             if user["password"] != "":
                 userobj.set_password(user["password"])
+        if "profpic" in user and user["profpic"] is not None:
+            if user["profpic"] != "":
+                filename = secure_filename(user["profpic"])
+                userobj.profpic = filename
+        if "file" in user and user["file"] is not None:
+            if user["file"] != "":
+                imgfile = b64decode(user["file"].split(",")[1] + '==')
+                print(imgfile)
+                print(PROFILEDIR)
+                with open(PROFILEDIR + "/" + userobj.profpic, "wb") as f:
+                    f.write(imgfile)
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,

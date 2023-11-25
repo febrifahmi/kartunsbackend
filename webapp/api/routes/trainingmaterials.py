@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.TrainingMaterials import TrainingMaterial, TrainMatSchema
 from webapp.api.utils.database import db
+from werkzeug.utils import secure_filename
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -32,6 +33,8 @@ def create_trainmat():
             urifile=trainmat["urifile"],
             is_verified=trainmat["is_verified"],
         )
+        filename = secure_filename(trainmatobj.tmimgurl)
+        trainmatobj.tmimgurl = filename
         result = trainmat_schema.dump(trainmatobj)
         return response_with(
             resp.SUCCESS_201,
