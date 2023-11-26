@@ -85,13 +85,13 @@ def get_members():
     return response_with(resp.SUCCESS_200, value={"members": members})
 
 
-@member_routes.route("/<int:id>", methods=["GET", "OPTIONS"])
+@member_routes.route("/<int:user_id>", methods=["GET", "OPTIONS"])
 @jwt_required()
-def get_specific_member(id):
+def get_specific_member(user_id):
     # handle preflight request first
     if request.method == "OPTIONS":
         return response_with(resp.SUCCESS_200)
-    fetch = Member.query.get_or_404(id)
+    fetch = Member.query.filter_by(user_id=user_id).first_or_404()
     member_schema = MemberSchema(
         many=False,
         only=[

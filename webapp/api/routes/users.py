@@ -13,9 +13,12 @@ from base64 import b64decode, decodebytes, b64encode
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
 
-PROFILEDIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ),"..","..","static","profiles"))
+PROFILEDIR = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "static", "profiles")
+)
 
 user_routes = Blueprint("user_routes", __name__)
+
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
@@ -167,7 +170,7 @@ def update_user(id):
                 userobj.profpic = filename
         if "file" in user and user["file"] is not None:
             if user["file"] != "":
-                imgfile = b64decode(user["file"].split(",")[1] + '==')
+                imgfile = b64decode(user["file"].split(",")[1] + "==")
                 print(imgfile)
                 print(PROFILEDIR)
                 with open(PROFILEDIR + "/" + userobj.profpic, "wb") as f:
