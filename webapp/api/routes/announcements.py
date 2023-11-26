@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.Announcements import Pengumuman, PengumumanSchema
 from webapp.api.utils.database import db
+from werkzeug.utils import secure_filename
 import os, random, string
 from PIL import Image
 from base64 import b64decode, decodebytes
@@ -41,6 +42,8 @@ def create_pengumuman():
             pengumumantext=pengumuman["pengumumantext"],
             file=pengumuman["file"],
         )
+        filename = secure_filename(pengumumanobj.pengumumanimgurl)
+        pengumumanobj.pengumumanimgurl = filename
         pengumumanobj.author_id = pengumuman["author_id"]
         imgfile = b64decode(pengumumanobj.file.split(",")[1] + "==")
         print(imgfile)

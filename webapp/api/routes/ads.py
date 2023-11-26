@@ -4,19 +4,27 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.Ads import Ad, AdSchema
 from webapp.api.utils.database import db
+import os, random, string
+from PIL import Image
+from base64 import b64decode, decodebytes
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
 
+UPLOADDIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ),"..","..","static","uploads"))
+
 ad_routes = Blueprint("ad_routes", __name__)
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
-@ad_routes.route("/create", methods=["POST"])
+@ad_routes.route("/create", methods=["POST", "OPTIONS"])
 @jwt_required()
 def create_ads():
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         current_user = get_jwt_identity()
         data = request.get_json()
         ad_schema = (
@@ -31,8 +39,15 @@ def create_ads():
             adcampaigntext=ad["adcampaigntext"],
             nrdaysserved=ad["nrdaysserved"],
             kodetagihan=ad["kodetagihan"],
+            file=ad["file"],
         )
         adobj.advertiser_id=ad["advertiser_id"]
+        imgfile = b64decode(adobj.file.split(",")[1] + '==')
+        print(imgfile)
+        print(UPLOADDIR)
+        with open(UPLOADDIR + "/" + adobj.adimgurl, "wb") as f:
+            f.write(imgfile)
+        # save to db
         adobj.create()
         result = ad_schema.dump(adobj)
         return response_with(
@@ -49,8 +64,11 @@ def create_ads():
 
 
 # READ (C)
-@ad_routes.route("/all", methods=["GET"])
+@ad_routes.route("/all", methods=["GET", "OPTIONS"])
 def get_ads():
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = Ad.query.all()
     ad_schema = AdSchema(
         many=True,

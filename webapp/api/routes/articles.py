@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.Articles import Article, ArticleSchema
 from webapp.api.utils.database import db
+from werkzeug.utils import secure_filename
 import os, random, string
 from PIL import Image
 from base64 import b64decode, decodebytes
@@ -40,6 +41,8 @@ def create_article():
             author_id=article["author_id"],
             file=article["file"],
         )
+        filename = secure_filename(articleobj.articleimgurl)
+        articleobj.articleimgurl = filename
         imgfile = b64decode(articleobj.file.split(",")[1] + '==')
         print(imgfile)
         print(UPLOADDIR)

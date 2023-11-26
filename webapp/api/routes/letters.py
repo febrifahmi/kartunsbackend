@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.Letters import Letter, LetterSchema
 from webapp.api.utils.database import db
+from werkzeug.utils import secure_filename
 from webapp import qrcode
 import os, random, string
 from base64 import b64decode, decodebytes, b64encode
@@ -42,6 +43,8 @@ def create_letter():
             filesuratkeluaruri=letter["filesuratkeluaruri"],
             file=letter["file"],
         )
+        filename = secure_filename(letterobj.filesuratkeluaruri)
+        letterobj.filesuratkeluaruri = filename
         letterobj.author_id = letter["author_id"]
         pdffile = b64decode(letterobj.file.split(",")[1] + "==")
         print(pdffile)

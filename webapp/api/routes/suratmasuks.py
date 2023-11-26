@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.SuratMasuks import SuratMasuk, SuratMasukSchema
 from webapp.api.utils.database import db
+from werkzeug.utils import secure_filename
 from webapp import qrcode
 import os, random, string
 from base64 import b64decode, decodebytes, b64encode
@@ -40,6 +41,8 @@ def create_suratmasuk():
             filesuraturi=suratmasuk["filesuraturi"],
             file=suratmasuk["file"],
         )
+        filename = secure_filename(suratmasukobj.filesuraturi)
+        suratmasukobj.filesuraturi = filename
         suratmasukobj.author_id = suratmasuk["author_id"]
         pdffile = b64decode(suratmasukobj.file.split(",")[1] + '==')
         print(pdffile)

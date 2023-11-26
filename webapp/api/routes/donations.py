@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.Donations import Donations, DonationsSchema
 from webapp.api.utils.database import db
+from werkzeug.utils import secure_filename
 import os, random, string
 from base64 import b64decode, decodebytes
 
@@ -40,6 +41,8 @@ def create_donation():
             donatur_id=donation["donatur_id"],
             file=donation["file"],
         )
+        filename = secure_filename(donationobj.donasiimgurl)
+        donationobj.donasiimgurl = filename
         imgfile = b64decode(donationobj.file.split(",")[1] + '==')
         print(imgfile)
         print(UPLOADDIR)

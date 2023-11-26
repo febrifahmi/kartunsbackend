@@ -30,7 +30,7 @@ class Ad(db.Model):
     advertiser_id = db.Column(db.Integer, db.ForeignKey("users.iduser"))
 
     def __init__(
-        self, adcampaigntitle, adimgurl, adcampaigndesc, adcampaigntext, nrdaysserved, kodetagihan
+        self, adcampaigntitle, adimgurl, adcampaigndesc, adcampaigntext, nrdaysserved, kodetagihan, file
     ):
         self.adcampaigntitle = adcampaigntitle
         self.adimgurl = adimgurl
@@ -38,6 +38,7 @@ class Ad(db.Model):
         self.adcampaigntext = adcampaigntext
         self.nrdaysserved = nrdaysserved
         self.kodetagihan = kodetagihan
+        self.file = file
 
     def create(self):
         db.session.add(self)
@@ -59,6 +60,7 @@ class AdSchema(ma.SQLAlchemyAutoSchema):
     kodetagihan = fields.String(required=True)
     is_paid = fields.Boolean()
     is_blocked = fields.Boolean()
+    file = fields.String()
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
     advertiser_id = fields.Integer()

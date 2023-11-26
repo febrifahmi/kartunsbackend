@@ -1,4 +1,5 @@
 import datetime
+
 # from webapp import bcrypt
 from flask_bcrypt import Bcrypt
 from hashlib import md5
@@ -9,13 +10,14 @@ from marshmallow import fields
 
 bcrypt = Bcrypt()
 
+
 class User(db.Model):
     __tablename__ = "users"
     iduser = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.String(20))
+    username = db.Column(db.String(20), unique=True)
     first_name = db.Column(db.String(40))
     last_name = db.Column(db.String(40))
-    email = db.Column(db.String(40))
+    email = db.Column(db.String(40), unique=True)
     telp = db.Column(db.String(20))
     tentang = db.Column(db.String(1500))
     angkatan = db.Column(db.String(4))
@@ -55,7 +57,8 @@ class User(db.Model):
     def avatar(self, size):
         digest = md5(self.email.lower().encode("utf-8")).hexdigest()
         self.profpic = "https://www.gravatar.com/avatar/{}?d=identicon&s={}".format(
-            digest, size)
+            digest, size
+        )
         return "https://www.gravatar.com/avatar/{}?d=identicon&s={}".format(
             digest, size
         )
@@ -82,9 +85,9 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     last_name = fields.String()
     email = fields.String(required=True)
     telp = fields.String()
-    tentang = fields.String()    
+    tentang = fields.String()
     angkatan = fields.String()
-    profesi = fields.String()    
+    profesi = fields.String()
     is_alumni = fields.Boolean()
     is_pengurus = fields.Boolean()
     is_trainer = fields.Boolean()
@@ -94,6 +97,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     password = fields.String(required=True)
     passhash = fields.String()
     last_seen = fields.String(dump_only=True)
+    file = fields.String()
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
     # pakets = fields.Nested(

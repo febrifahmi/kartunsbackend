@@ -67,6 +67,7 @@ def response_with(
 
     headers.update({"Access-Control-Allow-Origin": "*"})
     headers.update({"Access-Control-Allow-Headers": ["Content-Type", "Authorization"]})
+    headers.update({"Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE,OPTIONS"})
     headers.update({"Content-Type": "application/json; charset=utf-8"})
     headers.update({"server": "KartUNS API"})
 

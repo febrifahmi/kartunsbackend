@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.AnggaranArusKas import AnggaranArusKas, AnggaranArusKasSchema
 from webapp.api.utils.database import db
+from werkzeug.utils import secure_filename
 import os, random, string
 from PIL import Image
 from base64 import b64decode, decodebytes, b64encode
@@ -42,6 +43,8 @@ def create_anggarankas():
             filekasuri=anggarankas["filekasuri"],
             file=anggarankas["file"],
         )
+        filename = secure_filename(anggarankasobj.filekasuri)
+        anggarankasobj.filekasuri = filename
         anggarankasobj.author_id = anggarankas["author_id"]
         xlsfile = b64decode(anggarankasobj.file.split(",")[1] + "==")
         print(xlsfile)
