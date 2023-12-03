@@ -18,6 +18,7 @@ class Member(db.Model):
     kantor = db.Column(db.String(50))
     alamatkantor = db.Column(db.String(50))
     mulaibekerja = db.Column(db.String(10))
+    is_active = db.Column(db.Boolean(), default=0)
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
@@ -54,6 +55,7 @@ class MemberSchema(ma.SQLAlchemyAutoSchema):
     kantor = fields.String(required=True)
     alamatkantor = fields.String(required=True)
     mulaibekerja = fields.String()
+    is_active = fields.Boolean()
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
     user_id = fields.Integer()
