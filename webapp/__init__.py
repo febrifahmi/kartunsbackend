@@ -6,7 +6,9 @@ from webapp.api.utils.database import db
 from webapp.api.utils.responses import response_with
 import webapp.api.utils.responses as resp
 from flask_jwt_extended import JWTManager
-from webapp.api.utils.seed import seed # nice it works seeding this way and put BCrypt outside init but without app config
+from webapp.api.utils.seed import (
+    seed,
+)  # nice it works seeding this way and put BCrypt outside init but without app config
 from flask_qrcode import QRcode
 from sqlalchemy import create_engine
 
@@ -50,6 +52,7 @@ from webapp.api.routes.anggaranrabs import anggaranrab_routes
 from webapp.api.routes.anggaranaruskas import anggarankas_routes
 from webapp.api.routes.trainingwebinars import trainingwebinar_routes
 from webapp.api.routes.donations import donations_routes
+from webapp.api.routes.membersiuran import iuranmember_routes
 
 
 # REG BLUEPRINT
@@ -77,7 +80,7 @@ app.register_blueprint(anggaranrab_routes, url_prefix="/api/anggaranrabs")
 app.register_blueprint(anggarankas_routes, url_prefix="/api/anggarankas")
 app.register_blueprint(trainingwebinar_routes, url_prefix="/api/webinars")
 app.register_blueprint(donations_routes, url_prefix="/api/donations")
-
+app.register_blueprint(iuranmember_routes, url_prefix="/api/iuranmembers")
 
 
 # GLOBAL HTTP CONFIGS
@@ -102,15 +105,16 @@ def server_error(e):
 def not_found(e):
     logging.error(e)
     return response_with(resp.SERVER_ERROR_404)
-    
+
 
 db.init_app(app)
 with app.app_context():
     """to do: If using mysql, create db if not exist."""
     db.create_all()
-    #seed() # nice it works, seeding this way (already fixed in seed.py: double adding admin when there is existing admin in table)
-    app.cli.add_command(seed) # instead of seeding directly up which causes error in pipenv click when running uwsgi, we register custom flask cli
+    # seed() # nice it works, seeding this way (already fixed in seed.py: double adding admin when there is existing admin in table)
+    app.cli.add_command(
+        seed
+    )  # instead of seeding directly up which causes error in pipenv click when running uwsgi, we register custom flask cli
 
 if __name__ == "__main__":
     app.run(port=5000, host="0.0.0.0", use_reloader=False)
-
