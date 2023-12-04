@@ -18,6 +18,7 @@ UPLOADDIR = os.path.abspath(
 
 trainingwebinar_routes = Blueprint("trainingwebinar_routes", __name__)
 
+
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
 @trainingwebinar_routes.route("/create", methods=["POST", "OPTIONS"])
@@ -94,8 +95,12 @@ def get_trainingwebinars():
         ],
     )
     trainingwebinars = trainingwebinar_schema.dump(fetch)
-    descendingwebinars = sorted(trainingwebinars, key=lambda x: x["idwebinar"], reverse=True)
-    return response_with(resp.SUCCESS_200, value={"trainingwebinars": descendingwebinars})
+    descendingwebinars = sorted(
+        trainingwebinars, key=lambda x: x["idwebinar"], reverse=True
+    )
+    return response_with(
+        resp.SUCCESS_200, value={"trainingwebinars": descendingwebinars}
+    )
 
 
 @trainingwebinar_routes.route("/<int:id>", methods=["GET", "OPTIONS"])
@@ -121,10 +126,12 @@ def get_specific_trainingwebinar(id):
             "author_id",
         ],
     )
-    trainingwebinar = training_schema.dump(fetch)
+    trainingwebinar = trainingwebinar_schema.dump(fetch)
     return response_with(resp.SUCCESS_200, value={"trainingwebinar": trainingwebinar})
 
 
 # UPDATE (U)
 
 # DELETE (D)
+
+
