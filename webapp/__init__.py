@@ -53,6 +53,7 @@ from webapp.api.routes.anggaranaruskas import anggarankas_routes
 from webapp.api.routes.trainingwebinars import trainingwebinar_routes
 from webapp.api.routes.donations import donations_routes
 from webapp.api.routes.membersiuran import iuranmember_routes
+from webapp.api.routes.pesertawebinars import pesertawebinar_routes
 
 
 # REG BLUEPRINT
@@ -81,6 +82,7 @@ app.register_blueprint(anggarankas_routes, url_prefix="/api/anggarankas")
 app.register_blueprint(trainingwebinar_routes, url_prefix="/api/webinars")
 app.register_blueprint(donations_routes, url_prefix="/api/donations")
 app.register_blueprint(iuranmember_routes, url_prefix="/api/iuranmembers")
+app.register_blueprint(pesertawebinar_routes, url_prefix="/api/pesertawebinars")
 
 
 # GLOBAL HTTP CONFIGS

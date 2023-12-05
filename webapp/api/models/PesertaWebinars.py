@@ -20,8 +20,12 @@ class PesertaWebinar(db.Model):
     def __init__(
         self,
         namapeserta,
+        training_id,
+        user_id
     ):
         self.namapeserta = namapeserta
+        self.training_id = training_id
+        self.user_id = user_id
 
     def create(self):
         db.session.add(self)
@@ -39,5 +43,5 @@ class PesertaWebinarSchema(ma.SQLAlchemyAutoSchema):
     hasilpelatihan = fields.String()
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
-    training_id = fields.Integer()
-    user_id = fields.Integer()
+    training_id = fields.Integer(required=True)
+    user_id = fields.Integer(required=True)

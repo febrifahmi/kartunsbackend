@@ -33,7 +33,25 @@ def create_pesertawebinar():
         # need validation in ad creation process
         pesertawebinarobj = PesertaWebinar(
             namapeserta=pesertawebinar["namapeserta"],
+            training_id=pesertawebinar["training_id"],
+            user_id=pesertawebinar["user_id"],
         )
+        # cek eksisting user id and training id, if exist block request otherwise continue save to db
+        fetch = PesertaWebinar.query.filter_by(user_id=pesertawebinar["user_id"]).all()
+        eksistingpesertawebinar = pesertawebinar_schema.dump(fetch, many=True)
+        print("Eksisting data: ", eksistingpesertawebinar)
+        for item in eksistingpesertawebinar:
+            if (
+                item["training_id"] == pesertawebinar["training_id"]
+                and item["user_id"] == pesertawebinar["user_id"]
+            ):
+                return response_with(
+                    resp.INVALID_INPUT_422,
+                    value={
+                        "logged_in_as": current_user,
+                        "message": "Peserta webinar has already been registered!",
+                    },
+                )
         # save to db
         pesertawebinarobj.create()
         result = pesertawebinar_schema.dump(pesertawebinarobj)
@@ -64,6 +82,8 @@ def get_pesertawebinars():
             "idpeserta",
             "namapeserta",
             "hasilpelatihan",
+            "training_id",
+            "user_id",
             "created_at",
             "updated_at",
         ],
@@ -72,18 +92,20 @@ def get_pesertawebinars():
     return response_with(resp.SUCCESS_200, value={"pesertawebinars": pesertawebinar})
 
 
-@pesertawebinar_routes.route("/<int:id>", methods=["GET", "OPTIONS"])
-def get_specific_pesertawebinar(id):
+@pesertawebinar_routes.route("/<int:user_id>", methods=["GET", "OPTIONS"])
+def get_specific_pesertawebinar(user_id):
     # handle preflight request first
     if request.method == "OPTIONS":
         return response_with(resp.SUCCESS_200)
-    fetch = PesertaWebinar.query.get_or_404(id)
+    fetch = PesertaWebinar.query.filter_by(user_id=user_id).all()
     pesertawebinar_schema = PesertaWebinarSchema(
-        many=False,
+        many=True,
         only=[
             "idpeserta",
             "namapeserta",
             "hasilpelatihan",
+            "training_id",
+            "user_id",
             "created_at",
             "updated_at",
         ],
