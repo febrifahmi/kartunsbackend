@@ -23,6 +23,7 @@ class User(db.Model):
     angkatan = db.Column(db.String(4))
     profesi = db.Column(db.String(20))
     is_alumni = db.Column(db.Boolean(), default=0)
+    is_mhsarsuns = db.Column(db.Boolean(), default=0)
     is_pengurus = db.Column(db.Boolean(), default=0)
     is_trainer = db.Column(db.Boolean(), default=0)
     is_admin = db.Column(db.Boolean(), default=0)
@@ -38,12 +39,13 @@ class User(db.Model):
     # trainings = db.relationship("Trainings", backref="Participant", cascade="all, delete-orphan")
     # certificates = db.relationship("Certificates", backref="Holder", cascade="all, delete-orphan")
 
-    def __init__(self, username, first_name, last_name, email, is_alumni):
+    def __init__(self, username, first_name, last_name, email, is_alumni, is_mhsarsuns):
         self.username = username
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.is_alumni = is_alumni
+        self.is_mhsarsuns = is_mhsarsuns
 
     def set_password(self, password):
         self.passhash = bcrypt.generate_password_hash(password)
@@ -89,6 +91,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     angkatan = fields.String()
     profesi = fields.String()
     is_alumni = fields.Boolean()
+    is_mhsarsuns = fields.Boolean()
     is_pengurus = fields.Boolean()
     is_trainer = fields.Boolean()
     is_admin = fields.Boolean()

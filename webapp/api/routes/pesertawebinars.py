@@ -93,6 +93,7 @@ def get_pesertawebinars():
 
 
 @pesertawebinar_routes.route("/<int:user_id>", methods=["GET", "OPTIONS"])
+@jwt_required()
 def get_specific_pesertawebinar(user_id):
     # handle preflight request first
     if request.method == "OPTIONS":

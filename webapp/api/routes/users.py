@@ -263,6 +263,7 @@ def register_user():
             last_name=user["last_name"],
             email=user["email"],
             is_alumni=user["is_alumni"],
+            is_mhsarsuns=user["is_mhsarsuns"],
         )
         userobj.set_password(user["password"])
         userobj.profpic = userobj.avatar(128)
@@ -274,6 +275,7 @@ def register_user():
                 "last_name",
                 "email",
                 "is_alumni",
+                "is_mhsarsuns",
                 "profpic",
             ]
         )  # definisikan ulang user_schema tanpa memasukkan plain password sehingga di exclude dari result/API response
