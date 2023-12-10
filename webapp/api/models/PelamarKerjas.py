@@ -18,7 +18,7 @@ class PelamarKerja(db.Model):
 
     # fk
     joboffer_id = db.Column(db.Integer, db.ForeignKey("joboffers.idoffer"))
-    pelamar_id = db.Column(db.Integer, db.ForeignKey("users.iduser"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.iduser"))
 
     def __init__(
         self,
@@ -27,14 +27,20 @@ class PelamarKerja(db.Model):
         dokcv,
         dokportofolio,
         joboffer_id,
-        pelamar_id,
+        user_id,
+        filesuratlamaran,
+        filecv,
+        fileportofolio,
     ):
         self.namapelamar = namapelamar
         self.doksuratlamaran = doksuratlamaran
         self.dokcv = dokcv
         self.dokportofolio = dokportofolio
         self.joboffer_id = joboffer_id
-        self.pelamar_id = pelamar_id
+        self.user_id = user_id
+        self.filesuratlamaran = filesuratlamaran
+        self.filecv = filecv
+        self.fileportofolio = fileportofolio
 
     def create(self):
         db.session.add(self)
@@ -50,10 +56,13 @@ class PelamarKerjaSchema(ma.SQLAlchemyAutoSchema):
     idpelamar = fields.Integer(dump_only=True)
     namapelamar = fields.String(required=True)
     doksuratlamaran = fields.String(required=True)
+    filesuratlamaran = fields.String()
     dokcv = fields.String(required=True)
+    filecv = fields.String()
     dokportofolio = fields.String(required=True)
+    fileportofolio = fields.String()
     hasilseleksiakhir = fields.String()
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
     joboffer_id = fields.Integer(required=True)
-    pelamar_id = fields.Integer(required=True)
+    user_id = fields.Integer(required=True)

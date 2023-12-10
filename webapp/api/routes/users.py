@@ -40,6 +40,8 @@ def create_user():
             email=user["email"],
             is_alumni=user["is_alumni"],
         )
+        if(user["is_mhsarsuns"]):
+            userobj.is_mhsarsuns = user["is_mhsarsuns"]
         userobj.set_password(user["password"])
         userobj.create()
         user_schema = UserSchema(
@@ -88,6 +90,7 @@ def get_users():
             "is_alumni",
             "is_pengurus",
             "is_admin",
+            "is_mhsarsuns",
             "admin_verified",
             "profpic",
             "created_at",
@@ -117,6 +120,7 @@ def get_specific_user(id):
             "is_alumni",
             "is_pengurus",
             "is_admin",
+            "is_mhsarsuns",
             "admin_verified",
             "profpic",
             "created_at",
@@ -235,6 +239,7 @@ def authenticate_user():
                     "is_pengurus": active_user.is_pengurus,
                     "is_trainer": active_user.is_trainer,
                     "is_admin": active_user.is_admin,
+                    "is_mhsarsuns": active_user.is_mhsarsuns,
                 },
             )
         else:
