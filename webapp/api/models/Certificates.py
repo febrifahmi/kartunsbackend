@@ -18,17 +18,29 @@ class Certificate(db.Model):
 
     # fk
     penerima_id = db.Column(db.Integer, db.ForeignKey("users.iduser"))
+    webinar_id = db.Column(db.Integer, db.ForeignKey("trainingwebinars.idwebinar"))
 
     # relationship
 
     def __init__(
-        self, certtitle, certbgimgurl, certnumber, certtext, certdate
+        self,
+        certtitle,
+        certbgimgurl,
+        certnumber,
+        certtext,
+        certdate,
+        penerima_id,
+        webinar_id,
+        file,
     ):
         self.certtitle = certtitle
         self.certbgimgurl = certbgimgurl
         self.certnumber = certnumber
         self.certtext = certtext
         self.certdate = certdate
+        self.penerima_id = penerima_id
+        self.webinar_id = webinar_id
+        self.file = file
 
     def create(self):
         db.session.add(self)
@@ -47,6 +59,9 @@ class CertificateSchema(ma.SQLAlchemyAutoSchema):
     certnumber = fields.String(required=True)
     certtext = fields.String(required=True)
     certdate = fields.Integer(required=True)
+    penerima_id = fields.Integer(required=True)
+    webinar_id = fields.Integer(required=True)
+    file = fields.String()
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
     penerima_id = fields.Integer()
