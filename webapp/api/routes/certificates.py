@@ -4,12 +4,18 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.Certificates import Certificate, CertificateSchema
 from webapp.api.utils.database import db
+from werkzeug.utils import secure_filename
+import os, random, string
+from PIL import Image
+from base64 import b64decode, decodebytes
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
 
 certificate_routes = Blueprint("certificate_routes", __name__)
+
+SERTIFIKATDIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ),"..","..","static","sertifikat"))
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
@@ -26,12 +32,22 @@ def create_certificate():
         # need validation in ad creation process
         certobj = Certificate(
             certtitle=certificate["certtitle"],
-            certbgimgurl=certificate["certbgimgurl"],
             certnumber=certificate["certnumber"],
             certtext=certificate["certtext"],
             certdate=certificate["certdate"],
             penerima_id=certificate["penerima_id"],
+            webinar_id=certificate["webinar_id"],
+            file=certificate["file"],
         )
+        filename = secure_filename(certificate["certbgimgurl"])
+        certobj.certbgimgurl = filename
+        imgfile = b64decode(certobj.file.split(",")[1] + '==')
+        print(imgfile)
+        print(SERTIFIKATDIR)
+        with open(SERTIFIKATDIR + "/" + certobj.certbgimgurl, "wb") as f:
+            f.write(imgfile)
+        # save to db
+        certobj.create()
         result = certificate_schema.dump(certobj)
         return response_with(
             resp.SUCCESS_201,
@@ -62,6 +78,7 @@ def get_certificates():
             "created_at",
             "updated_at",
             "penerima_id",
+            "webinar_id",
         ],
     )
     certificates = certificate_schema.dump(fetch)
@@ -83,6 +100,7 @@ def get_specific_certificate(id):
             "created_at",
             "updated_at",
             "penerima_id",
+            "webinar_id",
         ],
     )
     certificate = certificate_schema.dump(fetch)
@@ -117,6 +135,9 @@ def update_certificate(id):
         if "penerima_id" in certificate and certificate["penerima_id"] is not None:
             if certificate["penerima_id"] != "":
                 certobj.penerima_id = certificate["penerima_id"]
+        if "webinar_id" in certificate and certificate["webinar_id"] is not None:
+            if certificate["webinar_id"] != "":
+                certobj.webinar_id = certificate["webinar_id"]
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,
