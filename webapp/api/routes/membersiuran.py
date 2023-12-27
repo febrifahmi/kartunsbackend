@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.MembersIuran import IuranMember, IuranMemberSchema
 from webapp.api.utils.database import db
+from webapp.api.utils.utility import getrandomstring
 from werkzeug.utils import secure_filename
 import os, random, string
 from PIL import Image
@@ -11,7 +12,7 @@ from base64 import b64decode, decodebytes
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 iuranmember_routes = Blueprint("iuranmember_routes", __name__)
 
@@ -36,17 +37,28 @@ def create_iuranmember():
         )  # iuran member schema pertama didefinisikan full utk menerima seluruh data yang diperlukan
         iuranmember = iuranmember_schema.load(data)
         # need validation in iuran member creation process
-        filename = secure_filename(iuranmember["iuranimgurl"])
         iuranmemberobj = IuranMember(
             nomoranggota=iuranmember["nomoranggota"],
             namaanggota=iuranmember["namaanggota"],
             tahun=iuranmember["tahun"],
             jumlahiuran=iuranmember["jumlahiuran"],
             bankpengirim=iuranmember["bankpengirim"],
-            iuranimgurl=filename,
+            iuranimgurl=iuranmember["iuranimgurl"],
             member_id=iuranmember["member_id"],
             user_id=iuranmember["user_id"],
             file=iuranmember["file"],
+        )
+        # filename = secure_filename(iuranmember["iuranimgurl"])
+        iuranmemberobj.iuranimgurl = (
+            "buktiiuranmember_"
+            + str(iuranmemberobj.user_id)
+            + "_"
+            + str(iuranmemberobj.member_id)
+            + "_"
+            + datetime.today().strftime("%Y%m%d")
+            + "_"
+            + getrandomstring(16)
+            + ".png"
         )
         imgfile = b64decode(iuranmemberobj.file.split(",")[1] + "==")
         print(imgfile)
@@ -90,6 +102,7 @@ def get_iuranmembers():
             "member_id",
             "user_id",
             "created_at",
+            "updated_at",
         ],
     )
     iuranmembers = iuranmember_schema.dump(fetch)
@@ -116,6 +129,7 @@ def get_specific_iuranmember(user_id):
             "member_id",
             "user_id",
             "created_at",
+            "updated_at",
         ],
     )
     iuranmember = iuranmember_schema.dump(fetch)

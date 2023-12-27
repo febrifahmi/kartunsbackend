@@ -13,6 +13,7 @@ class PengajuanBeasiswa(db.Model):
     dokproposalbsw = db.Column(db.String(128))
     dokcv = db.Column(db.String(128))
     dokportofolio = db.Column(db.String(128))
+    hasilseleksiakhir = db.Column(db.String(50))
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
@@ -31,7 +32,7 @@ class PengajuanBeasiswa(db.Model):
         fileproposalbsw,
         filecv,
         fileportofolio,
-        user_id
+        user_id,
     ):
         self.namamahasiswa = namamahasiswa
         self.batchbeasiswa = batchbeasiswa
@@ -63,6 +64,7 @@ class PengajuanBeasiswaSchema(ma.SQLAlchemyAutoSchema):
     fileproposalbsw = fields.String()
     filecv = fields.String()
     fileportofolio = fields.String()
+    hasilseleksiakhir = fields.String()
     created_at = fields.String(dump_only=True)
     updated_at = fields.String(dump_only=True)
     user_id = fields.Integer(required=True)

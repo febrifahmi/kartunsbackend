@@ -58,7 +58,8 @@ def create_pengajuanbeasiswa():
             + "_"
             + datetime.today().strftime("%Y%m%d")
             + "_"
-            + getrandomstring(16) + ".pdf"
+            + getrandomstring(16)
+            + ".pdf"
         )
         pengajuanbeasiswaobj.dokcv = (
             "cv_usr"
@@ -66,7 +67,8 @@ def create_pengajuanbeasiswa():
             + "_"
             + datetime.today().strftime("%Y%m%d")
             + "_"
-            + getrandomstring(16) + ".pdf"
+            + getrandomstring(16)
+            + ".pdf"
         )
         pengajuanbeasiswaobj.dokportofolio = (
             "portofolio_usr"
@@ -74,7 +76,8 @@ def create_pengajuanbeasiswa():
             + "_"
             + datetime.today().strftime("%Y%m%d")
             + "_"
-            + getrandomstring(16) + ".pdf"
+            + getrandomstring(16)
+            + ".pdf"
         )
         pdffile1 = b64decode(pengajuanbeasiswaobj.fileproposalbsw.split(",")[1] + "==")
         print(pdffile1)
@@ -107,3 +110,60 @@ def create_pengajuanbeasiswa():
     except Exception as e:
         print(e)
         return response_with(resp.INVALID_INPUT_422)
+
+
+# READ (R)
+@pengajuanbeasiswa_routes.route("/all", methods=["GET", "OPTIONS"])
+@jwt_required()
+def get_pengajuanbeasiswa():
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
+    fetch = PengajuanBeasiswa.query.all()
+    pengajuanbeasiswa_schema = PengajuanBeasiswaSchema(
+        many=True,
+        only=[
+            "idpengajuan",
+            "namamahasiswa",
+            "batchbeasiswa",
+            "dokproposalbsw",
+            "dokcv",
+            "dokportofolio",
+            "hasilseleksiakhir",
+            "user_id",
+            "created_at",
+            "updated_at",
+        ],
+    )
+    pengajuanbeasiswa = pengajuanbeasiswa_schema.dump(fetch)
+    return response_with(
+        resp.SUCCESS_200, value={"pengajuanbeasiswas": pengajuanbeasiswa}
+    )
+
+
+@pengajuanbeasiswa_routes.route("/<int:user_id>", methods=["GET", "OPTIONS"])
+@jwt_required()
+def get_specific_pengajuanbeasiswa(user_id):
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
+    fetch = PengajuanBeasiswa.query.filter_by(user_id=user_id).all()
+    pengajuanbeasiswa_schema = PengajuanBeasiswaSchema(
+        many=True,
+        only=[
+            "idpengajuan",
+            "namamahasiswa",
+            "batchbeasiswa",
+            "dokproposalbsw",
+            "dokcv",
+            "dokportofolio",
+            "hasilseleksiakhir",
+            "user_id",
+            "created_at",
+            "updated_at",
+        ],
+    )
+    pengajuanbeasiswa = pengajuanbeasiswa_schema.dump(fetch)
+    return response_with(
+        resp.SUCCESS_200, value={"pengajuanbeasiswa": pengajuanbeasiswa}
+    )

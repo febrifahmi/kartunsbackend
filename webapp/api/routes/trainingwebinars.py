@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.TrainingWebinars import TrainingWebinar, TrainingWebinarSchema
 from webapp.api.utils.database import db
+from webapp.api.utils.utility import getrandomstring
 from werkzeug.utils import secure_filename
 import os, random, string
 from base64 import b64decode, decodebytes
@@ -46,8 +47,14 @@ def create_trainingwebinar():
             price=trainingwebinar["price"],
             file=trainingwebinar["file"],
         )
-        filename = secure_filename(trainingwebinarobj.webinarimgurl)
-        trainingwebinarobj.webinarimgurl = filename
+        # filename = secure_filename(trainingwebinarobj.webinarimgurl)
+        trainingwebinarobj.webinarimgurl = (
+            "trainingwebinar_"
+            + datetime.today().strftime("%Y%m%d")
+            + "_"
+            + getrandomstring(16)
+            + ".png"
+        )
         trainingwebinarobj.author_id = trainingwebinar["author_id"]
         imgfile = b64decode(trainingwebinarobj.file.split(",")[1] + "==")
         print(imgfile)
@@ -133,5 +140,3 @@ def get_specific_trainingwebinar(id):
 # UPDATE (U)
 
 # DELETE (D)
-
-

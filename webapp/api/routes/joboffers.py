@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.JobOffers import JobOffer, JobOfferSchema
 from webapp.api.utils.database import db
+from webapp.api.utils.utility import getrandomstring
 from werkzeug.utils import secure_filename
 import os, random, string
 from flask import current_app
@@ -12,7 +13,7 @@ from base64 import b64decode, decodebytes
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 UPLOADDIR = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "..", "static", "uploads")
@@ -48,8 +49,16 @@ def create_offer():
             companylogo=offer["companylogo"],
             file=offer["file"],
         )
-        filename = secure_filename(offerobj.companylogo)
-        offerobj.companylogo = filename
+        # filename = secure_filename(offerobj.companylogo)
+        offerobj.companylogo = (
+            "lowongan_"
+            + offerobj.offertype
+            + "_"
+            + datetime.today().strftime("%Y%m%d")
+            + "_"
+            + getrandomstring(16)
+            + ".png"
+        )
         offerobj.author_id = offer["author_id"]
         offerobj.is_approved = 0
         offerobj.is_blocked = 0
