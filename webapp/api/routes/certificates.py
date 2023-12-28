@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.Certificates import Certificate, CertificateSchema
 from webapp.api.utils.database import db
+from webapp.api.utils.utility import getrandomstring
 from werkzeug.utils import secure_filename
 import os, random, string
 from PIL import Image
@@ -11,11 +12,14 @@ from base64 import b64decode, decodebytes
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 certificate_routes = Blueprint("certificate_routes", __name__)
 
-SERTIFIKATDIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ),"..","..","static","sertifikat"))
+SERTIFIKATDIR = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "static", "sertifikat")
+)
+
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
@@ -39,9 +43,17 @@ def create_certificate():
             webinar_id=certificate["webinar_id"],
             file=certificate["file"],
         )
-        filename = secure_filename(certificate["certbgimgurl"])
-        certobj.certbgimgurl = filename
-        imgfile = b64decode(certobj.file.split(",")[1] + '==')
+        # filename = secure_filename(certificate["certbgimgurl"])
+        certobj.certbgimgurl = (
+            "cert_"
+            + str(certobj.penerima_id)
+            + "_"
+            + datetime.today().strftime("%Y%m%d")
+            + "_"
+            + getrandomstring(16)
+            + ".png"
+        )
+        imgfile = b64decode(certobj.file.split(",")[1] + "==")
         print(imgfile)
         print(SERTIFIKATDIR)
         with open(SERTIFIKATDIR + "/" + certobj.certbgimgurl, "wb") as f:
@@ -162,7 +174,8 @@ def delete_certificate(id):
     db.session.commit()
     return response_with(
         resp.SUCCESS_200,
-        value={"logged_in_as": current_user, "message": "Certificate successfully deleted!"},
+        value={
+            "logged_in_as": current_user,
+            "message": "Certificate successfully deleted!",
+        },
     )
-
-

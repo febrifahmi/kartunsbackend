@@ -30,6 +30,7 @@ qrcode = QRcode(app)
 # IMPORT ROUTES BLUEPRINT (diimpor setelah seluruh konfigurasi app selesai agar tidak circular import)
 from webapp.api.routes.users import user_routes
 from webapp.api.routes.ads import ad_routes
+from webapp.api.routes.adrates import adrates_routes
 from webapp.api.routes.adstransactions import adtransaction_routes
 from webapp.api.routes.pengurus import pengurus_routes
 from webapp.api.routes.agendas import agenda_routes
@@ -55,11 +56,13 @@ from webapp.api.routes.donations import donations_routes
 from webapp.api.routes.membersiuran import iuranmember_routes
 from webapp.api.routes.pesertawebinars import pesertawebinar_routes
 from webapp.api.routes.pelamarkerjas import pelamarkerja_routes
+from webapp.api.routes.pengajuanbeasiswa import pengajuanbeasiswa_routes
 
 
 # REG BLUEPRINT
 app.register_blueprint(user_routes, url_prefix="/api/users")
 app.register_blueprint(ad_routes, url_prefix="/api/ads")
+app.register_blueprint(adrates_routes, url_prefix="/api/adrates")
 app.register_blueprint(adtransaction_routes, url_prefix="/api/adtransaction")
 app.register_blueprint(pengurus_routes, url_prefix="/api/pengurus")
 app.register_blueprint(agenda_routes, url_prefix="/api/agendas")
@@ -85,6 +88,7 @@ app.register_blueprint(donations_routes, url_prefix="/api/donations")
 app.register_blueprint(iuranmember_routes, url_prefix="/api/iuranmembers")
 app.register_blueprint(pesertawebinar_routes, url_prefix="/api/pesertawebinars")
 app.register_blueprint(pelamarkerja_routes, url_prefix="/api/pelamarkerjas")
+app.register_blueprint(pengajuanbeasiswa_routes, url_prefix="/api/pengajuanbeasiswa")
 
 
 # GLOBAL HTTP CONFIGS

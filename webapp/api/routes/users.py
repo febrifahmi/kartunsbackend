@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.Users import User, UserSchema
 from webapp.api.utils.database import db
+from webapp.api.utils.utility import getrandomstring
 from werkzeug.utils import secure_filename
 import traceback
 import os, random, string
@@ -40,7 +41,7 @@ def create_user():
             email=user["email"],
             is_alumni=user["is_alumni"],
         )
-        if(user["is_mhsarsuns"]):
+        if user["is_mhsarsuns"]:
             userobj.is_mhsarsuns = user["is_mhsarsuns"]
         userobj.set_password(user["password"])
         userobj.create()
@@ -171,7 +172,7 @@ def update_user(id):
         if "profpic" in user and user["profpic"] is not None:
             if user["profpic"] != "":
                 filename = secure_filename(user["profpic"])
-                userobj.profpic = filename
+                userobj.profpic = "avatar_" + getrandomstring(16) + "_" + filename
         if "file" in user and user["file"] is not None:
             if user["file"] != "":
                 imgfile = b64decode(user["file"].split(",")[1] + "==")

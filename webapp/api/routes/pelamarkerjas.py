@@ -4,13 +4,14 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.PelamarKerjas import PelamarKerja, PelamarKerjaSchema
 from webapp.api.utils.database import db
+from webapp.api.utils.utility import getrandomstring
 from werkzeug.utils import secure_filename
 import os, random, string
 from base64 import b64decode, decodebytes
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 BERKASPELAMARDIR = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "..", "static", "berkaspelamar")
@@ -63,20 +64,50 @@ def create_pelamarkerja():
                     },
                 )
         # file secure
-        filename1 = secure_filename(pelamarkerjaobj.doksuratlamaran)
-        pelamarkerjaobj.doksuratlamaran = "Application_"+filename1
-        filename2 = secure_filename(pelamarkerjaobj.dokcv)
-        pelamarkerjaobj.dokcv = "CV_"+filename2
-        filename3 = secure_filename(pelamarkerjaobj.dokportofolio)
-        pelamarkerjaobj.dokportofolio = "Portofolio_"+filename3
+        # filename1 = secure_filename(pelamarkerjaobj.doksuratlamaran)
+        pelamarkerjaobj.doksuratlamaran = (
+            "Application_"
+            + str(pelamarkerjaobj.joboffer_id)
+            + "_"
+            + str(pelamarkerjaobj.user_id)
+            + "_"
+            + datetime.today().strftime("%Y%m%d")
+            + "_"
+            + getrandomstring(16)
+            + ".pdf"
+        )
+        # filename2 = secure_filename(pelamarkerjaobj.dokcv)
+        pelamarkerjaobj.dokcv = (
+            "CV_"
+            + pelamarkerjaobj.joboffer_id
+            + "_"
+            + pelamarkerjaobj.user_id
+            + "_"
+            + datetime.today().strftime("%Y%m%d")
+            + "_"
+            + getrandomstring(16)
+            + ".pdf"
+        )
+        # filename3 = secure_filename(pelamarkerjaobj.dokportofolio)
+        pelamarkerjaobj.dokportofolio = (
+            "Portofolio_"
+            + pelamarkerjaobj.joboffer_id
+            + "_"
+            + pelamarkerjaobj.user_id
+            + "_"
+            + datetime.today().strftime("%Y%m%d")
+            + "_"
+            + getrandomstring(16)
+            + ".pdf"
+        )
         pdffile1 = b64decode(pelamarkerjaobj.filesuratlamaran.split(",")[1] + "==")
         pdffile2 = b64decode(pelamarkerjaobj.filecv.split(",")[1] + "==")
         pdffile3 = b64decode(pelamarkerjaobj.fileportofolio.split(",")[1] + "==")
-        with open(BERKASPELAMARDIR + "\\" + pelamarkerjaobj.doksuratlamaran, "wb") as f:
+        with open(BERKASPELAMARDIR + "/" + pelamarkerjaobj.doksuratlamaran, "wb") as f:
             f.write(pdffile1)
-        with open(BERKASPELAMARDIR + "\\" + pelamarkerjaobj.dokcv, "wb") as f:
+        with open(BERKASPELAMARDIR + "/" + pelamarkerjaobj.dokcv, "wb") as f:
             f.write(pdffile2)
-        with open(BERKASPELAMARDIR + "\\" + pelamarkerjaobj.dokportofolio, "wb") as f:
+        with open(BERKASPELAMARDIR + "/" + pelamarkerjaobj.dokportofolio, "wb") as f:
             f.write(pdffile3)
         # save to db
         pelamarkerjaobj.create()

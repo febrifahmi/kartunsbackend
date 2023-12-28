@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.SuratMasuks import SuratMasuk, SuratMasukSchema
 from webapp.api.utils.database import db
+from webapp.api.utils.utility import getrandomstring
 from werkzeug.utils import secure_filename
 from webapp import qrcode
 import os, random, string
@@ -11,11 +12,14 @@ from base64 import b64decode, decodebytes, b64encode
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from datetime import timedelta
+from datetime import timedelta, datetime
 
-SURATDIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ),"..","..","static","surat","masuk"))
+SURATDIR = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "static", "surat", "masuk")
+)
 
 suratmasuk_routes = Blueprint("suratmasuk_routes", __name__)
+
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
@@ -41,13 +45,19 @@ def create_suratmasuk():
             filesuraturi=suratmasuk["filesuraturi"],
             file=suratmasuk["file"],
         )
-        filename = secure_filename(suratmasukobj.filesuraturi)
-        suratmasukobj.filesuraturi = filename
+        # filename = secure_filename(suratmasukobj.filesuraturi)
+        suratmasukobj.filesuraturi = (
+            "suratmasuk_"
+            + datetime.today().strftime("%Y%m%d")
+            + "_"
+            + getrandomstring(16)
+            + ".pdf"
+        )
         suratmasukobj.author_id = suratmasuk["author_id"]
-        pdffile = b64decode(suratmasukobj.file.split(",")[1] + '==')
+        pdffile = b64decode(suratmasukobj.file.split(",")[1] + "==")
         print(pdffile)
         print(SURATDIR)
-        with open(SURATDIR + "\\" + suratmasukobj.filesuraturi, "wb") as f:
+        with open(SURATDIR + "/" + suratmasukobj.filesuraturi, "wb") as f:
             f.write(pdffile)
         # save to db
         suratmasukobj.create()
@@ -89,10 +99,10 @@ def get_suratmasuk():
     )
     suratmasuks = suratmasuk_schema.dump(fetch)
     for x in suratmasuks:
-        with open(SURATDIR + "\\" + x['filesuraturi'], "rb") as f:
+        with open(SURATDIR + "\\" + x["filesuraturi"], "rb") as f:
             pdfencoded = b64encode(f.read())
-            x['filesuraturi'] = str(pdfencoded.decode("utf-8"))
-    print("Surat Masuk: ",suratmasuks)
+            x["filesuraturi"] = str(pdfencoded.decode("utf-8"))
+    print("Surat Masuk: ", suratmasuks)
     return response_with(resp.SUCCESS_200, value={"suratmasuks": suratmasuks})
 
 
@@ -118,9 +128,9 @@ def get_specific_suratmasuk(id):
         ],
     )
     suratmasuk = suratmasuk_schema.dump(fetch)
-    with open(SURATDIR + "\\" + suratmasuk['filesuraturi'], "rb") as f:
+    with open(SURATDIR + "\\" + suratmasuk["filesuraturi"], "rb") as f:
         pdfencoded = b64encode(f.read())
-        suratmasuk['filesuraturi'] = str(pdfencoded.decode("utf-8"))
+        suratmasuk["filesuraturi"] = str(pdfencoded.decode("utf-8"))
     return response_with(resp.SUCCESS_200, value={"suratmasuk": suratmasuk})
 
 
@@ -134,7 +144,10 @@ def update_suratmasuk(id):
         data = request.get_json()
         suratmasuk_schema = SuratMasukSchema()
         suratmasuk = suratmasuk_schema.load(data, partial=True)
-        if "suratmasuktitle" in suratmasuk and suratmasuk["suratmasuktitle"] is not None:
+        if (
+            "suratmasuktitle" in suratmasuk
+            and suratmasuk["suratmasuktitle"] is not None
+        ):
             if suratmasuk["suratmasuktitle"] != "":
                 suratmasukobj.suratmasuktitle = suratmasuk["suratmasuktitle"]
         if "suratmasuknr" in suratmasuk and suratmasuk["suratmasuknr"] is not None:
@@ -144,10 +157,10 @@ def update_suratmasuk(id):
             if suratmasuk["filesurat"] != "":
                 suratmasukobj.filesurat = suratmasuk["filesurat"]
         if "suratmasukdesc" in suratmasuk and suratmasuk["suratmasukdesc"] is not None:
-            if suratmasuk["suratmasukdesc"] != '':
+            if suratmasuk["suratmasukdesc"] != "":
                 suratmasukobj.suratmasukdesc = suratmasuk["suratmasukdesc"]
         if "author_id" in suratmasuk and suratmasuk["author_id"] is not None:
-            if suratmasuk["author_id"] != '':
+            if suratmasuk["author_id"] != "":
                 suratmasukobj.author_id = suratmasuk["author_id"]
         db.session.commit()
         return response_with(
@@ -173,5 +186,8 @@ def delete_suratmasuk(id):
     db.session.commit()
     return response_with(
         resp.SUCCESS_200,
-        value={"logged_in_as": current_user, "message": "Surat masuk successfully deleted!"},
+        value={
+            "logged_in_as": current_user,
+            "message": "Surat masuk successfully deleted!",
+        },
     )

@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.AnggaranArusKas import AnggaranArusKas, AnggaranArusKasSchema
 from webapp.api.utils.database import db
+from webapp.api.utils.utility import getrandomstring
 from werkzeug.utils import secure_filename
 import os, random, string
 from PIL import Image
@@ -11,13 +12,14 @@ from base64 import b64decode, decodebytes, b64encode
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 ANGGARANDIR = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "..", "static", "anggaran", "kas")
 )
 
 anggarankas_routes = Blueprint("anggarankas_routes", __name__)
+
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
@@ -43,13 +45,19 @@ def create_anggarankas():
             filekasuri=anggarankas["filekasuri"],
             file=anggarankas["file"],
         )
-        filename = secure_filename(anggarankasobj.filekasuri)
-        anggarankasobj.filekasuri = filename
+        # filename = secure_filename(anggarankasobj.filekasuri)
+        anggarankasobj.filekasuri = (
+            "cashflow_"
+            + datetime.today().strftime("%Y%m%d")
+            + "_"
+            + getrandomstring(16)
+            + ".xls"
+        )
         anggarankasobj.author_id = anggarankas["author_id"]
         xlsfile = b64decode(anggarankasobj.file.split(",")[1] + "==")
         print(xlsfile)
         print(ANGGARANDIR)
-        with open(ANGGARANDIR + "\\" + anggarankasobj.filekasuri, "wb") as f:
+        with open(ANGGARANDIR + "/" + anggarankasobj.filekasuri, "wb") as f:
             f.write(xlsfile)
         # save to db
         anggarankasobj.create()
@@ -92,9 +100,9 @@ def get_anggarankas():
     anggarankas = anggarankas_schema.dump(fetch)
     descendingaruskas = sorted(anggarankas, key=lambda x: x["idaruskas"], reverse=True)
     for x in descendingaruskas:
-        with open(ANGGARANDIR + "\\" + x['filekasuri'], "rb") as f:
+        with open(ANGGARANDIR + "\\" + x["filekasuri"], "rb") as f:
             xlsencoded = b64encode(f.read())
-            x['filekasuri'] = str(xlsencoded.decode("utf-8"))
+            x["filekasuri"] = str(xlsencoded.decode("utf-8"))
     return response_with(resp.SUCCESS_200, value={"anggarankas": descendingaruskas})
 
 
@@ -120,15 +128,13 @@ def get_specific_anggarankas(id):
         ],
     )
     anggarankas = anggarankas_schema.dump(fetch)
-    with open(ANGGARANDIR + "\\" + anggarankas['filekasuri'], "rb") as f:
+    with open(ANGGARANDIR + "\\" + anggarankas["filekasuri"], "rb") as f:
         xlsencoded = b64encode(f.read())
-        anggarankas['filekasuri'] = str(xlsencoded.decode("utf-8"))
+        anggarankas["filekasuri"] = str(xlsencoded.decode("utf-8"))
     return response_with(resp.SUCCESS_200, value={"anggarankas": anggarankas})
 
 
 # UPDATE (U)
-
-
 
 
 # DELETE (D)

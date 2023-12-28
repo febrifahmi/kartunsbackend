@@ -4,6 +4,7 @@ from webapp.api.utils.responses import response_with
 from webapp.api.utils import responses as resp
 from webapp.api.models.AnggaranRAB import AnggaranRAB, AnggaranRABSchema
 from webapp.api.utils.database import db
+from webapp.api.utils.utility import getrandomstring
 from werkzeug.utils import secure_filename
 import os, random, string
 from PIL import Image
@@ -11,13 +12,14 @@ from base64 import b64decode, decodebytes, b64encode
 
 # Flask-JWT-Extended preparation
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 ANGGARANDIR = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "..", "static", "anggaran", "rab")
 )
 
 anggaranrab_routes = Blueprint("anggaranrab_routes", __name__)
+
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
@@ -42,13 +44,19 @@ def create_anggaranrab():
             fileraburi=anggaranrab["fileraburi"],
             file=anggaranrab["file"],
         )
-        filename = secure_filename(anggaranrabobj.fileraburi)
-        anggaranrabobj.fileraburi = filename
+        # filename = secure_filename(anggaranrabobj.fileraburi)
+        anggaranrabobj.fileraburi = (
+            "rabkegiatan_"
+            + datetime.today().strftime("%Y%m%d")
+            + "_"
+            + getrandomstring(16)
+            + ".xls"
+        )
         anggaranrabobj.author_id = anggaranrab["author_id"]
         xlsfile = b64decode(anggaranrabobj.file.split(",")[1] + "==")
         print(xlsfile)
         print(ANGGARANDIR)
-        with open(ANGGARANDIR + "\\" + anggaranrabobj.fileraburi, "wb") as f:
+        with open(ANGGARANDIR + "/" + anggaranrabobj.fileraburi, "wb") as f:
             f.write(xlsfile)
         # save to db
         anggaranrabobj.create()
@@ -90,9 +98,9 @@ def get_anggaranrab():
     anggaranrabs = anggaranrab_schema.dump(fetch)
     descendingrabs = sorted(anggaranrabs, key=lambda x: x["idrab"], reverse=True)
     for x in descendingrabs:
-        with open(ANGGARANDIR + "\\" + x['fileraburi'], "rb") as f:
+        with open(ANGGARANDIR + "\\" + x["fileraburi"], "rb") as f:
             xlsencoded = b64encode(f.read())
-            x['fileraburi'] = str(xlsencoded.decode("utf-8"))
+            x["fileraburi"] = str(xlsencoded.decode("utf-8"))
     return response_with(resp.SUCCESS_200, value={"anggaranrab": descendingrabs})
 
 
@@ -114,9 +122,9 @@ def get_specific_anggaranrab(id):
         ],
     )
     anggaranrab = anggaranrab_schema.dump(fetch)
-    with open(ANGGARANDIR + "\\" + anggaranrab['fileraburi'], "rb") as f:
+    with open(ANGGARANDIR + "\\" + anggaranrab["fileraburi"], "rb") as f:
         xlsencoded = b64encode(f.read())
-        anggaranrab['fileraburi'] = str(xlsencoded.decode("utf-8"))
+        anggaranrab["fileraburi"] = str(xlsencoded.decode("utf-8"))
     return response_with(resp.SUCCESS_200, value={"anggaranrab": anggaranrab})
 
 

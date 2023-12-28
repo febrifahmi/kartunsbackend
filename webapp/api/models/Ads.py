@@ -21,6 +21,7 @@ class Ad(db.Model):
     adcampaigntext = db.Column(db.String(800))
     nrdaysserved = db.Column(db.Integer, default=7)
     kodetagihan = db.Column(db.String())
+    totalprice = db.Column(db.Integer())
     is_paid = db.Column(db.Boolean(), default=0)
     is_blocked = db.Column(db.Boolean(), default=1)
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
@@ -30,7 +31,7 @@ class Ad(db.Model):
     advertiser_id = db.Column(db.Integer, db.ForeignKey("users.iduser"))
 
     def __init__(
-        self, adcampaigntitle, adimgurl, adcampaigndesc, adcampaigntext, nrdaysserved, kodetagihan, file
+        self, adcampaigntitle, adimgurl, adcampaigndesc, adcampaigntext, nrdaysserved, kodetagihan, totalprice, file
     ):
         self.adcampaigntitle = adcampaigntitle
         self.adimgurl = adimgurl
@@ -38,6 +39,7 @@ class Ad(db.Model):
         self.adcampaigntext = adcampaigntext
         self.nrdaysserved = nrdaysserved
         self.kodetagihan = kodetagihan
+        self.totalprice = totalprice
         self.file = file
 
     def create(self):
@@ -58,6 +60,7 @@ class AdSchema(ma.SQLAlchemyAutoSchema):
     adcampaigntext = fields.String(required=True)
     nrdaysserved = fields.Integer()
     kodetagihan = fields.String(required=True)
+    totalprice = fields.Integer(required=True)
     is_paid = fields.Boolean()
     is_blocked = fields.Boolean()
     file = fields.String()

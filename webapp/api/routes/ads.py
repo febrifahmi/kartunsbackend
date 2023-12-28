@@ -12,9 +12,12 @@ from base64 import b64decode, decodebytes
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
 
-UPLOADDIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ),"..","..","static","uploads"))
+UPLOADDIR = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "static", "uploads")
+)
 
 ad_routes = Blueprint("ad_routes", __name__)
+
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
@@ -39,10 +42,11 @@ def create_ads():
             adcampaigntext=ad["adcampaigntext"],
             nrdaysserved=ad["nrdaysserved"],
             kodetagihan=ad["kodetagihan"],
+            totalprice=ad["totalprice"],
             file=ad["file"],
         )
-        adobj.advertiser_id=ad["advertiser_id"]
-        imgfile = b64decode(adobj.file.split(",")[1] + '==')
+        adobj.advertiser_id = ad["advertiser_id"]
+        imgfile = b64decode(adobj.file.split(",")[1] + "==")
         print(imgfile)
         print(UPLOADDIR)
         with open(UPLOADDIR + "/" + adobj.adimgurl, "wb") as f:
@@ -80,6 +84,7 @@ def get_ads():
             "adcampaigntext",
             "nrdaysserved",
             "kodetagihan",
+            "totalprice",
             "is_paid",
             "is_blocked",
             "created_at",
@@ -91,8 +96,11 @@ def get_ads():
     return response_with(resp.SUCCESS_200, value={"ads": ads})
 
 
-@ad_routes.route("/<int:id>", methods=["GET"])
+@ad_routes.route("/<int:id>", methods=["GET", "OPTIONS"])
 def get_specific_ad(id):
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     fetch = Ad.query.get_or_404(id)
     ad_schema = AdSchema(
         many=False,
@@ -104,6 +112,7 @@ def get_specific_ad(id):
             "adcampaigntext",
             "nrdaysserved",
             "kodetagihan",
+            "totalprice",
             "is_paid",
             "is_blocked",
             "created_at",
@@ -116,10 +125,13 @@ def get_specific_ad(id):
 
 
 # UPDATE (U)
-@ad_routes.route("/update/<int:id>", methods=["PUT"])
+@ad_routes.route("/update/<int:id>", methods=["PUT", "OPTIONS"])
 @jwt_required()
 def update_ad(id):
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         current_user = get_jwt_identity()
         adobj = Ad.query.get_or_404(id)
         data = request.get_json()
@@ -137,6 +149,9 @@ def update_ad(id):
         if "nrdaysserved" in ad and ad["nrdaysserved"] is not None:
             if ad["nrdaysserved"] != "":
                 adobj.nrdaysserved = ad["nrdaysserved"]
+        if "totalprice" in ad and ad["totalprice"] is not None:
+            if ad["totalprice"] != "":
+                adobj.nrdaysserved = ad["totalprice"]
         if "is_paid" in ad and ad["is_paid"] is not None:
             if ad["is_paid"] != "":
                 adobj.is_paid = ad["is_paid"]
