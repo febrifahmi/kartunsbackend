@@ -42,6 +42,7 @@ def create_ads():
             adcampaigntext=ad["adcampaigntext"],
             nrdaysserved=ad["nrdaysserved"],
             kodetagihan=ad["kodetagihan"],
+            totalprice=ad["totalprice"],
             file=ad["file"],
         )
         adobj.advertiser_id = ad["advertiser_id"]
@@ -83,6 +84,7 @@ def get_ads():
             "adcampaigntext",
             "nrdaysserved",
             "kodetagihan",
+            "totalprice",
             "is_paid",
             "is_blocked",
             "created_at",
@@ -110,6 +112,7 @@ def get_specific_ad(id):
             "adcampaigntext",
             "nrdaysserved",
             "kodetagihan",
+            "totalprice",
             "is_paid",
             "is_blocked",
             "created_at",
@@ -146,6 +149,9 @@ def update_ad(id):
         if "nrdaysserved" in ad and ad["nrdaysserved"] is not None:
             if ad["nrdaysserved"] != "":
                 adobj.nrdaysserved = ad["nrdaysserved"]
+        if "totalprice" in ad and ad["totalprice"] is not None:
+            if ad["totalprice"] != "":
+                adobj.nrdaysserved = ad["totalprice"]
         if "is_paid" in ad and ad["is_paid"] is not None:
             if ad["is_paid"] != "":
                 adobj.is_paid = ad["is_paid"]

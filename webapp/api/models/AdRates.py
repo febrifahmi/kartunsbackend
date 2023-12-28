@@ -21,12 +21,13 @@ class AdRates(db.Model):
     manager_id = db.Column(db.Integer, db.ForeignKey("users.iduser"))
 
     def __init__(
-        self, adratetitle, adrateperhariharian, adrateperharibulanan, adrateperharitahunan
+        self, adratetitle, adrateperhariharian, adrateperharibulanan, adrateperharitahunan, manager_id
     ):
         self.adratetitle = adratetitle
         self.adrateperhariharian = adrateperhariharian
         self.adrateperharibulanan = adrateperharibulanan
         self.adrateperharitahunan = adrateperharitahunan
+        self.manager_id = manager_id
 
     def create(self):
         db.session.add(self)

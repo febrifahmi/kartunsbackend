@@ -11,6 +11,7 @@ from datetime import timedelta
 
 adrates_routes = Blueprint("adrates_routes", __name__)
 
+
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
 @adrates_routes.route("/create", methods=["POST", "OPTIONS"])
@@ -32,8 +33,8 @@ def create_adrate():
             adrateperhariharian=adrate["adrateperhariharian"],
             adrateperharibulanan=adrate["adrateperharibulanan"],
             adrateperharitahunan=adrate["adrateperharitahunan"],
+            manager_id=adrate["manager_id"],
         )
-        adrateobj.manager_id=adrate["manager_id"]
         adrateobj.create()
         result = adrate_schema.dump(adrateobj)
         return response_with(
@@ -56,7 +57,7 @@ def get_adrates():
     if request.method == "OPTIONS":
         return response_with(resp.SUCCESS_200)
     fetch = AdRates.query.all()
-    adrate_schema = AdSchema(
+    adrate_schema = AdRatesSchema(
         many=True,
         only=[
             "idadrate",
@@ -99,11 +100,6 @@ def get_specific_adrate(id):
 
 
 # UPDATE (U)
-
-
-
-
-
 
 
 # DELETE (D)
