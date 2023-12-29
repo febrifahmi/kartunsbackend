@@ -98,10 +98,10 @@ def get_letters():
         ],
     )
     letters = letter_schema.dump(fetch)
-    for x in letters:
-        with open(SURATDIR + "\\" + x["filesuratkeluaruri"], "rb") as f:
-            pdfencoded = b64encode(f.read())
-            x["filesuratkeluaruri"] = str(pdfencoded.decode("utf-8"))
+    # for x in letters:
+    #     with open(SURATDIR + "/" + x["filesuratkeluaruri"], "rb") as f:
+    #         pdfencoded = b64encode(f.read())
+    #         x["filesuratkeluaruri"] = str(pdfencoded.decode("utf-8"))
     # print("Letters: ",letters)
     return response_with(resp.SUCCESS_200, value={"letters": letters})
 
@@ -128,9 +128,9 @@ def get_specific_letter(id):
         ],
     )
     letter = letter_schema.dump(fetch)
-    with open(SURATDIR + "\\" + letter["filesuratkeluaruri"], "rb") as f:
-        pdfencoded = b64encode(f.read())
-        letter["filesuratkeluaruri"] = str(pdfencoded.decode("utf-8"))
+    # with open(SURATDIR + "\\" + letter["filesuratkeluaruri"], "rb") as f:
+    #     pdfencoded = b64encode(f.read())
+    #     letter["filesuratkeluaruri"] = str(pdfencoded.decode("utf-8"))
     return response_with(resp.SUCCESS_200, value={"letter": letter})
 
 
