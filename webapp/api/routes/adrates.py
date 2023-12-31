@@ -100,6 +100,36 @@ def get_specific_adrate(id):
 
 
 # UPDATE (U)
+@adrates_routes.route("/update/<int:id>", methods=["PUT", "OPTIONS"])
+@jwt_required()
+def update_adrate(id):
+    try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
+        current_user = get_jwt_identity()
+        adrateobj = AdRates.query.get_or_404(id)
+        data = request.get_json()
+        adrate_schema = AdRatesSchema()
+        adrate = adrate_schema.load(data, partial=True)
+        if "is_active" in adrate and adrate["is_active"] is not None:
+            if adrate["is_active"] != "":
+                adrateobj.is_active = adrate["is_active"]
+        db.session.commit()
+        return response_with(
+            resp.SUCCESS_200,
+            value={
+                "adrate": adrate,
+                "logged_in_as": current_user,
+                "message": "Adrate details successfully updated!",
+            },
+        )
+    except Exception as e:
+        print(e)
+        return response_with(resp.INVALID_INPUT_422)
+
+
+
 
 
 # DELETE (D)

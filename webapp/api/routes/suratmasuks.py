@@ -98,10 +98,10 @@ def get_suratmasuk():
         ],
     )
     suratmasuks = suratmasuk_schema.dump(fetch)
-    for x in suratmasuks:
-        with open(SURATDIR + "\\" + x["filesuraturi"], "rb") as f:
-            pdfencoded = b64encode(f.read())
-            x["filesuraturi"] = str(pdfencoded.decode("utf-8"))
+    # for x in suratmasuks:
+    #     with open(SURATDIR + "\\" + x["filesuraturi"], "rb") as f:
+    #         pdfencoded = b64encode(f.read())
+    #         x["filesuraturi"] = str(pdfencoded.decode("utf-8"))
     print("Surat Masuk: ", suratmasuks)
     return response_with(resp.SUCCESS_200, value={"suratmasuks": suratmasuks})
 
@@ -128,9 +128,9 @@ def get_specific_suratmasuk(id):
         ],
     )
     suratmasuk = suratmasuk_schema.dump(fetch)
-    with open(SURATDIR + "\\" + suratmasuk["filesuraturi"], "rb") as f:
-        pdfencoded = b64encode(f.read())
-        suratmasuk["filesuraturi"] = str(pdfencoded.decode("utf-8"))
+    # with open(SURATDIR + "\\" + suratmasuk["filesuraturi"], "rb") as f:
+    #     pdfencoded = b64encode(f.read())
+    #     suratmasuk["filesuraturi"] = str(pdfencoded.decode("utf-8"))
     return response_with(resp.SUCCESS_200, value={"suratmasuk": suratmasuk})
 
 
