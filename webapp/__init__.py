@@ -57,6 +57,7 @@ from webapp.api.routes.membersiuran import iuranmember_routes
 from webapp.api.routes.pesertawebinars import pesertawebinar_routes
 from webapp.api.routes.pelamarkerjas import pelamarkerja_routes
 from webapp.api.routes.pengajuanbeasiswa import pengajuanbeasiswa_routes
+from webapp.api.routes.logtail import logtail_routes
 
 
 # REG BLUEPRINT
@@ -89,6 +90,7 @@ app.register_blueprint(iuranmember_routes, url_prefix="/api/iuranmembers")
 app.register_blueprint(pesertawebinar_routes, url_prefix="/api/pesertawebinars")
 app.register_blueprint(pelamarkerja_routes, url_prefix="/api/pelamarkerjas")
 app.register_blueprint(pengajuanbeasiswa_routes, url_prefix="/api/pengajuanbeasiswa")
+app.register_blueprint(logtail_routes, url_prefix="/api/logtail")
 
 
 # GLOBAL HTTP CONFIGS
