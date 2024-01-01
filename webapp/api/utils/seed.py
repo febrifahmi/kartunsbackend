@@ -51,7 +51,7 @@ def seedAdminUser():
             )
             userobj.set_password(user["password"])
             userobj.is_admin = user["is_admin"]
-            userobj.avatar(48)
+            userobj.avatar(128)
             userobj.create()
     except Exception as e:
         print(e)
@@ -102,7 +102,7 @@ def seedPengurusUser():
             userobj.set_password(user["password"])
             userobj.is_pengurus = user["is_pengurus"]
             userobj.is_admin = user["is_admin"]
-            userobj.avatar(48)
+            userobj.avatar(128)
             userobj.create()
     except Exception as e:
         print(e)

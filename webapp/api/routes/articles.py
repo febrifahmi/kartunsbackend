@@ -13,9 +13,12 @@ from base64 import b64decode, decodebytes
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
 
-UPLOADDIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ),"..","..","static","uploads"))
+UPLOADDIR = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "static", "uploads")
+)
 
 article_routes = Blueprint("article_routes", __name__)
+
 
 # CONSULT https://marshmallow.readthedocs.io/en/stable/quickstart.html IF YOU FIND ANY TROUBLE WHEN USING SCHEMA HERE!
 # CREATE (C)
@@ -43,7 +46,7 @@ def create_article():
         )
         filename = secure_filename(articleobj.articleimgurl)
         articleobj.articleimgurl = filename
-        imgfile = b64decode(articleobj.file.split(",")[1] + '==')
+        imgfile = b64decode(articleobj.file.split(",")[1] + "==")
         print(imgfile)
         print(UPLOADDIR)
         with open(UPLOADDIR + "/" + articleobj.articleimgurl, "wb") as f:
@@ -113,10 +116,13 @@ def get_specific_article(id):
 
 
 # UPDATE (U)
-@article_routes.route("/update/<int:id>", methods=["PUT"])
+@article_routes.route("/update/<int:id>", methods=["PUT", "OPTIONS"])
 @jwt_required()
 def update_article(id):
     try:
+        # handle preflight request first
+        if request.method == "OPTIONS":
+            return response_with(resp.SUCCESS_200)
         current_user = get_jwt_identity()
         articleobj = Article.query.get_or_404(id)
         data = request.get_json()
@@ -127,7 +133,8 @@ def update_article(id):
                 articleobj.articletitle = article["articletitle"]
         if "articleimgurl" in article and article["articleimgurl"] is not None:
             if article["articleimgurl"] != "":
-                articleobj.articleimgurl = article["articleimgurl"]
+                filename = secure_filename(article["articleimgurl"])
+                articleobj.articleimgurl = "artc_" + filename
         if "articledesc" in article and article["articledesc"] is not None:
             if article["articledesc"] != "":
                 articleobj.articledesc = article["articledesc"]
@@ -137,6 +144,13 @@ def update_article(id):
         if "author_id" in article and article["author_id"] is not None:
             if article["author_id"] != "":
                 articleobj.author_id = article["author_id"]
+        if "file" in article and article["file"] is not None:
+            if article["file"] != "":
+                imgfile = b64decode(article["file"].split(",")[1] + "==")
+                print(imgfile)
+                print(UPLOADDIR)
+                with open(UPLOADDIR + "/" + articleobj.articleimgurl, "wb") as f:
+                    f.write(imgfile)
         db.session.commit()
         return response_with(
             resp.SUCCESS_200,
@@ -152,9 +166,12 @@ def update_article(id):
 
 
 # DELETE (D)
-@article_routes.route("/delete/<int:id>", methods=["DELETE"])
+@article_routes.route("/delete/<int:id>", methods=["DELETE", "OPTIONS"])
 @jwt_required()
 def delete_article(id):
+    # handle preflight request first
+    if request.method == "OPTIONS":
+        return response_with(resp.SUCCESS_200)
     current_user = get_jwt_identity()
     articleobj = Article.query.get_or_404(id)
     db.session.delete(articleobj)

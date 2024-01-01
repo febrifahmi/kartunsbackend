@@ -19,7 +19,7 @@ class User(db.Model):
     last_name = db.Column(db.String(40))
     email = db.Column(db.String(40), unique=True)
     telp = db.Column(db.String(20))
-    tentang = db.Column(db.String(1500))
+    tentang = db.Column(db.String(1500), default="")
     angkatan = db.Column(db.String(4))
     profesi = db.Column(db.String(20))
     is_alumni = db.Column(db.Boolean(), default=0)
